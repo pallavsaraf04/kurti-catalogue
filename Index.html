@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Kurti Design Catalogue</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #c9184a;
+    --rose-light: #ff4d6d;
+    --rose-pale: #fff0f3;
+    --rose-mid: #ffb3c1;
+    --ink: #1a0a0e;
+    --ink-soft: #4a2030;
+    --cream: #fdf6f0;
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --card-bg: #ffffff;
+    --border: #f0d6dc;
+    --shadow: 0 4px 32px rgba(201,24,74,0.08);
+    --shadow-hover: 0 8px 40px rgba(201,24,74,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); min-height: 100vh; color: var(--ink); }
+
+  /* ── TOP ACCENT ── */
+  .top-band { height: 4px; background: linear-gradient(90deg, var(--rose) 0%, var(--gold) 50%, var(--rose) 100%); }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    padding: 28px 24px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 120%, rgba(201,24,74,0.35) 0%, transparent 65%);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,24,74,0.4), transparent);
+  }
+  .brand-label {
+    font-size: 9px; font-weight: 600; letter-spacing: 5px;
+    text-transform: uppercase; color: var(--rose-mid);
+    margin-bottom: 6px; position: relative;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 6vw, 34px);
+    color: #fff; font-weight: 700; position: relative;
+    line-height: 1.2;
+  }
+  header h1 span { color: var(--gold); }
+  .subtitle {
+    font-size: 11px; color: rgba(255,255,255,0.38);
+    margin-top: 6px; letter-spacing: 1.5px; position: relative;
+  }
+
+  /* ── LAYOUT ── */
+  .main { max-width: 680px; margin: 0 auto; padding: 20px 14px 70px; }
+
+  /* ── SEARCH ── */
+  .search-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 18px 16px 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+  }
+  .search-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--rose);
+    margin-bottom: 10px; display: block;
+  }
+  .search-row { display: flex; gap: 10px; }
+  .search-input {
+    flex: 1;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px; font-weight: 500;
+    color: var(--ink); background: var(--rose-pale);
+    outline: none; transition: border-color 0.2s, background 0.2s;
+  }
+  .search-input:focus { border-color: var(--rose); background: #fff; }
+  .search-input::placeholder { color: #c4a0ab; font-weight: 300; }
+  .search-btn {
+    padding: 14px 22px;
+    background: var(--rose); color: white;
+    border: none; border-radius: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    white-space: nowrap; letter-spacing: 0.5px;
+  }
+  .search-btn:active { transform: scale(0.96); background: var(--rose-light); }
+  .search-btn:hover { background: var(--rose-light); }
+
+  /* ── SUGGESTIONS ── */
+  .suggestions-wrap { position: relative; z-index: 20; margin-bottom: 12px; }
+  .suggestions-inner {
+    background: white; border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(201,24,74,0.12);
+    overflow: hidden; max-height: 220px; overflow-y: auto;
+  }
+  .suggestion-item {
+    padding: 11px 16px; cursor: pointer; font-size: 13px;
+    color: var(--ink); display: flex; align-items: center;
+    gap: 10px; border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .suggestion-item:last-child { border-bottom: none; }
+  .suggestion-item:hover { background: var(--rose-pale); }
+  .sug-no { font-weight: 600; color: var(--rose); font-size: 14px; }
+  .sug-desc { font-size: 11px; color: var(--ink-soft); opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
+
+  /* ── STATUS ── */
+  .data-status {
+    text-align: center; font-size: 11px; color: #b090a0;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #c4a0ab; flex-shrink: 0; }
+  .dot.green  { background: #4caf50; }
+  .dot.loading { background: var(--gold); animation: pulse 1s infinite; }
+  .dot.error  { background: #e53935; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .status-msg { text-align: center; padding: 20px; font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
+  .status-msg.error { color: #b00020; background: #fff0f3; border-radius: 16px; border: 1px solid #ffd6de; }
+
+  /* ── RESULT COUNT ── */
+  .multi-header {
+    font-size: 13px; color: var(--ink-soft);
+    margin-bottom: 14px; text-align: center;
+    padding: 10px 16px; background: var(--rose-pale);
+    border-radius: 12px; border: 1px solid var(--border);
+  }
+  .multi-header strong { color: var(--rose); }
+
+  /* ── RESULT CARD ── */
+  .result-card {
+    background: var(--card-bg);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    animation: slideUp 0.35s cubic-bezier(0.2,0.8,0.3,1) both;
+    margin-bottom: 18px;
+    transition: box-shadow 0.2s;
+  }
+  .result-card:hover { box-shadow: var(--shadow-hover); }
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(18px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── CARD HEADER ── */
+  .result-header {
+    background: var(--ink); padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; overflow: hidden;
+  }
+  .result-header::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(ellipse at 0% 50%, rgba(201,24,74,0.25) 0%, transparent 60%);
+  }
+  .design-badge { position: relative; }
+  .design-badge .tag {
+    font-size: 9px; font-weight: 600; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--rose-mid);
+    display: block; margin-bottom: 2px;
+  }
+  .design-badge .number {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; color: #fff; font-weight: 700; line-height: 1;
+  }
+
+  /* ── PHOTO ── */
+  .photo-wrap {
+    width: 100%; background: #f8f0f2;
+    overflow: hidden; max-height: 460px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; min-height: 200px;
+  }
+  .photo-wrap img {
+    width: 100%; height: 100%;
+    object-fit: contain; max-height: 460px;
+    display: block;
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+  .photo-wrap img.loaded { opacity: 1; }
+  .photo-spinner-wrap {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: #f8f0f2; transition: opacity 0.3s;
+  }
+  .photo-spinner {
+    width: 30px; height: 30px;
+    border: 3px solid var(--border);
+    border-top-color: var(--rose);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  .no-photo {
+    padding: 50px 20px; color: #c4a0ab;
+    font-size: 13px; text-align: center; line-height: 2;
+  }
+  .no-photo .icon { font-size: 36px; display: block; margin-bottom: 8px; opacity: 0.4; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    padding: 16px 14px 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .field {
+    background: var(--rose-pale);
+    border-radius: 14px; padding: 13px 14px;
+    border: 1px solid var(--border);
+  }
+  .field.wide { grid-column: 1 / -1; }
+  .field-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--rose);
+    margin-bottom: 5px; display: block;
+  }
+  .field-value {
+    font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.45;
+  }
+  .field-value.price {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700; color: var(--rose);
+    line-height: 1;
+  }
+  .field-value.price-ws {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700; color: var(--ink-soft);
+    line-height: 1;
+  }
+  .field-value.empty {
+    color: #c4a0ab; font-style: italic; font-weight: 300; font-size: 12px;
+  }
+  .field-value.desc { font-size: 13px; color: var(--ink-soft); font-weight: 400; line-height: 1.55; }
+
+  /* ── INTERNAL DETAILS ── */
+  .internal-btn-wrap { padding: 10px 14px; }
+  .internal-btn {
+    width: 100%; padding: 13px;
+    background: transparent;
+    border: 2px dashed var(--rose-mid);
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--rose); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .internal-btn:hover { background: var(--rose-pale); border-color: var(--rose); }
+  .internal-btn:active { transform: scale(0.98); }
+  .internal-btn .lock-icon { font-size: 15px; transition: transform 0.3s; }
+  .internal-btn.open { background: var(--rose); color: white; border-style: solid; border-color: var(--rose); }
+  .internal-btn.open .lock-icon { transform: rotate(20deg); }
+
+  .internal-details {
+    display: none; padding: 0 14px 4px;
+    animation: fadeIn 0.3s ease;
+  }
+  .internal-details.visible { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+
+  .field.internal {
+    background: #fff8f0;
+    border-color: var(--gold-light);
+  }
+  .field.internal .field-label { color: var(--gold); }
+  .field.internal .field-value { color: var(--ink-soft); }
+  .field.internal .field-value.price-internal {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: #8a6a10;
+  }
+
+  /* ── CARD FOOTER SPACING ── */
+  .card-bottom { height: 14px; }
+
+  /* ── WATERMARK ── */
+  .watermark {
+    text-align: center; margin-top: 30px;
+    font-size: 10px; color: #d0b0b8; letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="top-band"></div>
+
+<header>
+  <div class="brand-label">Design Catalogue</div>
+  <h1>Kurti <span>Lookup</span></h1>
+  <div class="subtitle">Search by design number</div>
+</header>
+
+<div class="main">
+
+  <div class="search-card">
+    <span class="search-label">Search by Design Number</span>
+    <div class="search-row">
+      <input
+        class="search-input" id="searchInput" type="text"
+        placeholder="e.g. K-101, D-205…"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+      />
+      <button class="search-btn" onclick="doSearch()">Search</button>
+    </div>
+  </div>
+
+  <div id="suggestionsWrap" class="suggestions-wrap" style="display:none">
+    <div class="suggestions-inner" id="suggestionsList"></div>
+  </div>
+
+  <div class="data-status">
+    <div class="dot loading" id="statusDot"></div>
+    <span id="statusText">Loading catalogue…</span>
+  </div>
+
+  <div id="output"></div>
+  <div class="watermark">Kurti Manufacturing · Design Catalogue</div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────────────────────────
+var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWE67lriCuoTDuBUkcIKEQ1SlNXYerEsGb5qhhW7GfTGN70nH3UqpPlGBCS5BHy9RAtxVy-Oe60v_7/pub?output=csv';
+
+// Column indices (0-based) — A=0, B=1, C=2, D=3, E=4, F=5, G=6
+var COL_DESIGN      = 0;  // A — Design Number
+var COL_DESC        = 1;  // B — Description
+var COL_HAND_RATE   = 2;  // C — Hand Rate (restricted)
+var COL_COSTING     = 3;  // D — Costing (restricted)
+var COL_RETAIL      = 4;  // E — Retail Rate
+var COL_WHOLESALE   = 5;  // F — Wholesale Rate
+var COL_PHOTO       = 6;  // G — Photo Link
+
+// ─────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────
+var allRows = [];  // array of cleaned row arrays
+
+// ─────────────────────────────────────────────────────────────────
+// FETCH — tries direct first, then CORS proxies
+// ─────────────────────────────────────────────────────────────────
+async function fetchCSV(url) {
+  var attempts = [
+    url,  // direct — works for "published to web" sheets
+    'https://corsproxy.io/?url=' + encodeURIComponent(url),
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+    'https://cors-anywhere.herokuapp.com/' + url
+  ];
+  for (var i = 0; i < attempts.length; i++) {
+    try {
+      var resp = await fetch(attempts[i], { cache: 'no-cache' });
+      if (!resp.ok) continue;
+      var text = await resp.text();
+      // Make sure it looks like CSV, not an HTML error page
+      if (text && text.length > 30 && text.indexOf('<!DOCTYPE') === -1 && text.indexOf('<html') === -1) {
+        return text;
+      }
+    } catch (e) { /* try next */ }
+  }
+  return null;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CSV PARSER — handles quoted fields with commas/newlines
+// ─────────────────────────────────────────────────────────────────
+function parseCSV(text) {
+  var rows = [];
+  var lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+  for (var l = 0; l < lines.length; l++) {
+    var line = lines[l];
+    var row = [], inQ = false, cell = '';
+    for (var i = 0; i < line.length; i++) {
+      var c = line[i];
+      if (c === '"') {
+        if (inQ && line[i+1] === '"') { cell += '"'; i++; }
+        else { inQ = !inQ; }
+      } else if (c === ',' && !inQ) {
+        row.push(cell.trim()); cell = '';
+      } else {
+        cell += c;
+      }
+    }
+    row.push(cell.trim());
+    rows.push(row);
+  }
+  return rows;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// LOAD
+// ─────────────────────────────────────────────────────────────────
+async function loadData() {
+  updateStatus('loading', 'Loading catalogue…');
+  var text = await fetchCSV(CSV_URL);
+
+  if (!text) {
+    updateStatus('error', 'Could not load data');
+    document.getElementById('output').innerHTML =
+      '<div class="status-msg error">⚠️ Could not load the catalogue.<br><small>Check that the Google Sheet is published to the web.</small></div>';
+    return;
+  }
+
+  var parsed = parseCSV(text);
+
+  // Skip header row (row 0) and filter out rows with no design number
+  allRows = parsed.slice(1).filter(function(r) {
+    return r[COL_DESIGN] && r[COL_DESIGN].trim() !== '';
+  });
+
+  if (!allRows.length) {
+    updateStatus('error', 'No data found');
+    document.getElementById('output').innerHTML =
+      '<div class="status-msg error">No design rows found in the sheet.</div>';
+    return;
+  }
+
+  updateStatus('green', allRows.length + ' designs loaded');
+}
+
+// ─────────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────────
+function roundToNearest5(val) {
+  var n = parseFloat(val);
+  if (isNaN(n)) return val;
+  return Math.round(n / 5) * 5;
+}
+
+function makePhotoUrl(raw) {
+  if (!raw) return null;
+  raw = raw.trim();
+  if (!raw || raw === '-' || raw === '') return null;
+
+  // /file/d/FILE_ID/view  →  thumbnail
+  var m = raw.match(/\/file\/d\/([a-zA-Z0-9_-]{10,})/);
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800';
+
+  // ?id=FILE_ID or &id=FILE_ID
+  var m2 = raw.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+  if (m2) return 'https://drive.google.com/thumbnail?id=' + m2[1] + '&sz=w800';
+
+  // /d/FILE_ID (alternate forms)
+  var m3 = raw.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+  if (m3) return 'https://drive.google.com/thumbnail?id=' + m3[1] + '&sz=w800';
+
+  // Already a direct URL
+  if (/^https?:\/\//.test(raw)) return raw;
+
+  return null;
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─────────────────────────────────────────────────────────────────
+// RENDER CARD
+// ─────────────────────────────────────────────────────────────────
+var _cardCounter = 0;
+
+function renderCard(row) {
+  var id = 'c' + (++_cardCounter);
+  var designNum  = esc((row[COL_DESIGN]   || '').trim());
+  var desc       = esc((row[COL_DESC]     || '').trim());
+  var retailRaw  = (row[COL_RETAIL]    || '').trim();
+  var wsRaw      = (row[COL_WHOLESALE] || '').trim();
+  var handRaw    = (row[COL_HAND_RATE] || '').trim();
+  var costRaw    = (row[COL_COSTING]   || '').trim();
+  var photoUrl   = makePhotoUrl(row[COL_PHOTO] || '');
+
+  var wsRounded  = wsRaw ? roundToNearest5(wsRaw) : null;
+
+  // Photo HTML
+  var photoHTML;
+  if (photoUrl) {
+    photoHTML =
+      '<div class="photo-wrap" id="pw-' + id + '">' +
+        '<div class="photo-spinner-wrap" id="ps-' + id + '"><div class="photo-spinner"></div></div>' +
+        '<img id="pi-' + id + '" alt="Design ' + designNum + '" data-src="' + esc(photoUrl) + '">' +
+      '</div>';
+  } else {
+    photoHTML =
+      '<div class="photo-wrap">' +
+        '<div class="no-photo"><span class="icon">🖼</span>No photo linked</div>' +
+      '</div>';
+  }
+
+  // Rate fields
+  var retailHTML = retailRaw
+    ? '<span class="field-value price">₹' + esc(retailRaw) + '</span>'
+    : '<span class="field-value empty">Not set</span>';
+
+  var wsHTML = wsRounded !== null
+    ? '<span class="field-value price-ws">₹' + wsRounded + '</span>'
+    : '<span class="field-value empty">Not set</span>';
+
+  var descHTML = desc
+    ? '<span class="field-value desc">' + desc + '</span>'
+    : '<span class="field-value empty">No description</span>';
+
+  // Internal details
+  var handHTML = handRaw
+    ? '<span class="field-value price-internal">₹' + esc(handRaw) + '</span>'
+    : '<span class="field-value empty">—</span>';
+
+  var costHTML = costRaw
+    ? '<span class="field-value price-internal">₹' + esc(costRaw) + '</span>'
+    : '<span class="field-value empty">—</span>';
+
+  return (
+    '<div class="result-card">' +
+
+      // Header
+      '<div class="result-header">' +
+        '<div class="design-badge">' +
+          '<span class="tag">Design No.</span>' +
+          '<span class="number">' + designNum + '</span>' +
+        '</div>' +
+      '</div>' +
+
+      // Photo
+      photoHTML +
+
+      // Main info
+      '<div class="info-grid">' +
+        '<div class="field">' +
+          '<span class="field-label">Retail Rate</span>' +
+          retailHTML +
+        '</div>' +
+        '<div class="field">' +
+          '<span class="field-label">Wholesale Rate</span>' +
+          wsHTML +
+        '</div>' +
+        '<div class="field wide">' +
+          '<span class="field-label">Description</span>' +
+          descHTML +
+        '</div>' +
+      '</div>' +
+
+      // Internal details button
+      '<div class="internal-btn-wrap">' +
+        '<button class="internal-btn" id="ib-' + id + '" onclick="toggleInternal(\'' + id + '\')">' +
+          '<span class="lock-icon">🔒</span> View Internal Details' +
+        '</button>' +
+      '</div>' +
+
+      // Hidden internal details
+      '<div class="internal-details" id="id-' + id + '">' +
+        '<div class="field internal">' +
+          '<span class="field-label">Hand Rate</span>' +
+          handHTML +
+        '</div>' +
+        '<div class="field internal">' +
+          '<span class="field-label">Costing</span>' +
+          costHTML +
+        '</div>' +
+      '</div>' +
+
+      '<div class="card-bottom"></div>' +
+
+    '</div>'
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────
+// TOGGLE INTERNAL DETAILS
+// ─────────────────────────────────────────────────────────────────
+function toggleInternal(id) {
+  var detailEl = document.getElementById('id-' + id);
+  var btnEl    = document.getElementById('ib-' + id);
+  if (!detailEl || !btnEl) return;
+
+  var isOpen = detailEl.classList.contains('visible');
+  if (isOpen) {
+    detailEl.classList.remove('visible');
+    btnEl.classList.remove('open');
+    btnEl.innerHTML = '<span class="lock-icon">🔒</span> View Internal Details';
+  } else {
+    detailEl.classList.add('visible');
+    btnEl.classList.add('open');
+    btnEl.innerHTML = '<span class="lock-icon">🔓</span> Hide Internal Details';
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// IMAGE LOADER — runs after HTML is inserted into the DOM
+// This is the KEY fix: no inline onload/onerror (they cause
+// duplicate-fire bugs). Instead we wire up handlers in JS.
+// ─────────────────────────────────────────────────────────────────
+function initImages() {
+  var imgs = document.querySelectorAll('img[data-src]');
+  imgs.forEach(function(img) {
+    var id = img.id.replace('pi-', '');
+    var spinner = document.getElementById('ps-' + id);
+    var src = img.getAttribute('data-src');
+    if (!src) return;
+
+    var loaded = false;  // guard — prevents both onload+onerror firing
+
+    img.onload = function() {
+      if (loaded) return;
+      loaded = true;
+      img.classList.add('loaded');
+      if (spinner) spinner.style.display = 'none';
+    };
+
+    img.onerror = function() {
+      if (loaded) return;
+      loaded = true;
+      var wrap = document.getElementById('pw-' + id);
+      if (wrap) {
+        wrap.innerHTML = '<div class="no-photo"><span class="icon">🖼</span>Photo unavailable</div>';
+      }
+    };
+
+    // Set src AFTER attaching handlers
+    img.src = src;
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────
+// SEARCH
+// ─────────────────────────────────────────────────────────────────
+function doSearch() {
+  hideSuggestions();
+  var query  = document.getElementById('searchInput').value.trim().toLowerCase();
+  var output = document.getElementById('output');
+
+  if (!query) {
+    output.innerHTML = '<div class="status-msg">Please enter a design number to search.</div>';
+    return;
+  }
+  if (!allRows.length) {
+    output.innerHTML = '<div class="status-msg error">Data not loaded yet — please wait a moment.</div>';
+    return;
+  }
+
+  var exact   = allRows.filter(function(r){ return (r[COL_DESIGN]||'').trim().toLowerCase() === query; });
+  var partial = allRows.filter(function(r){
+    var v = (r[COL_DESIGN]||'').trim().toLowerCase();
+    return v.indexOf(query) !== -1 && v !== query;
+  });
+  var results = exact.concat(partial);
+
+  if (!results.length) {
+    output.innerHTML =
+      '<div class="status-msg error">No design found for <strong>"' + esc(query) + '"</strong>.<br>' +
+      '<small style="opacity:0.7">Double-check the design number and try again.</small></div>';
+    return;
+  }
+
+  var html = '';
+  if (results.length > 1) {
+    html += '<div class="multi-header">Found <strong>' + results.length + '</strong> matching design' + (results.length > 1 ? 's' : '') + '</div>';
+  }
+  html += results.map(renderCard).join('');
+  output.innerHTML = html;
+
+  // Wire up image loading AFTER DOM update
+  initImages();
+}
+
+// ─────────────────────────────────────────────────────────────────
+// AUTOCOMPLETE SUGGESTIONS
+// ─────────────────────────────────────────────────────────────────
+document.getElementById('searchInput').addEventListener('input', function() {
+  var q = this.value.trim().toLowerCase();
+  if (!q || !allRows.length) { hideSuggestions(); return; }
+
+  var matches = allRows.filter(function(r) {
+    return (r[COL_DESIGN]||'').trim().toLowerCase().indexOf(q) !== -1;
+  }).slice(0, 8);
+
+  if (!matches.length) { hideSuggestions(); return; }
+
+  document.getElementById('suggestionsList').innerHTML = matches.map(function(r) {
+    var dn   = esc((r[COL_DESIGN]||'').trim());
+    var desc = esc((r[COL_DESC]  ||'').trim().substring(0, 40));
+    return (
+      '<div class="suggestion-item" onclick="selectSuggestion(\'' + dn.replace(/'/g,"\\'") + '\')">' +
+        '<span class="sug-no">' + dn + '</span>' +
+        (desc ? '<span class="sug-desc">' + desc + (r[COL_DESC].length > 40 ? '…' : '') + '</span>' : '') +
+      '</div>'
+    );
+  }).join('');
+
+  document.getElementById('suggestionsWrap').style.display = 'block';
+});
+
+document.getElementById('searchInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter')  { doSearch(); }
+  if (e.key === 'Escape') { hideSuggestions(); }
+});
+
+function selectSuggestion(val) {
+  document.getElementById('searchInput').value = val;
+  hideSuggestions();
+  doSearch();
+}
+
+function hideSuggestions() {
+  document.getElementById('suggestionsWrap').style.display = 'none';
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#suggestionsWrap') && !e.target.closest('#searchInput')) {
+    hideSuggestions();
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────
+// STATUS
+// ─────────────────────────────────────────────────────────────────
+function updateStatus(state, text) {
+  var dot = document.getElementById('statusDot');
+  dot.className = 'dot ' + (state === 'green' ? 'green' : state === 'error' ? 'error' : 'loading');
+  document.getElementById('statusText').textContent = text;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
