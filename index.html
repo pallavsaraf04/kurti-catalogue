@@ -47,7 +47,7 @@
     background: linear-gradient(90deg, transparent, rgba(201,24,74,0.4), transparent);
   }
   .header-logo {
-    width: 72px; height: 72px;
+    width: 96px; height: 96px;
     object-fit: contain;
     border-radius: 50%;
     background: white;
@@ -260,6 +260,11 @@
     font-size: 24px; font-weight: 700; color: var(--ink-soft);
     line-height: 1;
   }
+  .field-value.price-stock {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700;
+    line-height: 1;
+  }
   .field-value.empty {
     color: #c4a0ab; font-style: italic; font-weight: 300; font-size: 12px;
   }
@@ -374,10 +379,20 @@ var COL_RETAIL      = 4;  // E — Retail Rate
 var COL_WHOLESALE   = 5;  // F — Wholesale Rate
 var COL_PHOTO       = 6;  // G — Photo Link
 
+// Stock Calculator sheet — published separately
+// To get this URL: In your Sheet, go to File → Share → Publish to web
+// Select the "Stock Calculator" tab, CSV format, and copy the URL here
+var STOCK_CSV_URL = 'PASTE_STOCK_CALCULATOR_CSV_URL_HERE';
+
+// Column indices in Stock Calculator (0-based)
+var STOCK_COL_DESIGN = 0;  // A — Design Number
+var STOCK_COL_HAND   = 4;  // E — Stock in Hand
+
 // ─────────────────────────────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────────────────────────────
-var allRows = [];  // array of cleaned row arrays
+var allRows  = [];  // catalogue rows
+var stockMap = {};  // { normalisedDN: stockInHand }
 
 // ─────────────────────────────────────────────────────────────────
 // FETCH — tries direct first, then CORS proxies
@@ -458,6 +473,26 @@ async function loadData() {
   }
 
   updateStatus('green', allRows.length + ' designs loaded');
+
+  // Load stock data in background (non-blocking)
+  loadStock();
+}
+
+// ─────────────────────────────────────────────────────────────────
+// LOAD STOCK DATA
+// ─────────────────────────────────────────────────────────────────
+async function loadStock() {
+  if (!STOCK_CSV_URL || STOCK_CSV_URL.indexOf('PASTE_') === 0) return;
+  var text = await fetchCSV(STOCK_CSV_URL);
+  if (!text) return;
+  var rows = parseCSV(text);
+  stockMap = {};
+  // Skip header row
+  for (var r = 1; r < rows.length; r++) {
+    var dn  = (rows[r][STOCK_COL_DESIGN] || '').trim().toLowerCase();
+    var qty = (rows[r][STOCK_COL_HAND]   || '').trim();
+    if (dn) stockMap[dn] = qty;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -537,6 +572,18 @@ function renderCard(row) {
     ? '<span class="field-value price-ws">₹' + wsRounded + '</span>'
     : '<span class="field-value empty">Not set</span>';
 
+  // Stock in hand — lookup from stockMap
+  var stockKey = designNum.toLowerCase();
+  var stockVal = stockMap[stockKey];
+  var stockHTML;
+  if (stockVal !== undefined && stockVal !== '') {
+    var stockNum = parseFloat(stockVal);
+    var stockColor = (!isNaN(stockNum) && stockNum <= 0) ? '#e53935' : '#1a0a0e';
+    stockHTML = '<span class="field-value price-stock" style="color:' + stockColor + '">' + esc(String(stockVal)) + ' PCS</span>';
+  } else {
+    stockHTML = '<span class="field-value empty">—</span>';
+  }
+
   var descHTML = desc
     ? '<span class="field-value desc">' + desc + '</span>'
     : '<span class="field-value empty">No description</span>';
@@ -573,6 +620,10 @@ function renderCard(row) {
         '<div class="field">' +
           '<span class="field-label">Wholesale Rate</span>' +
           wsHTML +
+        '</div>' +
+        '<div class="field wide">' +
+          '<span class="field-label">Stock in Hand</span>' +
+          stockHTML +
         '</div>' +
         '<div class="field wide">' +
           '<span class="field-label">Description</span>' +
