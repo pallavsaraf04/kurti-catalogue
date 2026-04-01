@@ -361,12 +361,27 @@
   .series-pill:hover { border-color:var(--rose); color:var(--rose); background:var(--rose-pale); }
   .series-pill.active { background:var(--rose); color:white; border-color:var(--rose); }
 
-  /* ── DOWNLOAD BUTTON ── */
-  .dl-btn-wrap { padding:0 14px 14px; }
-  .dl-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px; background:transparent; border:2px solid #25D366; border-radius:14px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; color:#1a8a44; cursor:pointer; transition:all 0.2s; letter-spacing:0.3px; }
-  .dl-btn:hover { background:#f0fff5; }
-  .dl-btn:active { transform:scale(0.97); }
-  .dl-btn.loading { opacity:0.6; cursor:wait; }
+  /* ── SHARE BUTTONS ── */
+  .share-btn-wrap { padding:0 14px 14px; display:flex; gap:8px; }
+  .share-btn {
+    flex:1; display:flex; align-items:center; justify-content:center; gap:7px;
+    padding:13px 8px; border-radius:14px;
+    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700;
+    cursor:pointer; transition:all 0.2s; letter-spacing:0.3px;
+    text-decoration:none;
+  }
+  .share-btn-save {
+    background:transparent; border:2px solid var(--rose);
+    color:var(--rose);
+  }
+  .share-btn-save:hover { background:var(--rose-pale); }
+  .share-btn-save:active { transform:scale(0.97); }
+  .share-btn-wa {
+    background:#25D366; border:2px solid #25D366;
+    color:white;
+  }
+  .share-btn-wa:hover { background:#1ebe5d; border-color:#1ebe5d; }
+  .share-btn-wa:active { transform:scale(0.97); }
 
   /* ── PRICE STOCK ── */
   .field-value.price-stock { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; line-height:1; }
@@ -683,11 +698,17 @@ function renderCard(row) {
         '</div>' +
       '</div>' +
 
-      '<div class="dl-btn-wrap">' +
-        '<button class="dl-btn" id="dl-' + id + '" onclick="downloadDesignImage(\'' + id + '\',\'' + designNum + '\',' + (retailRaw ? '\'' + esc(retailRaw) + '\'' : 'null') + ',\'' + esc(photoUrl || '') + '\')">' +
-          '&#x1F4E5; Save Photo for WhatsApp' +
-        '</button>' +
-      '</div>' +
+      // Share buttons — only show if photo exists
+      (photoUrl ? (
+        '<div class="share-btn-wrap">' +
+          '<a class="share-btn share-btn-save" href="' + esc(photoUrl || '') + '" target="_blank" rel="noopener">' +
+            '&#x1F4F7; Save Photo' +
+          '</a>' +
+          '<a class="share-btn share-btn-wa" href="' + makeWaUrl(designNum, retailRaw, desc, '') + '" target="_blank" rel="noopener">' +
+            '&#x1F4AC; WhatsApp' +
+          '</a>' +
+        '</div>'
+      ) : '') +
       '<div class="card-bottom"></div>' +
 
     '</div>'
@@ -975,95 +996,7 @@ function appendGridCards() {
   document.getElementById('loadMoreBtn').style.display=gridOffset<getFilteredRows().length?'block':'none';
 }
 
-// ─────────────────────────────────────────────────────────────────
-// DOWNLOAD BRANDED IMAGE
-// Google Drive blocks canvas.drawImage() due to CORS.
-// Fix: fetch the image as a blob via CORS proxy first,
-// create an object URL from it, then draw that — no CORS issues.
-// ─────────────────────────────────────────────────────────────────
-async function downloadDesignImage(id,designNum,retailRaw,photoUrl) {
-  if (!photoUrl){alert('No photo available.');return;}
-  var btn=document.getElementById('dl-'+id);
-  btn.classList.add('loading');
-  btn.innerHTML='Preparing…';
 
-  // Fetch image blob through CORS proxy
-  var blobUrl = null;
-  var proxies = [
-    'https://corsproxy.io/?url=' + encodeURIComponent(photoUrl),
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(photoUrl),
-  ];
-  for (var pi=0; pi<proxies.length; pi++) {
-    try {
-      var resp = await fetch(proxies[pi]);
-      if (!resp.ok) continue;
-      var blob = await resp.blob();
-      blobUrl = URL.createObjectURL(blob);
-      break;
-    } catch(e) { continue; }
-  }
-
-  if (!blobUrl) {
-    btn.classList.remove('loading');
-    btn.innerHTML='&#x1F4E5; Save Photo for WhatsApp';
-    alert('Could not load photo. Please try again.');
-    return;
-  }
-
-  var img=new Image();
-  img.onload=function(){
-    var scale=img.naturalWidth>1200?1200/img.naturalWidth:1;
-    var cW=Math.round(img.naturalWidth*scale),cH=Math.round(img.naturalHeight*scale);
-    var canvas=document.createElement('canvas');
-    canvas.width=cW;canvas.height=cH;
-    var ctx=canvas.getContext('2d');
-    ctx.drawImage(img,0,0,cW,cH);
-    URL.revokeObjectURL(blobUrl);
-
-    var sh=Math.max(Math.round(cH*0.10),48);
-    ctx.fillStyle='rgba(0,0,0,0.55)';
-    ctx.fillRect(0,cH-sh,cW,sh);
-    if (retailRaw){
-      var fs=Math.round(sh*0.45);
-      ctx.font='bold '+fs+'px Georgia,serif';
-      ctx.fillStyle='#fff';ctx.textAlign='right';ctx.textBaseline='middle';
-      ctx.fillText('₹'+retailRaw,cW-Math.round(sh*0.4),cH-sh/2);
-    }
-    // Draw logo — also via blob to avoid CORS
-    fetch('JTC.jpg').then(function(r){return r.blob();}).then(function(lb){
-      var logoUrl=URL.createObjectURL(lb);
-      var logo=new Image();
-      var done=function(){
-        try{
-          var ls=Math.round(sh*0.75),lx=Math.round(sh*0.18),ly=cH-sh+(sh-ls)/2;
-          ctx.drawImage(logo,lx,ly,ls,ls);
-        }catch(e){}
-        URL.revokeObjectURL(logoUrl);
-        canvas.toBlob(function(outBlob){
-          var outUrl=URL.createObjectURL(outBlob);
-          var a=document.createElement('a');a.href=outUrl;a.download='Design_'+designNum+'.jpg';
-          document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(outUrl);
-          btn.classList.remove('loading');btn.innerHTML='&#x1F4E5; Save Photo for WhatsApp';
-        },'image/jpeg',0.92);
-      };
-      logo.onload=done;logo.onerror=done;logo.src=logoUrl;
-    }).catch(function(){
-      // Logo fetch failed — still save without logo
-      canvas.toBlob(function(outBlob){
-        var outUrl=URL.createObjectURL(outBlob);
-        var a=document.createElement('a');a.href=outUrl;a.download='Design_'+designNum+'.jpg';
-        document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(outUrl);
-        btn.classList.remove('loading');btn.innerHTML='&#x1F4E5; Save Photo for WhatsApp';
-      },'image/jpeg',0.92);
-    });
-  };
-  img.onerror=function(){
-    URL.revokeObjectURL(blobUrl);
-    btn.classList.remove('loading');btn.innerHTML='&#x1F4E5; Save Photo for WhatsApp';
-    alert('Could not load photo.');
-  };
-  img.src=blobUrl;
-}
 
 // ─────────────────────────────────────────────────────────────────
 // INIT
