@@ -346,6 +346,21 @@
   .load-more-btn { width:100%; padding:14px; background:transparent; border:2px dashed var(--rose-mid); border-radius:14px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--rose); cursor:pointer; transition:all 0.2s; margin-bottom:20px; }
   .load-more-btn:hover { background:var(--rose-pale); border-color:var(--rose); }
 
+  /* ── SERIES FILTER ── */
+  .series-filter-wrap { margin-bottom:14px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; }
+  .series-filter-wrap::-webkit-scrollbar { display:none; }
+  .series-pills { display:flex; gap:8px; width:max-content; }
+  .series-pill {
+    padding:8px 16px; border-radius:20px;
+    border:1.5px solid var(--border);
+    background:var(--card-bg);
+    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600;
+    color:#b090a0; cursor:pointer; white-space:nowrap;
+    transition:all 0.2s;
+  }
+  .series-pill:hover { border-color:var(--rose); color:var(--rose); background:var(--rose-pale); }
+  .series-pill.active { background:var(--rose); color:white; border-color:var(--rose); }
+
   /* ── DOWNLOAD BUTTON ── */
   .dl-btn-wrap { padding:0 14px 14px; }
   .dl-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px; background:transparent; border:2px solid #25D366; border-radius:14px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; color:#1a8a44; cursor:pointer; transition:all 0.2s; letter-spacing:0.3px; }
@@ -392,6 +407,9 @@
   <div class="tab-panel" id="panel-browse">
     <div class="data-status" id="browseStatus" style="display:none">
       <div class="dot loading"></div><span>Loading&hellip;</span>
+    </div>
+    <div class="series-filter-wrap">
+      <div class="series-pills" id="seriesPills"></div>
     </div>
     <div class="browse-grid" id="browseGrid"></div>
     <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreGrid()" style="display:none">Load More Designs</button>
@@ -845,7 +863,55 @@ function switchTab(tab) {
 // ─────────────────────────────────────────────────────────────────
 // BROWSE GRID
 // ─────────────────────────────────────────────────────────────────
-var GRID_PAGE_SIZE=20, gridOffset=0;
+var GRID_PAGE_SIZE=20, gridOffset=0, activeSeriesFilter='all';
+
+function buildSeriesPills() {
+  // Extract unique 2-digit prefixes from all design numbers
+  var seen={}, series=[];
+  allRows.forEach(function(row){
+    var dn=(row[COL_DESIGN]||'').trim();
+    var prefix=dn.substring(0,2);
+    if (prefix && /^\d{2}$/.test(prefix) && !seen[prefix]) {
+      seen[prefix]=true; series.push(prefix);
+    }
+  });
+  series.sort();
+  var pills=document.getElementById('seriesPills');
+  if (!pills) return;
+  pills.innerHTML='';
+  // All pill
+  var allPill=document.createElement('button');
+  allPill.className='series-pill active'; allPill.textContent='All';
+  allPill.setAttribute('data-series','all');
+  allPill.onclick=function(){ setSeriesFilter('all'); };
+  pills.appendChild(allPill);
+  // One pill per prefix
+  series.forEach(function(s){
+    var pill=document.createElement('button');
+    pill.className='series-pill'; pill.textContent=s+'__';
+    pill.setAttribute('data-series',s);
+    pill.onclick=function(){ setSeriesFilter(s); };
+    pills.appendChild(pill);
+  });
+}
+
+function setSeriesFilter(series) {
+  activeSeriesFilter=series;
+  document.querySelectorAll('.series-pill').forEach(function(p){
+    p.classList.toggle('active', p.getAttribute('data-series')===series);
+  });
+  gridOffset=0;
+  document.getElementById('browseGrid').innerHTML='';
+  appendGridCards();
+}
+
+function getFilteredRows() {
+  if (activeSeriesFilter==='all') return allRows;
+  return allRows.filter(function(row){
+    var dn=(row[COL_DESIGN]||'').trim();
+    return dn.substring(0,2)===activeSeriesFilter;
+  });
+}
 
 function renderBrowseGrid() {
   if (!allRows.length) {
@@ -854,6 +920,7 @@ function renderBrowseGrid() {
     return;
   }
   document.getElementById('browseStatus').style.display='none';
+  buildSeriesPills();
   gridOffset=0;
   document.getElementById('browseGrid').innerHTML='';
   appendGridCards();
@@ -863,7 +930,8 @@ function loadMoreGrid(){appendGridCards();}
 
 function appendGridCards() {
   var grid=document.getElementById('browseGrid');
-  var batch=allRows.slice(gridOffset,gridOffset+GRID_PAGE_SIZE);
+  var filtered=getFilteredRows();
+  var batch=filtered.slice(gridOffset,gridOffset+GRID_PAGE_SIZE);
   var ctr=gridOffset;
   batch.forEach(function(row){
     var gid='g'+ctr++;
@@ -904,19 +972,45 @@ function appendGridCards() {
     }
   });
   gridOffset+=batch.length;
-  document.getElementById('loadMoreBtn').style.display=gridOffset<allRows.length?'block':'none';
+  document.getElementById('loadMoreBtn').style.display=gridOffset<getFilteredRows().length?'block':'none';
 }
 
 // ─────────────────────────────────────────────────────────────────
 // DOWNLOAD BRANDED IMAGE
+// Google Drive blocks canvas.drawImage() due to CORS.
+// Fix: fetch the image as a blob via CORS proxy first,
+// create an object URL from it, then draw that — no CORS issues.
 // ─────────────────────────────────────────────────────────────────
-function downloadDesignImage(id,designNum,retailRaw,photoUrl) {
+async function downloadDesignImage(id,designNum,retailRaw,photoUrl) {
   if (!photoUrl){alert('No photo available.');return;}
   var btn=document.getElementById('dl-'+id);
   btn.classList.add('loading');
   btn.innerHTML='Preparing…';
+
+  // Fetch image blob through CORS proxy
+  var blobUrl = null;
+  var proxies = [
+    'https://corsproxy.io/?url=' + encodeURIComponent(photoUrl),
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(photoUrl),
+  ];
+  for (var pi=0; pi<proxies.length; pi++) {
+    try {
+      var resp = await fetch(proxies[pi]);
+      if (!resp.ok) continue;
+      var blob = await resp.blob();
+      blobUrl = URL.createObjectURL(blob);
+      break;
+    } catch(e) { continue; }
+  }
+
+  if (!blobUrl) {
+    btn.classList.remove('loading');
+    btn.innerHTML='&#x1F4E5; Save Photo for WhatsApp';
+    alert('Could not load photo. Please try again.');
+    return;
+  }
+
   var img=new Image();
-  img.crossOrigin='anonymous';
   img.onload=function(){
     var scale=img.naturalWidth>1200?1200/img.naturalWidth:1;
     var cW=Math.round(img.naturalWidth*scale),cH=Math.round(img.naturalHeight*scale);
@@ -924,6 +1018,8 @@ function downloadDesignImage(id,designNum,retailRaw,photoUrl) {
     canvas.width=cW;canvas.height=cH;
     var ctx=canvas.getContext('2d');
     ctx.drawImage(img,0,0,cW,cH);
+    URL.revokeObjectURL(blobUrl);
+
     var sh=Math.max(Math.round(cH*0.10),48);
     ctx.fillStyle='rgba(0,0,0,0.55)';
     ctx.fillRect(0,cH-sh,cW,sh);
@@ -933,23 +1029,40 @@ function downloadDesignImage(id,designNum,retailRaw,photoUrl) {
       ctx.fillStyle='#fff';ctx.textAlign='right';ctx.textBaseline='middle';
       ctx.fillText('₹'+retailRaw,cW-Math.round(sh*0.4),cH-sh/2);
     }
-    var logo=new Image();logo.crossOrigin='anonymous';
-    var done=function(){
-      try{var ls=Math.round(sh*0.75),lx=Math.round(sh*0.18),ly=cH-sh+(sh-ls)/2;ctx.drawImage(logo,lx,ly,ls,ls);}catch(e){}
-      canvas.toBlob(function(blob){
-        var url=URL.createObjectURL(blob);
-        var a=document.createElement('a');a.href=url;a.download='Design_'+designNum+'.jpg';
-        document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+    // Draw logo — also via blob to avoid CORS
+    fetch('JTC.jpg').then(function(r){return r.blob();}).then(function(lb){
+      var logoUrl=URL.createObjectURL(lb);
+      var logo=new Image();
+      var done=function(){
+        try{
+          var ls=Math.round(sh*0.75),lx=Math.round(sh*0.18),ly=cH-sh+(sh-ls)/2;
+          ctx.drawImage(logo,lx,ly,ls,ls);
+        }catch(e){}
+        URL.revokeObjectURL(logoUrl);
+        canvas.toBlob(function(outBlob){
+          var outUrl=URL.createObjectURL(outBlob);
+          var a=document.createElement('a');a.href=outUrl;a.download='Design_'+designNum+'.jpg';
+          document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(outUrl);
+          btn.classList.remove('loading');btn.innerHTML='&#x1F4E5; Save Photo for WhatsApp';
+        },'image/jpeg',0.92);
+      };
+      logo.onload=done;logo.onerror=done;logo.src=logoUrl;
+    }).catch(function(){
+      // Logo fetch failed — still save without logo
+      canvas.toBlob(function(outBlob){
+        var outUrl=URL.createObjectURL(outBlob);
+        var a=document.createElement('a');a.href=outUrl;a.download='Design_'+designNum+'.jpg';
+        document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(outUrl);
         btn.classList.remove('loading');btn.innerHTML='&#x1F4E5; Save Photo for WhatsApp';
       },'image/jpeg',0.92);
-    };
-    logo.onload=done;logo.onerror=done;logo.src='JTC.jpg';
+    });
   };
   img.onerror=function(){
+    URL.revokeObjectURL(blobUrl);
     btn.classList.remove('loading');btn.innerHTML='&#x1F4E5; Save Photo for WhatsApp';
     alert('Could not load photo.');
   };
-  img.src=photoUrl;
+  img.src=blobUrl;
 }
 
 // ─────────────────────────────────────────────────────────────────
