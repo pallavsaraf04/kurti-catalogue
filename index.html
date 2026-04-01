@@ -544,15 +544,15 @@ function makePhotoUrl(raw) {
 
   // /file/d/FILE_ID/view  →  thumbnail
   var m = raw.match(/\/file\/d\/([a-zA-Z0-9_-]{10,})/);
-  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800';
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m + '&sz=w800';
 
   // ?id=FILE_ID or &id=FILE_ID
   var m2 = raw.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
-  if (m2) return 'https://drive.google.com/thumbnail?id=' + m2[1] + '&sz=w800';
+  if (m2) return 'https://drive.google.com/thumbnail?id=' + m2 + '&sz=w800';
 
   // /d/FILE_ID (alternate forms)
   var m3 = raw.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
-  if (m3) return 'https://drive.google.com/thumbnail?id=' + m3[1] + '&sz=w800';
+  if (m3) return 'https://drive.google.com/thumbnail?id=' + m3 + '&sz=w800';
 
   // Already a direct URL
   if (/^https?:\/\//.test(raw)) return raw;
@@ -987,8 +987,6 @@ function appendGridCards() {
   document.getElementById('loadMoreBtn').style.display=gridOffset<getFilteredRows().length?'block':'none';
 }
 
-
-
 // ─────────────────────────────────────────────────────────────────
 // SHARE DESIGN
 // Uses the native Web Share API (navigator.share) which on iOS opens
@@ -997,12 +995,9 @@ function appendGridCards() {
 // Falls back to opening WhatsApp with text if share API not available.
 // ─────────────────────────────────────────────────────────────────
 async function shareDesign(designNum, retailRaw, desc, photoUrl) {
-  var text = 'Jariwala Trading Company
-' +
-             'Design No: ' + designNum + '
-' +
-             (desc ? desc + '
-' : '') +
+  var text = 'Jariwala Trading Company\n' +
+             'Design No: ' + designNum + '\n' +
+             (desc ? desc + '\n' : '') +
              (retailRaw ? '₹' + retailRaw : '');
 
   // Try Web Share API first — works on iOS Safari, Android Chrome
@@ -1048,8 +1043,7 @@ async function shareDesign(designNum, retailRaw, desc, photoUrl) {
   }
 
   // Fallback: open WhatsApp with text
-  var waText = text + (photoUrl ? '
-Photo: ' + photoUrl : '');
+  var waText = text + (photoUrl ? '\nPhoto: ' + photoUrl : '');
   window.open('https://wa.me/?text=' + encodeURIComponent(waText), '_blank');
 }
 
