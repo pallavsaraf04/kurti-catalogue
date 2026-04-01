@@ -47,7 +47,7 @@
     background: linear-gradient(90deg, transparent, rgba(201,24,74,0.4), transparent);
   }
   .header-logo {
-    width: 96px; height: 96px;
+    width: 72px; height: 72px;
     object-fit: contain;
     border-radius: 50%;
     background: white;
@@ -260,11 +260,6 @@
     font-size: 24px; font-weight: 700; color: var(--ink-soft);
     line-height: 1;
   }
-  .field-value.price-stock {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px; font-weight: 700;
-    line-height: 1;
-  }
   .field-value.empty {
     color: #c4a0ab; font-style: italic; font-weight: 300; font-size: 12px;
   }
@@ -309,6 +304,22 @@
 
   /* ── CARD FOOTER SPACING ── */
   .card-bottom { height: 14px; }
+
+  /* ── DOWNLOAD BUTTON ── */
+  .dl-btn-wrap { padding: 0 14px 14px; }
+  .dl-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 13px;
+    background: transparent;
+    border: 2px solid #25D366; border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 700;
+    color: #1a8a44; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.3px;
+  }
+  .dl-btn:hover { background: #f0fff5; }
+  .dl-btn:active { transform: scale(0.97); }
+  .dl-btn.loading { opacity: 0.6; cursor: wait; }
 
   /* ── WATERMARK ── */
   .watermark {
@@ -378,7 +389,6 @@ var COL_COSTING     = 3;  // D — Costing (restricted)
 var COL_RETAIL      = 4;  // E — Retail Rate
 var COL_WHOLESALE   = 5;  // F — Wholesale Rate
 var COL_PHOTO       = 6;  // G — Photo Link
-var COL_STOCK       = 7;  // H — Stock in Hand (from Stock Calculator via formula)
 
 // ─────────────────────────────────────────────────────────────────
 // STATE
@@ -543,19 +553,6 @@ function renderCard(row) {
     ? '<span class="field-value price-ws">₹' + wsRounded + '</span>'
     : '<span class="field-value empty">Not set</span>';
 
-  // Stock in Hand — Col H of catalogue sheet
-  var stockRaw = (row[COL_STOCK] || '').toString().trim();
-  var stockHTML;
-  if (stockRaw !== '' && stockRaw !== '-' && stockRaw !== '0') {
-    var stockNum = parseFloat(stockRaw);
-    var stockColor = (!isNaN(stockNum) && stockNum <= 0) ? '#e53935' : '#1a0a0e';
-    stockHTML = '<span class="field-value price-stock" style="color:' + stockColor + '">' + esc(stockRaw) + ' PCS</span>';
-  } else if (stockRaw === '0') {
-    stockHTML = '<span class="field-value price-stock" style="color:#e53935">0 PCS</span>';
-  } else {
-    stockHTML = '<span class="field-value empty">Not set</span>';
-  }
-
   var descHTML = desc
     ? '<span class="field-value desc">' + desc + '</span>'
     : '<span class="field-value empty">No description</span>';
@@ -594,10 +591,6 @@ function renderCard(row) {
           wsHTML +
         '</div>' +
         '<div class="field wide">' +
-          '<span class="field-label">Stock in Hand</span>' +
-          stockHTML +
-        '</div>' +
-        '<div class="field wide">' +
           '<span class="field-label">Description</span>' +
           descHTML +
         '</div>' +
@@ -620,6 +613,13 @@ function renderCard(row) {
           '<span class="field-label">Costing</span>' +
           costHTML +
         '</div>' +
+      '</div>' +
+
+      // Download branded image button
+      '<div class="dl-btn-wrap">' +
+        '<button class="dl-btn" id="dl-' + id + '" onclick="downloadDesignImage('' + id + '','' + designNum + '',' + (retailRaw ? '"' + esc(retailRaw) + '"' : 'null') + ','' + esc(photoUrl || '') + '')">' +
+          '📥 Save Photo for WhatsApp' +
+        '</button>' +
       '</div>' +
 
       '<div class="card-bottom"></div>' +
@@ -781,6 +781,101 @@ function updateStatus(state, text) {
   var dot = document.getElementById('statusDot');
   dot.className = 'dot ' + (state === 'green' ? 'green' : state === 'error' ? 'error' : 'loading');
   document.getElementById('statusText').textContent = text;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// DOWNLOAD BRANDED IMAGE
+// Draws the design photo onto a canvas, overlays the JTC logo
+// (bottom-left corner) and retail price (bottom-right), then
+// triggers a download. The saved image is ready to share on WhatsApp.
+// ─────────────────────────────────────────────────────────────────
+function downloadDesignImage(id, designNum, retailRaw, photoUrl) {
+  if (!photoUrl) {
+    alert('No photo available for this design.');
+    return;
+  }
+
+  var btn = document.getElementById('dl-' + id);
+  btn.classList.add('loading');
+  btn.textContent = 'Preparing…';
+
+  // Load the design photo
+  var designImg = new Image();
+  designImg.crossOrigin = 'anonymous';
+
+  designImg.onload = function() {
+    var W = designImg.naturalWidth;
+    var H = designImg.naturalHeight;
+
+    // Scale down if very large (max 1200px wide) to keep file size reasonable
+    var scale = W > 1200 ? 1200 / W : 1;
+    var cW = Math.round(W * scale);
+    var cH = Math.round(H * scale);
+
+    var canvas  = document.createElement('canvas');
+    canvas.width  = cW;
+    canvas.height = cH;
+    var ctx = canvas.getContext('2d');
+
+    // Draw design photo
+    ctx.drawImage(designImg, 0, 0, cW, cH);
+
+    // ── Footer strip — semi-transparent dark bar at the bottom
+    var stripH = Math.round(cH * 0.10);  // 10% of image height
+    stripH = Math.max(stripH, 48);        // minimum 48px
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+    ctx.fillRect(0, cH - stripH, cW, stripH);
+
+    // ── Price text — right side
+    if (retailRaw) {
+      var fontSize = Math.round(stripH * 0.45);
+      ctx.font = 'bold ' + fontSize + 'px "Playfair Display", Georgia, serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('₹' + retailRaw, cW - Math.round(stripH * 0.4), cH - stripH / 2);
+    }
+
+    // ── JTC Logo — left side of footer strip
+    var logoImg = new Image();
+    logoImg.crossOrigin = 'anonymous';
+
+    var finalize = function() {
+      try {
+        var logoSize = Math.round(stripH * 0.75);
+        var logoX    = Math.round(stripH * 0.18);
+        var logoY    = cH - stripH + (stripH - logoSize) / 2;
+        ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
+      } catch(e) { /* logo failed silently — price still shows */ }
+
+      // Trigger download
+      canvas.toBlob(function(blob) {
+        var url  = URL.createObjectURL(blob);
+        var link = document.createElement('a');
+        link.href     = url;
+        link.download = 'Design_' + designNum + '.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        btn.classList.remove('loading');
+        btn.textContent = '📥 Save Photo for WhatsApp';
+      }, 'image/jpeg', 0.92);
+    };
+
+    logoImg.onload  = finalize;
+    logoImg.onerror = finalize;  // proceed even if logo fails to load
+    logoImg.src = 'JTC.jpg';
+  };
+
+  designImg.onerror = function() {
+    btn.classList.remove('loading');
+    btn.textContent = '📥 Save Photo for WhatsApp';
+    alert('Could not load photo. Please try again.');
+  };
+
+  designImg.src = photoUrl;
 }
 
 // ─────────────────────────────────────────────────────────────────
