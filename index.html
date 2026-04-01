@@ -361,27 +361,18 @@
   .series-pill:hover { border-color:var(--rose); color:var(--rose); background:var(--rose-pale); }
   .series-pill.active { background:var(--rose); color:white; border-color:var(--rose); }
 
-  /* ── SHARE BUTTONS ── */
-  .share-btn-wrap { padding:0 14px 14px; display:flex; gap:8px; }
+  /* ── SHARE BUTTON ── */
+  .share-btn-wrap { padding:0 14px 14px; }
   .share-btn {
-    flex:1; display:flex; align-items:center; justify-content:center; gap:7px;
-    padding:13px 8px; border-radius:14px;
-    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; padding:13px; border-radius:14px;
+    font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700;
     cursor:pointer; transition:all 0.2s; letter-spacing:0.3px;
-    text-decoration:none;
+    background:#25D366; border:none; color:white;
   }
-  .share-btn-save {
-    background:transparent; border:2px solid var(--rose);
-    color:var(--rose);
-  }
-  .share-btn-save:hover { background:var(--rose-pale); }
-  .share-btn-save:active { transform:scale(0.97); }
-  .share-btn-wa {
-    background:#25D366; border:2px solid #25D366;
-    color:white;
-  }
-  .share-btn-wa:hover { background:#1ebe5d; border-color:#1ebe5d; }
-  .share-btn-wa:active { transform:scale(0.97); }
+  .share-btn:hover { background:#1ebe5d; }
+  .share-btn:active { transform:scale(0.97); }
+  .share-btn:disabled { opacity:0.6; cursor:wait; }
 
   /* ── PRICE STOCK ── */
   .field-value.price-stock { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; line-height:1; }
@@ -698,17 +689,17 @@ function renderCard(row) {
         '</div>' +
       '</div>' +
 
-      // Share buttons — only show if photo exists
-      (photoUrl ? (
-        '<div class="share-btn-wrap">' +
-          '<a class="share-btn share-btn-save" href="' + esc(photoUrl || '') + '" target="_blank" rel="noopener">' +
-            '&#x1F4F7; Save Photo' +
-          '</a>' +
-          '<a class="share-btn share-btn-wa" href="' + makeWaUrl(designNum, retailRaw, desc, '') + '" target="_blank" rel="noopener">' +
-            '&#x1F4AC; WhatsApp' +
-          '</a>' +
-        '</div>'
-      ) : '') +
+      // Share button
+      '<div class="share-btn-wrap">' +
+        '<button class="share-btn" onclick="shareDesign(' +
+          '\'' + designNum + '\',' +
+          (retailRaw ? '\'' + esc(retailRaw) + '\'' : 'null') + ',' +
+          '\'' + esc(desc || '') + '\',' +
+          '\'' + esc(photoUrl || '') + '\'' +
+        ')">' +
+          '&#x1F4E4; Share Design' +
+        '</button>' +
+      '</div>' +
       '<div class="card-bottom"></div>' +
 
     '</div>'
@@ -997,6 +988,70 @@ function appendGridCards() {
 }
 
 
+
+// ─────────────────────────────────────────────────────────────────
+// SHARE DESIGN
+// Uses the native Web Share API (navigator.share) which on iOS opens
+// the system share sheet — lets user share to WhatsApp, save to Photos,
+// AirDrop, copy link, or anything else in one tap.
+// Falls back to opening WhatsApp with text if share API not available.
+// ─────────────────────────────────────────────────────────────────
+async function shareDesign(designNum, retailRaw, desc, photoUrl) {
+  var text = 'Jariwala Trading Company
+' +
+             'Design No: ' + designNum + '
+' +
+             (desc ? desc + '
+' : '') +
+             (retailRaw ? '₹' + retailRaw : '');
+
+  // Try Web Share API first — works on iOS Safari, Android Chrome
+  if (navigator.share) {
+    try {
+      // Try sharing with photo fetched as a File (works on iOS 15+)
+      if (photoUrl && navigator.canShare) {
+        try {
+          var proxies = [
+            'https://corsproxy.io/?url=' + encodeURIComponent(photoUrl),
+            'https://api.allorigins.win/raw?url=' + encodeURIComponent(photoUrl),
+          ];
+          var blob = null;
+          for (var i = 0; i < proxies.length; i++) {
+            try {
+              var resp = await fetch(proxies[i]);
+              if (resp.ok) { blob = await resp.blob(); break; }
+            } catch(e) { continue; }
+          }
+          if (blob) {
+            var file = new File([blob], 'Design_' + designNum + '.jpg', { type: 'image/jpeg' });
+            if (navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                files: [file],
+                text: text,
+              });
+              return; // success — done
+            }
+          }
+        } catch(e) { /* fall through to text-only share */ }
+      }
+      // Text + URL share (no image attachment)
+      await navigator.share({
+        title: 'Design ' + designNum + ' — Jariwala Trading Company',
+        text: text,
+        url: photoUrl || window.location.href,
+      });
+      return;
+    } catch(e) {
+      if (e.name === 'AbortError') return; // user cancelled — do nothing
+      // Other error — fall through to WhatsApp
+    }
+  }
+
+  // Fallback: open WhatsApp with text
+  var waText = text + (photoUrl ? '
+Photo: ' + photoUrl : '');
+  window.open('https://wa.me/?text=' + encodeURIComponent(waText), '_blank');
+}
 
 // ─────────────────────────────────────────────────────────────────
 // INIT
