@@ -47,7 +47,7 @@
     background: linear-gradient(90deg, transparent, rgba(201,24,74,0.4), transparent);
   }
   .header-logo {
-    width: 72px; height: 72px;
+    width: 96px; height: 96px;
     object-fit: contain;
     border-radius: 50%;
     background: white;
@@ -305,22 +305,6 @@
   /* ── CARD FOOTER SPACING ── */
   .card-bottom { height: 14px; }
 
-  /* ── DOWNLOAD BUTTON ── */
-  .dl-btn-wrap { padding: 0 14px 14px; }
-  .dl-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 13px;
-    background: transparent;
-    border: 2px solid #25D366; border-radius: 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px; font-weight: 700;
-    color: #1a8a44; cursor: pointer;
-    transition: all 0.2s; letter-spacing: 0.3px;
-  }
-  .dl-btn:hover { background: #f0fff5; }
-  .dl-btn:active { transform: scale(0.97); }
-  .dl-btn.loading { opacity: 0.6; cursor: wait; }
-
   /* ── WATERMARK ── */
   .watermark {
     text-align: center; margin-top: 30px;
@@ -333,6 +317,44 @@
     object-fit: contain; opacity: 0.35;
     filter: grayscale(100%);
   }
+
+  /* ── TAB BAR ── */
+  .tab-bar { display:flex; background:var(--card-bg); border-radius:16px; border:1px solid var(--border); box-shadow:var(--shadow); overflow:hidden; margin-bottom:16px; }
+  .tab-btn { flex:1; padding:13px 8px; background:transparent; border:none; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:#b090a0; cursor:pointer; letter-spacing:0.3px; transition:background 0.2s,color 0.2s; border-right:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:5px; }
+  .tab-btn:last-child { border-right:none; }
+  .tab-btn.active { background:var(--rose); color:white; }
+  .tab-btn:not(.active):hover { background:var(--rose-pale); color:var(--rose); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  /* ── BROWSE GRID ── */
+  .browse-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+  .grid-card { background:var(--card-bg); border-radius:18px; overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer; transition:box-shadow 0.2s,transform 0.15s; animation:slideUp 0.3s cubic-bezier(0.2,0.8,0.3,1) both; }
+  .grid-card:hover { box-shadow:var(--shadow-hover); transform:translateY(-2px); }
+  .grid-card:active { transform:scale(0.97); }
+  .grid-img-wrap { width:100%; aspect-ratio:3/4; background:#f8f0f2; overflow:hidden; position:relative; display:flex; align-items:center; justify-content:center; }
+  .grid-img-wrap img { width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 0.3s; }
+  .grid-img-wrap img.loaded { opacity:1; }
+  .grid-no-photo { font-size:28px; opacity:0.25; }
+  .grid-spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#f8f0f2; }
+  .grid-spinner-ring { width:22px; height:22px; border:2px solid var(--border); border-top-color:var(--rose); border-radius:50%; animation:spin 0.7s linear infinite; }
+  .grid-info { padding:10px 12px 12px; }
+  .grid-dn { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--ink); line-height:1; margin-bottom:4px; }
+  .grid-price { font-size:11px; color:var(--rose); font-weight:600; }
+  .grid-stock { font-size:10px; color:#b090a0; margin-top:2px; }
+  .grid-stock.low { color:#e53935; }
+  .load-more-btn { width:100%; padding:14px; background:transparent; border:2px dashed var(--rose-mid); border-radius:14px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--rose); cursor:pointer; transition:all 0.2s; margin-bottom:20px; }
+  .load-more-btn:hover { background:var(--rose-pale); border-color:var(--rose); }
+
+  /* ── DOWNLOAD BUTTON ── */
+  .dl-btn-wrap { padding:0 14px 14px; }
+  .dl-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px; background:transparent; border:2px solid #25D366; border-radius:14px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; color:#1a8a44; cursor:pointer; transition:all 0.2s; letter-spacing:0.3px; }
+  .dl-btn:hover { background:#f0fff5; }
+  .dl-btn:active { transform:scale(0.97); }
+  .dl-btn.loading { opacity:0.6; cursor:wait; }
+
+  /* ── PRICE STOCK ── */
+  .field-value.price-stock { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; line-height:1; }
 </style>
 </head>
 <body>
@@ -342,36 +364,41 @@
   <img src="JTC.jpg" alt="JTC Logo" class="header-logo">
   <div class="brand-label">Jariwala Trading Company</div>
   <h1>Kurti <span>Catalogue</span></h1>
-  <div class="subtitle">Search by design number</div>
+  <div class="subtitle">Search · Browse · Share</div>
 </header>
 
 <div class="main">
-
-  <div class="search-card">
-    <span class="search-label">Search by Design Number</span>
-    <div class="search-row">
-      <input
-        class="search-input" id="searchInput" type="text"
-        placeholder="e.g. K-101, D-205…"
-        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-      />
-      <button class="search-btn" onclick="doSearch()">Search</button>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-search" onclick="switchTab('search')">&#128269; Search</button>
+    <button class="tab-btn" id="tab-browse" onclick="switchTab('browse')">&#128193; Browse All</button>
+  </div>
+  <div class="tab-panel active" id="panel-search">
+    <div class="search-card">
+      <span class="search-label">Search by Design Number</span>
+      <div class="search-row">
+        <input class="search-input" id="searchInput" type="text" placeholder="e.g. K-101, D-205&hellip;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+        <button class="search-btn" onclick="doSearch()">Search</button>
+      </div>
     </div>
+    <div id="suggestionsWrap" class="suggestions-wrap" style="display:none">
+      <div class="suggestions-inner" id="suggestionsList"></div>
+    </div>
+    <div class="data-status">
+      <div class="dot loading" id="statusDot"></div>
+      <span id="statusText">Loading catalogue&hellip;</span>
+    </div>
+    <div id="output"></div>
   </div>
-
-  <div id="suggestionsWrap" class="suggestions-wrap" style="display:none">
-    <div class="suggestions-inner" id="suggestionsList"></div>
+  <div class="tab-panel" id="panel-browse">
+    <div class="data-status" id="browseStatus" style="display:none">
+      <div class="dot loading"></div><span>Loading&hellip;</span>
+    </div>
+    <div class="browse-grid" id="browseGrid"></div>
+    <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreGrid()" style="display:none">Load More Designs</button>
   </div>
-
-  <div class="data-status">
-    <div class="dot loading" id="statusDot"></div>
-    <span id="statusText">Loading catalogue…</span>
-  </div>
-
-  <div id="output"></div>
   <div class="watermark">
     <img src="JTC.jpg" alt="JTC" class="watermark-logo">
-    <div>Jariwala Trading Company · Kurti Catalogue</div>
+    <div>Jariwala Trading Company &middot; Kurti Catalogue</div>
   </div>
 </div>
 
@@ -389,6 +416,7 @@ var COL_COSTING     = 3;  // D — Costing (restricted)
 var COL_RETAIL      = 4;  // E — Retail Rate
 var COL_WHOLESALE   = 5;  // F — Wholesale Rate
 var COL_PHOTO       = 6;  // G — Photo Link
+var COL_STOCK       = 7;  // H — Stock in Hand
 
 // ─────────────────────────────────────────────────────────────────
 // STATE
@@ -512,6 +540,14 @@ function esc(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function makeWaUrl(designNum, retailRaw, desc, photoUrl) {
+  var lines = ['*Jariwala Trading Company*', 'Design No: *' + designNum + '*'];
+  if (desc) lines.push('Description: ' + desc);
+  if (retailRaw) lines.push('Rate: ₹' + retailRaw);
+  if (photoUrl) lines.push('Photo: ' + photoUrl);
+  return 'https://wa.me/?text=' + encodeURIComponent(lines.join('\n'));
+}
+
 // ─────────────────────────────────────────────────────────────────
 // RENDER CARD
 // ─────────────────────────────────────────────────────────────────
@@ -553,6 +589,16 @@ function renderCard(row) {
     ? '<span class="field-value price-ws">₹' + wsRounded + '</span>'
     : '<span class="field-value empty">Not set</span>';
 
+  var stockRaw = (row[COL_STOCK] || '').toString().trim();
+  var stockHTML;
+  if (stockRaw !== '' && stockRaw !== '-') {
+    var stockNum = parseFloat(stockRaw);
+    var stockColor = (!isNaN(stockNum) && stockNum <= 0) ? '#e53935' : '#1a0a0e';
+    stockHTML = '<span class="field-value price-stock" style="color:' + stockColor + '">' + esc(stockRaw) + ' PCS</span>';
+  } else {
+    stockHTML = '<span class="field-value empty">Not set</span>';
+  }
+
   var descHTML = desc
     ? '<span class="field-value desc">' + desc + '</span>'
     : '<span class="field-value empty">No description</span>';
@@ -591,6 +637,10 @@ function renderCard(row) {
           wsHTML +
         '</div>' +
         '<div class="field wide">' +
+          '<span class="field-label">Stock in Hand</span>' +
+          stockHTML +
+        '</div>' +
+        '<div class="field wide">' +
           '<span class="field-label">Description</span>' +
           descHTML +
         '</div>' +
@@ -615,13 +665,11 @@ function renderCard(row) {
         '</div>' +
       '</div>' +
 
-      // Download branded image button
       '<div class="dl-btn-wrap">' +
-        '<button class="dl-btn" id="dl-' + id + '" onclick="downloadDesignImage('' + id + '','' + designNum + '',' + (retailRaw ? '"' + esc(retailRaw) + '"' : 'null') + ','' + esc(photoUrl || '') + '')">' +
-          '📥 Save Photo for WhatsApp' +
+        '<button class="dl-btn" id="dl-' + id + '" onclick="downloadDesignImage(\'' + id + '\',\'' + designNum + '\',' + (retailRaw ? '\'' + esc(retailRaw) + '\'' : 'null') + ',\'' + esc(photoUrl || '') + '\')">' +
+          '&#x1F4E5; Save Photo for WhatsApp' +
         '</button>' +
       '</div>' +
-
       '<div class="card-bottom"></div>' +
 
     '</div>'
@@ -784,98 +832,124 @@ function updateStatus(state, text) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// DOWNLOAD BRANDED IMAGE
-// Draws the design photo onto a canvas, overlays the JTC logo
-// (bottom-left corner) and retail price (bottom-right), then
-// triggers a download. The saved image is ready to share on WhatsApp.
+// TAB SWITCHING
 // ─────────────────────────────────────────────────────────────────
-function downloadDesignImage(id, designNum, retailRaw, photoUrl) {
-  if (!photoUrl) {
-    alert('No photo available for this design.');
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('panel-'+tab).classList.add('active');
+  if (tab==='browse' && document.getElementById('browseGrid').children.length===0) renderBrowseGrid();
+}
+
+// ─────────────────────────────────────────────────────────────────
+// BROWSE GRID
+// ─────────────────────────────────────────────────────────────────
+var GRID_PAGE_SIZE=20, gridOffset=0;
+
+function renderBrowseGrid() {
+  if (!allRows.length) {
+    document.getElementById('browseStatus').style.display='flex';
+    var chk=setInterval(function(){if(allRows.length){clearInterval(chk);renderBrowseGrid();}},400);
     return;
   }
+  document.getElementById('browseStatus').style.display='none';
+  gridOffset=0;
+  document.getElementById('browseGrid').innerHTML='';
+  appendGridCards();
+}
 
-  var btn = document.getElementById('dl-' + id);
-  btn.classList.add('loading');
-  btn.textContent = 'Preparing…';
+function loadMoreGrid(){appendGridCards();}
 
-  // Load the design photo
-  var designImg = new Image();
-  designImg.crossOrigin = 'anonymous';
-
-  designImg.onload = function() {
-    var W = designImg.naturalWidth;
-    var H = designImg.naturalHeight;
-
-    // Scale down if very large (max 1200px wide) to keep file size reasonable
-    var scale = W > 1200 ? 1200 / W : 1;
-    var cW = Math.round(W * scale);
-    var cH = Math.round(H * scale);
-
-    var canvas  = document.createElement('canvas');
-    canvas.width  = cW;
-    canvas.height = cH;
-    var ctx = canvas.getContext('2d');
-
-    // Draw design photo
-    ctx.drawImage(designImg, 0, 0, cW, cH);
-
-    // ── Footer strip — semi-transparent dark bar at the bottom
-    var stripH = Math.round(cH * 0.10);  // 10% of image height
-    stripH = Math.max(stripH, 48);        // minimum 48px
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-    ctx.fillRect(0, cH - stripH, cW, stripH);
-
-    // ── Price text — right side
-    if (retailRaw) {
-      var fontSize = Math.round(stripH * 0.45);
-      ctx.font = 'bold ' + fontSize + 'px "Playfair Display", Georgia, serif';
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'right';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('₹' + retailRaw, cW - Math.round(stripH * 0.4), cH - stripH / 2);
+function appendGridCards() {
+  var grid=document.getElementById('browseGrid');
+  var batch=allRows.slice(gridOffset,gridOffset+GRID_PAGE_SIZE);
+  var ctr=gridOffset;
+  batch.forEach(function(row){
+    var gid='g'+ctr++;
+    var dn=esc((row[COL_DESIGN]||'').trim());
+    var retailRaw=(row[COL_RETAIL]||'').trim();
+    var photoUrl=makePhotoUrl(row[COL_PHOTO]||'');
+    var stockRaw=(row[COL_STOCK]||'').toString().trim();
+    var stockNum=parseFloat(stockRaw);
+    var priceStr=retailRaw?'₹'+esc(retailRaw):'';
+    var stockStr=(stockRaw!==''&&stockRaw!=='-')?stockRaw+' PCS':'';
+    var stockLow=(!isNaN(stockNum)&&stockNum<=0)?' low':'';
+    var imgHTML=photoUrl
+      ?'<div class="grid-spinner" id="gs-'+gid+'"><div class="grid-spinner-ring"></div></div><img id="gi-'+gid+'" data-src="'+esc(photoUrl)+'" alt="'+dn+'">'
+      :'<div class="grid-no-photo">&#x1F5BE;</div>';
+    var card=document.createElement('div');
+    card.className='grid-card';
+    card.innerHTML=
+      '<div class="grid-img-wrap" id="gw-'+gid+'">'+imgHTML+'</div>'+
+      '<div class="grid-info">'+
+        '<div class="grid-dn">'+dn+'</div>'+
+        (priceStr?'<div class="grid-price">'+priceStr+'</div>':'')+
+        (stockStr?'<div class="grid-stock'+stockLow+'">'+stockStr+' in stock</div>':'')+
+      '</div>';
+    card.addEventListener('click',function(){
+      switchTab('search');
+      document.getElementById('searchInput').value=(row[COL_DESIGN]||'').trim();
+      doSearch();
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+    grid.appendChild(card);
+    if (photoUrl) {
+      var img=document.getElementById('gi-'+gid);
+      var spinner=document.getElementById('gs-'+gid);
+      var loaded=false;
+      img.onload=function(){if(loaded)return;loaded=true;img.classList.add('loaded');if(spinner)spinner.style.display='none';};
+      img.onerror=function(){if(loaded)return;loaded=true;var w=document.getElementById('gw-'+gid);if(w)w.innerHTML='<div class="grid-no-photo">&#x1F5BE;</div>';};
+      img.src=img.getAttribute('data-src');
     }
+  });
+  gridOffset+=batch.length;
+  document.getElementById('loadMoreBtn').style.display=gridOffset<allRows.length?'block':'none';
+}
 
-    // ── JTC Logo — left side of footer strip
-    var logoImg = new Image();
-    logoImg.crossOrigin = 'anonymous';
-
-    var finalize = function() {
-      try {
-        var logoSize = Math.round(stripH * 0.75);
-        var logoX    = Math.round(stripH * 0.18);
-        var logoY    = cH - stripH + (stripH - logoSize) / 2;
-        ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
-      } catch(e) { /* logo failed silently — price still shows */ }
-
-      // Trigger download
-      canvas.toBlob(function(blob) {
-        var url  = URL.createObjectURL(blob);
-        var link = document.createElement('a');
-        link.href     = url;
-        link.download = 'Design_' + designNum + '.jpg';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-
-        btn.classList.remove('loading');
-        btn.textContent = '📥 Save Photo for WhatsApp';
-      }, 'image/jpeg', 0.92);
+// ─────────────────────────────────────────────────────────────────
+// DOWNLOAD BRANDED IMAGE
+// ─────────────────────────────────────────────────────────────────
+function downloadDesignImage(id,designNum,retailRaw,photoUrl) {
+  if (!photoUrl){alert('No photo available.');return;}
+  var btn=document.getElementById('dl-'+id);
+  btn.classList.add('loading');
+  btn.innerHTML='Preparing…';
+  var img=new Image();
+  img.crossOrigin='anonymous';
+  img.onload=function(){
+    var scale=img.naturalWidth>1200?1200/img.naturalWidth:1;
+    var cW=Math.round(img.naturalWidth*scale),cH=Math.round(img.naturalHeight*scale);
+    var canvas=document.createElement('canvas');
+    canvas.width=cW;canvas.height=cH;
+    var ctx=canvas.getContext('2d');
+    ctx.drawImage(img,0,0,cW,cH);
+    var sh=Math.max(Math.round(cH*0.10),48);
+    ctx.fillStyle='rgba(0,0,0,0.55)';
+    ctx.fillRect(0,cH-sh,cW,sh);
+    if (retailRaw){
+      var fs=Math.round(sh*0.45);
+      ctx.font='bold '+fs+'px Georgia,serif';
+      ctx.fillStyle='#fff';ctx.textAlign='right';ctx.textBaseline='middle';
+      ctx.fillText('₹'+retailRaw,cW-Math.round(sh*0.4),cH-sh/2);
+    }
+    var logo=new Image();logo.crossOrigin='anonymous';
+    var done=function(){
+      try{var ls=Math.round(sh*0.75),lx=Math.round(sh*0.18),ly=cH-sh+(sh-ls)/2;ctx.drawImage(logo,lx,ly,ls,ls);}catch(e){}
+      canvas.toBlob(function(blob){
+        var url=URL.createObjectURL(blob);
+        var a=document.createElement('a');a.href=url;a.download='Design_'+designNum+'.jpg';
+        document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+        btn.classList.remove('loading');btn.innerHTML='&#x1F4E5; Save Photo for WhatsApp';
+      },'image/jpeg',0.92);
     };
-
-    logoImg.onload  = finalize;
-    logoImg.onerror = finalize;  // proceed even if logo fails to load
-    logoImg.src = 'JTC.jpg';
+    logo.onload=done;logo.onerror=done;logo.src='JTC.jpg';
   };
-
-  designImg.onerror = function() {
-    btn.classList.remove('loading');
-    btn.textContent = '📥 Save Photo for WhatsApp';
-    alert('Could not load photo. Please try again.');
+  img.onerror=function(){
+    btn.classList.remove('loading');btn.innerHTML='&#x1F4E5; Save Photo for WhatsApp';
+    alert('Could not load photo.');
   };
-
-  designImg.src = photoUrl;
+  img.src=photoUrl;
 }
 
 // ─────────────────────────────────────────────────────────────────
