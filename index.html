@@ -319,45 +319,72 @@
   }
 
   /* ── TAB BAR ── */
-  .tab-bar{display:flex;background:var(--card-bg);border-radius:16px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px;}
-  .tab-btn{flex:1;padding:13px 8px;background:transparent;border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#b090a0;cursor:pointer;letter-spacing:0.3px;transition:background 0.2s,color 0.2s;border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:5px;}
-  .tab-btn:last-child{border-right:none;}
-  .tab-btn.active{background:var(--rose);color:white;}
-  .tab-btn:not(.active):hover{background:var(--rose-pale);color:var(--rose);}
-  .tab-panel{display:none;}
-  .tab-panel.active{display:block;}
+  .tab-bar { display:flex; background:var(--card-bg); border-radius:16px; border:1px solid var(--border); box-shadow:var(--shadow); overflow:hidden; margin-bottom:16px; }
+  .tab-btn { flex:1; padding:13px 8px; background:transparent; border:none; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:#b090a0; cursor:pointer; letter-spacing:0.3px; transition:background 0.2s,color 0.2s; border-right:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:5px; }
+  .tab-btn:last-child { border-right:none; }
+  .tab-btn.active { background:var(--rose); color:white; }
+  .tab-btn:not(.active):hover { background:var(--rose-pale); color:var(--rose); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
   /* ── BROWSE GRID ── */
-  .browse-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
-  .grid-card{background:var(--card-bg);border-radius:18px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow);cursor:pointer;transition:box-shadow 0.2s,transform 0.15s;animation:slideUp 0.3s cubic-bezier(0.2,0.8,0.3,1) both;}
-  .grid-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px);}
-  .grid-card:active{transform:scale(0.97);}
-  .grid-img-wrap{width:100%;aspect-ratio:3/4;background:#f8f0f2;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
-  .grid-img-wrap img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.3s;}
-  .grid-img-wrap img.loaded{opacity:1;}
-  .grid-no-photo{font-size:28px;opacity:0.25;}
-  .grid-spinner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#f8f0f2;}
-  .grid-spinner-ring{width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--rose);border-radius:50%;animation:spin 0.7s linear infinite;}
-  .grid-info{padding:10px 12px 12px;}
-  .grid-dn{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);line-height:1;margin-bottom:4px;}
-  .grid-price{font-size:11px;color:var(--rose);font-weight:600;}
-  .grid-stock{font-size:10px;color:#b090a0;margin-top:2px;}
-  .grid-stock.low{color:#e53935;}
-  .load-more-btn{width:100%;padding:14px;background:transparent;border:2px dashed var(--rose-mid);border-radius:14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--rose);cursor:pointer;transition:all 0.2s;margin-bottom:20px;}
-  .load-more-btn:hover{background:var(--rose-pale);border-color:var(--rose);}
+  .browse-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+  .grid-card { background:var(--card-bg); border-radius:18px; overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer; transition:box-shadow 0.2s,transform 0.15s; animation:slideUp 0.3s cubic-bezier(0.2,0.8,0.3,1) both; }
+  .grid-card:hover { box-shadow:var(--shadow-hover); transform:translateY(-2px); }
+  .grid-card:active { transform:scale(0.97); }
+  .grid-img-wrap { width:100%; aspect-ratio:3/4; background:#f8f0f2; overflow:hidden; position:relative; display:flex; align-items:center; justify-content:center; }
+  .grid-img-wrap img { width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 0.3s; }
+  .grid-img-wrap img.loaded { opacity:1; }
+  .grid-no-photo { font-size:28px; opacity:0.25; }
+  .grid-spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#f8f0f2; }
+  .grid-spinner-ring { width:22px; height:22px; border:2px solid var(--border); border-top-color:var(--rose); border-radius:50%; animation:spin 0.7s linear infinite; }
+  .grid-info { padding:10px 12px 12px; }
+  .grid-dn { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--ink); line-height:1; margin-bottom:4px; }
+  .grid-price { font-size:11px; color:var(--rose); font-weight:600; }
+  .grid-stock { font-size:10px; color:#b090a0; margin-top:2px; }
+  .grid-stock.low { color:#e53935; }
+  .load-more-btn { width:100%; padding:14px; background:transparent; border:2px dashed var(--rose-mid); border-radius:14px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--rose); cursor:pointer; transition:all 0.2s; margin-bottom:20px; }
+  .load-more-btn:hover { background:var(--rose-pale); border-color:var(--rose); }
+
   /* ── SERIES FILTER ── */
-  .series-filter-wrap{margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
-  .series-filter-wrap::-webkit-scrollbar{display:none;}
-  .series-pills{display:flex;gap:8px;width:max-content;}
-  .series-pill{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--card-bg);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#b090a0;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
-  .series-pill:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-pale);}
-  .series-pill.active{background:var(--rose);color:white;border-color:var(--rose);}
-  /* ── SHARE BUTTON ── */
-  .share-btn-wrap{padding:0 14px 14px;}
-  .share-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px;background:#25D366;border:none;color:white;}
-  .share-btn:hover{background:#1ebe5d;}
-  .share-btn:active{transform:scale(0.97);}
-  /* ── STOCK FIELD ── */
-  .field-value.price-stock{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;line-height:1;}
+  .series-filter-wrap { margin-bottom:14px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; }
+  .series-filter-wrap::-webkit-scrollbar { display:none; }
+  .series-pills { display:flex; gap:8px; width:max-content; }
+  .series-pill {
+    padding:8px 16px; border-radius:20px;
+    border:1.5px solid var(--border);
+    background:var(--card-bg);
+    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600;
+    color:#b090a0; cursor:pointer; white-space:nowrap;
+    transition:all 0.2s;
+  }
+  .series-pill:hover { border-color:var(--rose); color:var(--rose); background:var(--rose-pale); }
+  .series-pill.active { background:var(--rose); color:white; border-color:var(--rose); }
+
+  /* ── SHARE BUTTONS ── */
+  .share-btn-wrap { padding:0 14px 14px; display:flex; gap:8px; }
+  .share-btn {
+    flex:1; display:flex; align-items:center; justify-content:center; gap:7px;
+    padding:13px 8px; border-radius:14px;
+    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700;
+    cursor:pointer; transition:all 0.2s; letter-spacing:0.3px;
+    text-decoration:none;
+  }
+  .share-btn-save {
+    background:transparent; border:2px solid var(--rose);
+    color:var(--rose);
+  }
+  .share-btn-save:hover { background:var(--rose-pale); }
+  .share-btn-save:active { transform:scale(0.97); }
+  .share-btn-wa {
+    background:#25D366; border:2px solid #25D366;
+    color:white;
+  }
+  .share-btn-wa:hover { background:#1ebe5d; border-color:#1ebe5d; }
+  .share-btn-wa:active { transform:scale(0.97); }
+
+  /* ── PRICE STOCK ── */
+  .field-value.price-stock { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; line-height:1; }
 </style>
 </head>
 <body>
@@ -379,7 +406,7 @@
     <div class="search-card">
       <span class="search-label">Search by Design Number</span>
       <div class="search-row">
-        <input class="search-input" id="searchInput" type="text" placeholder="e.g. 1317, 2025…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+        <input class="search-input" id="searchInput" type="text" placeholder="e.g. K-101, D-205&hellip;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
         <button class="search-btn" onclick="doSearch()">Search</button>
       </div>
     </div>
@@ -388,21 +415,23 @@
     </div>
     <div class="data-status">
       <div class="dot loading" id="statusDot"></div>
-      <span id="statusText">Loading catalogue…</span>
+      <span id="statusText">Loading catalogue&hellip;</span>
     </div>
     <div id="output"></div>
   </div>
   <div class="tab-panel" id="panel-browse">
     <div class="data-status" id="browseStatus" style="display:none">
-      <div class="dot loading"></div><span>Loading…</span>
+      <div class="dot loading"></div><span>Loading&hellip;</span>
     </div>
-    <div class="series-filter-wrap"><div class="series-pills" id="seriesPills"></div></div>
+    <div class="series-filter-wrap">
+      <div class="series-pills" id="seriesPills"></div>
+    </div>
     <div class="browse-grid" id="browseGrid"></div>
     <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreGrid()" style="display:none">Load More Designs</button>
   </div>
   <div class="watermark">
     <img src="JTC.jpg" alt="JTC" class="watermark-logo">
-    <div>Jariwala Trading Company · Kurti Catalogue</div>
+    <div>Jariwala Trading Company &middot; Kurti Catalogue</div>
   </div>
 </div>
 
@@ -430,28 +459,25 @@ var allRows = [];  // array of cleaned row arrays
 // ─────────────────────────────────────────────────────────────────
 // FETCH — tries direct first, then CORS proxies
 // ─────────────────────────────────────────────────────────────────
-function fetchCSV(url) {
+async function fetchCSV(url) {
   var attempts = [
-    url,
+    url,  // direct — works for "published to web" sheets
     'https://corsproxy.io/?url=' + encodeURIComponent(url),
     'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
     'https://cors-anywhere.herokuapp.com/' + url
   ];
-  function tryNext(i) {
-    if (i >= attempts.length) return Promise.resolve(null);
-    return fetch(attempts[i], { cache: 'no-cache' })
-      .then(function(resp) {
-        if (!resp.ok) return tryNext(i + 1);
-        return resp.text().then(function(text) {
-          if (text && text.length > 30 && text.indexOf('<!DOCTYPE') === -1 && text.indexOf('<html') === -1) {
-            return text;
-          }
-          return tryNext(i + 1);
-        });
-      })
-      .catch(function() { return tryNext(i + 1); });
+  for (var i = 0; i < attempts.length; i++) {
+    try {
+      var resp = await fetch(attempts[i], { cache: 'no-cache' });
+      if (!resp.ok) continue;
+      var text = await resp.text();
+      // Make sure it looks like CSV, not an HTML error page
+      if (text && text.length > 30 && text.indexOf('<!DOCTYPE') === -1 && text.indexOf('<html') === -1) {
+        return text;
+      }
+    } catch (e) { /* try next */ }
   }
-  return tryNext(0);
+  return null;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -483,27 +509,32 @@ function parseCSV(text) {
 // ─────────────────────────────────────────────────────────────────
 // LOAD
 // ─────────────────────────────────────────────────────────────────
-function loadData() {
+async function loadData() {
   updateStatus('loading', 'Loading catalogue…');
-  fetchCSV(CSV_URL).then(function(text) {
-    if (!text) {
-      updateStatus('error', 'Could not load data');
-      document.getElementById('output').innerHTML =
-        '<div class="status-msg error">⚠️ Could not load the catalogue.<br><small>Check that the Google Sheet is published to the web.</small></div>';
-      return;
-    }
-    var parsed = parseCSV(text);
-    allRows = parsed.slice(1).filter(function(r) {
-      return r[COL_DESIGN] && r[COL_DESIGN].trim() !== '';
-    });
-    if (!allRows.length) {
-      updateStatus('error', 'No data found');
-      document.getElementById('output').innerHTML =
-        '<div class="status-msg error">No design rows found in the sheet.</div>';
-      return;
-    }
-    updateStatus('green', allRows.length + ' designs loaded');
+  var text = await fetchCSV(CSV_URL);
+
+  if (!text) {
+    updateStatus('error', 'Could not load data');
+    document.getElementById('output').innerHTML =
+      '<div class="status-msg error">⚠️ Could not load the catalogue.<br><small>Check that the Google Sheet is published to the web.</small></div>';
+    return;
+  }
+
+  var parsed = parseCSV(text);
+
+  // Skip header row (row 0) and filter out rows with no design number
+  allRows = parsed.slice(1).filter(function(r) {
+    return r[COL_DESIGN] && r[COL_DESIGN].trim() !== '';
   });
+
+  if (!allRows.length) {
+    updateStatus('error', 'No data found');
+    document.getElementById('output').innerHTML =
+      '<div class="status-msg error">No design rows found in the sheet.</div>';
+    return;
+  }
+
+  updateStatus('green', allRows.length + ' designs loaded');
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -544,9 +575,9 @@ function esc(s) {
 
 function makeWaUrl(designNum, retailRaw, desc, photoUrl) {
   var lines = ['*Jariwala Trading Company*', 'Design No: *' + designNum + '*'];
-  if (desc) lines.push(desc);
-  if (retailRaw) lines.push('₹' + retailRaw);
-  if (photoUrl) lines.push(photoUrl);
+  if (desc) lines.push('Description: ' + desc);
+  if (retailRaw) lines.push('Rate: ₹' + retailRaw);
+  if (photoUrl) lines.push('Photo: ' + photoUrl);
   return 'https://wa.me/?text=' + encodeURIComponent(lines.join('\n'));
 }
 
@@ -667,11 +698,17 @@ function renderCard(row) {
         '</div>' +
       '</div>' +
 
-      '<div class="share-btn-wrap">' +
-        '<button class="share-btn" onclick="shareDesign(\'' + designNum + '\',' + (retailRaw ? '\'' + esc(retailRaw) + '\'' : 'null') + ',\'' + esc(desc||'') + '\',' + '\'' + esc(photoUrl||'') + '\')">' +
-          '&#x1F4E4; Share Design' +
-        '</button>' +
-      '</div>' +
+      // Share buttons — only show if photo exists
+      (photoUrl ? (
+        '<div class="share-btn-wrap">' +
+          '<a class="share-btn share-btn-save" href="' + esc(photoUrl || '') + '" target="_blank" rel="noopener">' +
+            '&#x1F4F7; Save Photo' +
+          '</a>' +
+          '<a class="share-btn share-btn-wa" href="' + makeWaUrl(designNum, retailRaw, desc, '') + '" target="_blank" rel="noopener">' +
+            '&#x1F4AC; WhatsApp' +
+          '</a>' +
+        '</div>'
+      ) : '') +
       '<div class="card-bottom"></div>' +
 
     '</div>'
@@ -845,16 +882,17 @@ function switchTab(tab) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// SERIES FILTER + BROWSE GRID
+// BROWSE GRID
 // ─────────────────────────────────────────────────────────────────
 var GRID_PAGE_SIZE=20, gridOffset=0, activeSeriesFilter='all';
 
 function buildSeriesPills() {
+  // Extract unique 2-digit prefixes from all design numbers
   var seen={}, series=[];
   allRows.forEach(function(row){
     var dn=(row[COL_DESIGN]||'').trim();
     var prefix=dn.substring(0,2);
-    if (prefix && /^[0-9]{2}$/.test(prefix) && !seen[prefix]) {
+    if (prefix && /^\d{2}$/.test(prefix) && !seen[prefix]) {
       seen[prefix]=true; series.push(prefix);
     }
   });
@@ -862,16 +900,16 @@ function buildSeriesPills() {
   var pills=document.getElementById('seriesPills');
   if (!pills) return;
   pills.innerHTML='';
+  // All pill
   var allPill=document.createElement('button');
-  allPill.className='series-pill active';
-  allPill.textContent='All';
+  allPill.className='series-pill active'; allPill.textContent='All';
   allPill.setAttribute('data-series','all');
   allPill.onclick=function(){ setSeriesFilter('all'); };
   pills.appendChild(allPill);
+  // One pill per prefix
   series.forEach(function(s){
     var pill=document.createElement('button');
-    pill.className='series-pill';
-    pill.textContent=s+'__';
+    pill.className='series-pill'; pill.textContent=s+'__';
     pill.setAttribute('data-series',s);
     pill.onclick=function(){ setSeriesFilter(s); };
     pills.appendChild(pill);
@@ -891,16 +929,15 @@ function setSeriesFilter(series) {
 function getFilteredRows() {
   if (activeSeriesFilter==='all') return allRows;
   return allRows.filter(function(row){
-    return (row[COL_DESIGN]||'').trim().substring(0,2)===activeSeriesFilter;
+    var dn=(row[COL_DESIGN]||'').trim();
+    return dn.substring(0,2)===activeSeriesFilter;
   });
 }
 
 function renderBrowseGrid() {
   if (!allRows.length) {
     document.getElementById('browseStatus').style.display='flex';
-    var chk=setInterval(function(){
-      if (allRows.length) { clearInterval(chk); renderBrowseGrid(); }
-    }, 400);
+    var chk=setInterval(function(){if(allRows.length){clearInterval(chk);renderBrowseGrid();}},400);
     return;
   }
   document.getElementById('browseStatus').style.display='none';
@@ -910,12 +947,12 @@ function renderBrowseGrid() {
   appendGridCards();
 }
 
-function loadMoreGrid() { appendGridCards(); }
+function loadMoreGrid(){appendGridCards();}
 
 function appendGridCards() {
   var grid=document.getElementById('browseGrid');
   var filtered=getFilteredRows();
-  var batch=filtered.slice(gridOffset, gridOffset+GRID_PAGE_SIZE);
+  var batch=filtered.slice(gridOffset,gridOffset+GRID_PAGE_SIZE);
   var ctr=gridOffset;
   batch.forEach(function(row){
     var gid='g'+ctr++;
@@ -939,7 +976,7 @@ function appendGridCards() {
         (priceStr?'<div class="grid-price">'+priceStr+'</div>':'')+
         (stockStr?'<div class="grid-stock'+stockLow+'">'+stockStr+' in stock</div>':'')+
       '</div>';
-    card.addEventListener('click', function(){
+    card.addEventListener('click',function(){
       switchTab('search');
       document.getElementById('searchInput').value=(row[COL_DESIGN]||'').trim();
       doSearch();
@@ -956,32 +993,10 @@ function appendGridCards() {
     }
   });
   gridOffset+=batch.length;
-  document.getElementById('loadMoreBtn').style.display=gridOffset<filtered.length?'block':'none';
+  document.getElementById('loadMoreBtn').style.display=gridOffset<getFilteredRows().length?'block':'none';
 }
 
-// ─────────────────────────────────────────────────────────────────
-// SHARE DESIGN — uses native Web Share API, falls back to WhatsApp
-// ─────────────────────────────────────────────────────────────────
-function shareDesign(designNum, retailRaw, desc, photoUrl) {
-  var text = 'Jariwala Trading Company\nDesign No: ' + designNum +
-    (desc ? '\n' + desc : '') +
-    (retailRaw ? '\n₹' + retailRaw : '');
 
-  if (navigator.share) {
-    var shareData = {
-      title: 'Design ' + designNum,
-      text: text,
-      url: photoUrl || window.location.href
-    };
-    navigator.share(shareData).catch(function(e){
-      if (e.name !== 'AbortError') {
-        window.open('https://wa.me/?text=' + encodeURIComponent(text + (photoUrl ? '\n' + photoUrl : '')), '_blank');
-      }
-    });
-  } else {
-    window.open('https://wa.me/?text=' + encodeURIComponent(text + (photoUrl ? '\n' + photoUrl : '')), '_blank');
-  }
-}
 
 // ─────────────────────────────────────────────────────────────────
 // INIT
