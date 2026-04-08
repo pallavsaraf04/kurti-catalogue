@@ -423,10 +423,13 @@
     <div class="price-filter-wrap">
       <span class="price-filter-label">Price Range</span>
       <div class="price-pills">
-        <button class="price-pill active" data-price="all"     onclick="setPriceFilter('all')">All Prices</button>
-        <button class="price-pill"        data-price="u500"    onclick="setPriceFilter('u500')">Under &#x20B9;500</button>
-        <button class="price-pill"        data-price="500-1000" onclick="setPriceFilter('500-1000')">&#x20B9;500&#x2013;&#x20B9;1000</button>
-        <button class="price-pill"        data-price="o1000"   onclick="setPriceFilter('o1000')">Above &#x20B9;1000</button>
+        <button class="price-pill active" data-price="all"       onclick="setPriceFilter('all')">All</button>
+        <button class="price-pill"        data-price="u1000"     onclick="setPriceFilter('u1000')">Under &#x20B9;1000</button>
+        <button class="price-pill"        data-price="1000-1500" onclick="setPriceFilter('1000-1500')">&#x20B9;1000&#x2013;1500</button>
+        <button class="price-pill"        data-price="1500-2000" onclick="setPriceFilter('1500-2000')">&#x20B9;1500&#x2013;2000</button>
+        <button class="price-pill"        data-price="2000-2500" onclick="setPriceFilter('2000-2500')">&#x20B9;2000&#x2013;2500</button>
+        <button class="price-pill"        data-price="2500-3000" onclick="setPriceFilter('2500-3000')">&#x20B9;2500&#x2013;3000</button>
+        <button class="price-pill"        data-price="o3000"     onclick="setPriceFilter('o3000')">&#x20B9;3000+</button>
       </div>
     </div>
     <div class="sort-wrap">
@@ -712,9 +715,12 @@ function renderCard(row) {
           '&#x1F4CB; Copy Details' +
         '</button>' +
       '</div>' +
-      '<div class="share-btn-wrap">' +
-        '<button class="share-btn" onclick="shareDesign(\'' + designNum + '\',' + (retailRaw ? '\'' + esc(retailRaw) + '\'' : 'null') + ',\'' + esc(desc||'') + '\',' + '\'' + esc(photoUrl||'') + '\')">' +
-          '&#x1F4E4; Share Design' +
+      '<div class="share-btn-wrap" style="display:flex;gap:8px;padding:0 14px 14px;">' +
+        '<button class="share-btn" style="flex:1;background:#c9184a;" onclick="shareDesign(\'' + designNum + '\',' + (retailRaw ? '\'' + esc(retailRaw) + '\'' : 'null') + ',\'' + esc(desc||'') + '\',' + '\'' + esc(photoUrl||'') + '\',' + '\'retail\')">' +
+          '&#x1F3EA; Retail' +
+        '</button>' +
+        '<button class="share-btn" style="flex:1;background:#4a2030;" onclick="shareDesign(\'' + designNum + '\',' + (wsRounded !== null ? '\'' + wsRounded + '\'' : 'null') + ',\'' + esc(desc||'') + '\',' + '\'' + esc(photoUrl||'') + '\',' + '\'wholesale\')">' +
+          '&#x1F3ED; Wholesale' +
         '</button>' +
       '</div>' +
       '<div class="card-bottom"></div>' +
@@ -897,7 +903,19 @@ var activeSeriesFilter='all';
 var activeSortOrder='default';
 var activePriceFilter='all';
 
-// ── Series pills ──
+// ── Fabric series map ──
+var FABRIC_MAP = {
+  '11': 'Dola',
+  '12': 'Roman',
+  '13': 'Tissue',
+  '14': 'Jacquard',
+  '15': 'Mul Chanderi',
+  '16': 'Chinnon',
+  '20': 'Indo Western',
+  '30': 'Half & Half',
+  '40': 'Giraffe'
+};
+
 function buildSeriesPills() {
   var seen={}, series=[];
   allRows.forEach(function(row){
@@ -913,14 +931,15 @@ function buildSeriesPills() {
   pills.innerHTML='';
   var allPill=document.createElement('button');
   allPill.className='series-pill active';
-  allPill.textContent='All';
+  allPill.textContent='All Fabrics';
   allPill.setAttribute('data-series','all');
   allPill.onclick=function(){ setSeriesFilter('all'); };
   pills.appendChild(allPill);
   series.forEach(function(s){
+    var label = FABRIC_MAP[s] || (s + '__');
     var pill=document.createElement('button');
     pill.className='series-pill';
-    pill.textContent=s+'__';
+    pill.textContent=label;
     pill.setAttribute('data-series',s);
     pill.onclick=function(){ setSeriesFilter(s); };
     pills.appendChild(pill);
@@ -956,10 +975,13 @@ function setPriceFilter(range) {
 function priceInRange(retailRaw, range) {
   if (range==='all') return true;
   var n=parseFloat((retailRaw||'').replace(/[^0-9.]/g,''));
-  if (isNaN(n)) return range==='all';
-  if (range==='u500')    return n < 500;
-  if (range==='500-1000') return n >= 500 && n <= 1000;
-  if (range==='o1000')   return n > 1000;
+  if (isNaN(n)) return false;
+  if (range==='u1000')     return n < 1000;
+  if (range==='1000-1500') return n >= 1000 && n <= 1500;
+  if (range==='1500-2000') return n > 1500 && n <= 2000;
+  if (range==='2000-2500') return n > 2000 && n <= 2500;
+  if (range==='2500-3000') return n > 2500 && n <= 3000;
+  if (range==='o3000')     return n > 3000;
   return true;
 }
 
@@ -1114,175 +1136,168 @@ function fallbackCopy(text) {
 // ─────────────────────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────────────────────
-// SHARE CANVAS — photo (via proxy) + DN + price overlay
-// Layout: photo fills top 3/4, dark bar at bottom with text
-// Falls back gracefully if photo fails or proxy is slow
+// SHARE CANVAS
+// Layout: photo fills top section at full height (no cropping),
+// then a solid branded panel below with DN + price.
+// mode = 'retail' | 'wholesale'
 // ─────────────────────────────────────────────────────────────────
 
-function drawCanvasOverlay(ctx, W, H, designNum, retailRaw) {
-  // ── Top gradient band ──
-  var band = ctx.createLinearGradient(0, 0, W, 0);
-  band.addColorStop(0,   '#c9184a');
-  band.addColorStop(0.5, '#c9a84c');
-  band.addColorStop(1,   '#c9184a');
-  ctx.fillStyle = band;
-  ctx.fillRect(0, 0, W, 6);
-
-  // ── Bottom overlay bar ──
-  var barH = 200;
-  var barY = H - barH;
-
-  // Gradient: transparent → dark ink
-  var barGrad = ctx.createLinearGradient(0, barY - 60, 0, H);
-  barGrad.addColorStop(0, 'rgba(26,10,14,0)');
-  barGrad.addColorStop(0.35, 'rgba(26,10,14,0.85)');
-  barGrad.addColorStop(1,   'rgba(26,10,14,0.97)');
-  ctx.fillStyle = barGrad;
-  ctx.fillRect(0, barY - 60, W, barH + 60);
-
-  // Rose glow accent inside bar
-  var glow = ctx.createRadialGradient(W/2, H, 10, W/2, H - barH/2, W * 0.7);
-  glow.addColorStop(0, 'rgba(201,24,74,0.3)');
-  glow.addColorStop(1, 'rgba(201,24,74,0)');
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, barY - 60, W, barH + 60);
-
-  // ── Brand micro-label ──
-  ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(255,179,193,0.65)';
-  ctx.font = '500 17px DM Sans, sans-serif';
-  ctx.letterSpacing = '4px';
-  ctx.fillText('JARIWALA TRADING COMPANY', W/2, barY + 30);
-
-  // ── Thin rose rule ──
-  var rule = ctx.createLinearGradient(0, 0, W, 0);
-  rule.addColorStop(0,   'transparent');
-  rule.addColorStop(0.5, 'rgba(201,24,74,0.5)');
-  rule.addColorStop(1,   'transparent');
-  ctx.strokeStyle = rule;
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(60, barY + 44); ctx.lineTo(W - 60, barY + 44); ctx.stroke();
-
-  // ── Design number (large) ──
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 68px Playfair Display, serif';
-  ctx.letterSpacing = '1px';
-  ctx.fillText('Design No. ' + designNum, W/2, barY + 118);
-
-  // ── Retail price ──
-  if (retailRaw) {
-    ctx.fillStyle = '#c9a84c';
-    ctx.font = '600 36px DM Sans, sans-serif';
-    ctx.letterSpacing = '1px';
-    ctx.fillText('\u20B9' + retailRaw, W/2, barY + 168);
-  }
-}
-
-// Helper: rounded rectangle path
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  ctx.lineTo(x + r, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x, y, x+r, y);
   ctx.closePath();
 }
 
-// Build canvas with photo; resolves with canvas always (falls back to no-photo if needed)
-function buildShareCanvas(designNum, retailRaw, photoUrl) {
-  var W = 800, H = 1000;
+// Returns a Promise<canvas>
+function buildShareCanvas(designNum, priceRaw, photoUrl, mode) {
+  var W = 800;
+  var PANEL_H = 220;   // fixed height of the text panel below photo
 
   return new Promise(function(resolve) {
-    var canvas = document.createElement('canvas');
-    canvas.width = W; canvas.height = H;
-    var ctx = canvas.getContext('2d');
 
-    function drawWithPhoto(img) {
-      // Draw photo cover-fit into top portion
-      var photoH = H;
-      var scale = Math.max(W / img.naturalWidth, photoH / img.naturalHeight);
-      var dw = img.naturalWidth  * scale;
-      var dh = img.naturalHeight * scale;
-      var dx = (W - dw) / 2;
-      var dy = (photoH - dh) / 2;
-      ctx.drawImage(img, dx, dy, dw, dh);
-    }
+    function renderFinal(photoImg) {
+      // Photo natural size
+      var photoW = photoImg ? photoImg.naturalWidth  : 0;
+      var photoH = photoImg ? photoImg.naturalHeight : 0;
 
-    function drawNoPhoto() {
-      // Dark branded background when no photo
+      // Scale photo to fit W exactly (contain width, natural height)
+      var scale   = photoImg ? (W / photoW) : 1;
+      var imgH    = photoImg ? Math.round(photoH * scale) : 600;
+
+      var TOTAL_H = imgH + PANEL_H;
+      var canvas  = document.createElement('canvas');
+      canvas.width  = W;
+      canvas.height = TOTAL_H;
+      var ctx = canvas.getContext('2d');
+
+      // ── Draw photo ──
+      if (photoImg) {
+        ctx.drawImage(photoImg, 0, 0, W, imgH);
+      } else {
+        // No photo — plain dark background placeholder
+        ctx.fillStyle = '#1a0a0e';
+        ctx.fillRect(0, 0, W, imgH || 600);
+        var glow = ctx.createRadialGradient(W/2, (imgH||600)/2, 40, W/2, (imgH||600)/2, W*0.6);
+        glow.addColorStop(0, 'rgba(201,24,74,0.3)');
+        glow.addColorStop(1, 'rgba(201,24,74,0)');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, W, imgH || 600);
+      }
+
+      // ── Top gradient band (rose-gold) ──
+      var topBand = ctx.createLinearGradient(0, 0, W, 0);
+      topBand.addColorStop(0,   '#c9184a');
+      topBand.addColorStop(0.5, '#c9a84c');
+      topBand.addColorStop(1,   '#c9184a');
+      ctx.fillStyle = topBand;
+      ctx.fillRect(0, 0, W, 7);
+
+      // ── Panel background ──
+      var panelY = imgH;
       ctx.fillStyle = '#1a0a0e';
-      ctx.fillRect(0, 0, W, H);
-      var glow = ctx.createRadialGradient(W/2, H*0.5, 50, W/2, H*0.5, H*0.7);
-      glow.addColorStop(0, 'rgba(201,24,74,0.35)');
-      glow.addColorStop(1, 'rgba(201,24,74,0)');
-      ctx.fillStyle = glow;
-      ctx.fillRect(0, 0, W, H);
-      // Large design number centred
-      ctx.fillStyle = 'rgba(255,255,255,0.12)';
-      ctx.font = 'bold 200px Playfair Display, serif';
-      ctx.textAlign = 'center';
-      ctx.letterSpacing = '2px';
-      ctx.fillText(designNum, W/2, H*0.5 + 70);
-    }
+      ctx.fillRect(0, panelY, W, PANEL_H);
 
-    function finish() {
-      drawCanvasOverlay(ctx, W, H, designNum, retailRaw);
+      // Rose glow inside panel
+      var pg = ctx.createRadialGradient(W/2, panelY + PANEL_H/2, 10, W/2, panelY + PANEL_H/2, W*0.55);
+      pg.addColorStop(0, 'rgba(201,24,74,0.22)');
+      pg.addColorStop(1, 'rgba(201,24,74,0)');
+      ctx.fillStyle = pg;
+      ctx.fillRect(0, panelY, W, PANEL_H);
+
+      // ── Thin separator line ──
+      var sep = ctx.createLinearGradient(0, 0, W, 0);
+      sep.addColorStop(0,   'transparent');
+      sep.addColorStop(0.5, 'rgba(201,168,76,0.7)');
+      sep.addColorStop(1,   'transparent');
+      ctx.strokeStyle = sep;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(40, panelY + 1); ctx.lineTo(W-40, panelY + 1); ctx.stroke();
+
+      // ── Brand label ──
+      ctx.textAlign   = 'center';
+      ctx.fillStyle   = 'rgba(255,179,193,0.65)';
+      ctx.font        = '500 17px DM Sans, sans-serif';
+      ctx.letterSpacing = '5px';
+      ctx.fillText('JARIWALA TRADING COMPANY', W/2, panelY + 42);
+
+      // ── Design number ──
+      ctx.fillStyle   = '#ffffff';
+      ctx.font        = 'bold 64px Playfair Display, serif';
+      ctx.letterSpacing = '1px';
+      ctx.fillText('Design No. ' + designNum, W/2, panelY + 122);
+
+      // ── Price ──
+      if (priceRaw) {
+        // Mode label
+        var modeLabel = (mode === 'wholesale') ? 'Wholesale Rate' : 'Retail Rate';
+        ctx.fillStyle   = 'rgba(201,168,76,0.7)';
+        ctx.font        = '500 15px DM Sans, sans-serif';
+        ctx.letterSpacing = '3px';
+        ctx.fillText(modeLabel.toUpperCase(), W/2, panelY + 152);
+
+        ctx.fillStyle   = '#c9a84c';
+        ctx.font        = '700 42px DM Sans, sans-serif';
+        ctx.letterSpacing = '1px';
+        ctx.fillText('\u20B9' + priceRaw, W/2, panelY + 200);
+      }
+
+      // ── Bottom gold band ──
+      ctx.fillStyle = topBand;
+      ctx.fillRect(0, TOTAL_H - 5, W, 5);
+
       resolve(canvas);
     }
 
     if (photoUrl) {
       var img = new Image();
       img.crossOrigin = 'anonymous';
-      img.onload  = function() { drawWithPhoto(img); finish(); };
-      img.onerror = function() { drawNoPhoto();      finish(); };
-      // 6 second timeout — if proxy is slow, fall back to no-photo
-      var timedOut = false;
+      var done = false;
       var timer = setTimeout(function() {
-        timedOut = true;
+        if (done) return; done = true;
         img.src = '';
-        drawNoPhoto(); finish();
-      }, 6000);
+        renderFinal(null);
+      }, 7000);
       img.onload = function() {
-        if (timedOut) return;
+        if (done) return; done = true;
         clearTimeout(timer);
-        drawWithPhoto(img); finish();
+        renderFinal(img);
       };
       img.onerror = function() {
-        if (timedOut) return;
+        if (done) return; done = true;
         clearTimeout(timer);
-        drawNoPhoto(); finish();
+        renderFinal(null);
       };
       img.src = photoUrl;
     } else {
-      drawNoPhoto();
-      finish();
+      renderFinal(null);
     }
   });
 }
 
-function shareDesign(designNum, retailRaw, desc, photoUrl) {
+function shareDesign(designNum, priceRaw, desc, photoUrl, mode) {
+  var modeLabel = (mode === 'wholesale') ? 'Wholesale' : 'Retail';
   var fallbackText =
     '*Jariwala Trading Company*\nDesign No: *' + designNum + '*' +
-    (desc      ? '\n' + desc         : '') +
-    (retailRaw ? '\n\u20B9' + retailRaw : '') +
-    (photoUrl  ? '\n' + photoUrl     : '');
+    (desc     ? '\n' + desc                        : '') +
+    (priceRaw ? '\n' + modeLabel + ': \u20B9' + priceRaw : '') +
+    (photoUrl ? '\n' + photoUrl                    : '');
 
-  buildShareCanvas(designNum, retailRaw, photoUrl).then(function(canvas) {
+  buildShareCanvas(designNum, priceRaw, photoUrl, mode).then(function(canvas) {
     canvas.toBlob(function(blob) {
       if (!blob) { doFallbackShare(fallbackText); return; }
-
-      var file = new File([blob], 'Design-' + designNum + '.png', { type: 'image/png' });
-
+      var file = new File([blob], 'Design-' + designNum + '-' + modeLabel + '.png', { type: 'image/png' });
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         navigator.share({
           title: 'Design ' + designNum + ' \u00B7 JTC',
           text: 'Jariwala Trading Company\nDesign No: ' + designNum +
-                (retailRaw ? '\n\u20B9' + retailRaw : ''),
+                (priceRaw ? '\n' + modeLabel + ': \u20B9' + priceRaw : ''),
           files: [file]
         }).catch(function(e) {
           if (e.name !== 'AbortError') doFallbackShare(fallbackText);
