@@ -450,6 +450,7 @@
 // CONFIG
 // ─────────────────────────────────────────────────────────────────
 var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWE67lriCuoTDuBUkcIKEQ1SlNXYerEsGb5qhhW7GfTGN70nH3UqpPlGBCS5BHy9RAtxVy-Oe60v_7/pub?output=csv';
+var IMG_PROXY = 'https://jtc-image-proxy.pallavsaraf04.workers.dev/';
 
 // Column indices (0-based) — A=0, B=1, C=2, D=3, E=4, F=5, G=6
 var COL_DESIGN      = 0;  // A — Design Number
@@ -554,26 +555,26 @@ function roundToNearest5(val) {
   return Math.round(n / 5) * 5;
 }
 
+// Returns Drive file ID from any Drive URL format, or null
+function extractDriveId(raw) {
+  if (!raw) return null;
+  raw = raw.trim();
+  if (!raw || raw === '-') return null;
+  var m;
+  m = raw.match(/\/file\/d\/([a-zA-Z0-9_-]{10,})/); if (m) return m[1];
+  m = raw.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);        if (m) return m[1];
+  m = raw.match(/\/d\/([a-zA-Z0-9_-]{10,})/);         if (m) return m[1];
+  return null;
+}
+
+// Returns proxied URL for display (CORS-safe for canvas)
 function makePhotoUrl(raw) {
   if (!raw) return null;
   raw = raw.trim();
-  if (!raw || raw === '-' || raw === '') return null;
-
-  // /file/d/FILE_ID/view  →  thumbnail
-  var m = raw.match(/\/file\/d\/([a-zA-Z0-9_-]{10,})/);
-  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800';
-
-  // ?id=FILE_ID or &id=FILE_ID
-  var m2 = raw.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
-  if (m2) return 'https://drive.google.com/thumbnail?id=' + m2[1] + '&sz=w800';
-
-  // /d/FILE_ID (alternate forms)
-  var m3 = raw.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
-  if (m3) return 'https://drive.google.com/thumbnail?id=' + m3[1] + '&sz=w800';
-
-  // Already a direct URL
+  if (!raw || raw === '-') return null;
+  var id = extractDriveId(raw);
+  if (id) return IMG_PROXY + '?id=' + id;
   if (/^https?:\/\//.test(raw)) return raw;
-
   return null;
 }
 
@@ -1112,23 +1113,13 @@ function fallbackCopy(text) {
 // shares via Web Share API (with image file), falls back to WhatsApp
 // ─────────────────────────────────────────────────────────────────
 
-function buildShareCanvas(designNum, retailRaw, desc) {
-  var W = 800, H = 800;
-  var canvas = document.createElement('canvas');
-  canvas.width = W; canvas.height = H;
-  var ctx = canvas.getContext('2d');
+// ─────────────────────────────────────────────────────────────────
+// SHARE CANVAS — photo (via proxy) + DN + price overlay
+// Layout: photo fills top 3/4, dark bar at bottom with text
+// Falls back gracefully if photo fails or proxy is slow
+// ─────────────────────────────────────────────────────────────────
 
-  // ── Background: dark ink with rose radial glow ──
-  ctx.fillStyle = '#1a0a0e';
-  ctx.fillRect(0, 0, W, H);
-
-  // Rose radial glow from bottom centre
-  var glow = ctx.createRadialGradient(W/2, H+100, 50, W/2, H/2, H*0.9);
-  glow.addColorStop(0, 'rgba(201,24,74,0.45)');
-  glow.addColorStop(1, 'rgba(201,24,74,0)');
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, W, H);
-
+function drawCanvasOverlay(ctx, W, H, designNum, retailRaw) {
   // ── Top gradient band ──
   var band = ctx.createLinearGradient(0, 0, W, 0);
   band.addColorStop(0,   '#c9184a');
@@ -1137,95 +1128,54 @@ function buildShareCanvas(designNum, retailRaw, desc) {
   ctx.fillStyle = band;
   ctx.fillRect(0, 0, W, 6);
 
-  // ── Brand label ──
-  ctx.fillStyle = 'rgba(255,179,193,0.75)';
-  ctx.font = '600 22px DM Sans, sans-serif';
-  ctx.letterSpacing = '6px';
-  ctx.textAlign = 'center';
-  ctx.fillText('JARIWALA TRADING COMPANY', W/2, 70);
+  // ── Bottom overlay bar ──
+  var barH = 200;
+  var barY = H - barH;
 
-  // ── Decorative horizontal rule ──
+  // Gradient: transparent → dark ink
+  var barGrad = ctx.createLinearGradient(0, barY - 60, 0, H);
+  barGrad.addColorStop(0, 'rgba(26,10,14,0)');
+  barGrad.addColorStop(0.35, 'rgba(26,10,14,0.85)');
+  barGrad.addColorStop(1,   'rgba(26,10,14,0.97)');
+  ctx.fillStyle = barGrad;
+  ctx.fillRect(0, barY - 60, W, barH + 60);
+
+  // Rose glow accent inside bar
+  var glow = ctx.createRadialGradient(W/2, H, 10, W/2, H - barH/2, W * 0.7);
+  glow.addColorStop(0, 'rgba(201,24,74,0.3)');
+  glow.addColorStop(1, 'rgba(201,24,74,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, barY - 60, W, barH + 60);
+
+  // ── Brand micro-label ──
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,179,193,0.65)';
+  ctx.font = '500 17px DM Sans, sans-serif';
+  ctx.letterSpacing = '4px';
+  ctx.fillText('JARIWALA TRADING COMPANY', W/2, barY + 30);
+
+  // ── Thin rose rule ──
   var rule = ctx.createLinearGradient(0, 0, W, 0);
   rule.addColorStop(0,   'transparent');
   rule.addColorStop(0.5, 'rgba(201,24,74,0.5)');
   rule.addColorStop(1,   'transparent');
   ctx.strokeStyle = rule;
   ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(80, 90); ctx.lineTo(W-80, 90); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(60, barY + 44); ctx.lineTo(W - 60, barY + 44); ctx.stroke();
 
-  // ── "Design No." label ──
-  ctx.fillStyle = 'rgba(255,179,193,0.6)';
-  ctx.font = '500 20px DM Sans, sans-serif';
-  ctx.letterSpacing = '4px';
-  ctx.fillText('DESIGN NO.', W/2, 160);
-
-  // ── Large design number ──
+  // ── Design number (large) ──
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 120px Playfair Display, serif';
-  ctx.letterSpacing = '2px';
-  ctx.fillText(designNum, W/2, 310);
+  ctx.font = 'bold 68px Playfair Display, serif';
+  ctx.letterSpacing = '1px';
+  ctx.fillText('Design No. ' + designNum, W/2, barY + 118);
 
-  // ── Description (if any) — wrap to 2 lines ──
-  if (desc) {
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.font = '300 26px DM Sans, sans-serif';
-    ctx.letterSpacing = '0.5px';
-    var maxW = 620, words = desc.split(' '), line = '', lines = [], y = 380;
-    for (var i = 0; i < words.length; i++) {
-      var test = line + (line ? ' ' : '') + words[i];
-      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = words[i]; }
-      else { line = test; }
-    }
-    if (line) lines.push(line);
-    lines.slice(0, 2).forEach(function(l, idx) {
-      ctx.fillText(l, W/2, y + idx * 38);
-    });
-  }
-
-  // ── Bottom price panel ──
-  var panelY = 480, panelH = 230;
-  // subtle panel background
-  ctx.fillStyle = 'rgba(201,24,74,0.12)';
-  roundRect(ctx, 60, panelY, W-120, panelH, 24);
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(201,24,74,0.3)';
-  ctx.lineWidth = 1.5;
-  roundRect(ctx, 60, panelY, W-120, panelH, 24);
-  ctx.stroke();
-
+  // ── Retail price ──
   if (retailRaw) {
-    ctx.fillStyle = 'rgba(255,179,193,0.7)';
-    ctx.font = '600 18px DM Sans, sans-serif';
-    ctx.letterSpacing = '3px';
-    ctx.fillText('RETAIL RATE', W/2, panelY + 54);
-
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 80px Playfair Display, serif';
+    ctx.fillStyle = '#c9a84c';
+    ctx.font = '600 36px DM Sans, sans-serif';
     ctx.letterSpacing = '1px';
-    ctx.fillText('₹' + retailRaw, W/2, panelY + 160);
-  } else {
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.font = '300 28px DM Sans, sans-serif';
-    ctx.letterSpacing = '1px';
-    ctx.fillText('Rate on request', W/2, panelY + 120);
+    ctx.fillText('\u20B9' + retailRaw, W/2, barY + 168);
   }
-
-  // ── Bottom gold rule ──
-  var grule = ctx.createLinearGradient(0, 0, W, 0);
-  grule.addColorStop(0,   'transparent');
-  grule.addColorStop(0.5, 'rgba(201,168,76,0.5)');
-  grule.addColorStop(1,   'transparent');
-  ctx.strokeStyle = grule;
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(80, 740); ctx.lineTo(W-80, 740); ctx.stroke();
-
-  // ── Footer ──
-  ctx.fillStyle = 'rgba(255,255,255,0.22)';
-  ctx.font = '400 18px DM Sans, sans-serif';
-  ctx.letterSpacing = '2px';
-  ctx.fillText('Kurti Catalogue · JTC', W/2, 780);
-
-  return canvas;
 }
 
 // Helper: rounded rectangle path
@@ -1243,17 +1193,86 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
+// Build canvas with photo; resolves with canvas always (falls back to no-photo if needed)
+function buildShareCanvas(designNum, retailRaw, photoUrl) {
+  var W = 800, H = 1000;
+
+  return new Promise(function(resolve) {
+    var canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    var ctx = canvas.getContext('2d');
+
+    function drawWithPhoto(img) {
+      // Draw photo cover-fit into top portion
+      var photoH = H;
+      var scale = Math.max(W / img.naturalWidth, photoH / img.naturalHeight);
+      var dw = img.naturalWidth  * scale;
+      var dh = img.naturalHeight * scale;
+      var dx = (W - dw) / 2;
+      var dy = (photoH - dh) / 2;
+      ctx.drawImage(img, dx, dy, dw, dh);
+    }
+
+    function drawNoPhoto() {
+      // Dark branded background when no photo
+      ctx.fillStyle = '#1a0a0e';
+      ctx.fillRect(0, 0, W, H);
+      var glow = ctx.createRadialGradient(W/2, H*0.5, 50, W/2, H*0.5, H*0.7);
+      glow.addColorStop(0, 'rgba(201,24,74,0.35)');
+      glow.addColorStop(1, 'rgba(201,24,74,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, W, H);
+      // Large design number centred
+      ctx.fillStyle = 'rgba(255,255,255,0.12)';
+      ctx.font = 'bold 200px Playfair Display, serif';
+      ctx.textAlign = 'center';
+      ctx.letterSpacing = '2px';
+      ctx.fillText(designNum, W/2, H*0.5 + 70);
+    }
+
+    function finish() {
+      drawCanvasOverlay(ctx, W, H, designNum, retailRaw);
+      resolve(canvas);
+    }
+
+    if (photoUrl) {
+      var img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload  = function() { drawWithPhoto(img); finish(); };
+      img.onerror = function() { drawNoPhoto();      finish(); };
+      // 6 second timeout — if proxy is slow, fall back to no-photo
+      var timedOut = false;
+      var timer = setTimeout(function() {
+        timedOut = true;
+        img.src = '';
+        drawNoPhoto(); finish();
+      }, 6000);
+      img.onload = function() {
+        if (timedOut) return;
+        clearTimeout(timer);
+        drawWithPhoto(img); finish();
+      };
+      img.onerror = function() {
+        if (timedOut) return;
+        clearTimeout(timer);
+        drawNoPhoto(); finish();
+      };
+      img.src = photoUrl;
+    } else {
+      drawNoPhoto();
+      finish();
+    }
+  });
+}
+
 function shareDesign(designNum, retailRaw, desc, photoUrl) {
   var fallbackText =
     '*Jariwala Trading Company*\nDesign No: *' + designNum + '*' +
-    (desc       ? '\n' + desc              : '') +
-    (retailRaw  ? '\n₹' + retailRaw        : '') +
-    (photoUrl   ? '\n' + photoUrl          : '');
+    (desc      ? '\n' + desc         : '') +
+    (retailRaw ? '\n\u20B9' + retailRaw : '') +
+    (photoUrl  ? '\n' + photoUrl     : '');
 
-  // Try to build and share a canvas image
-  try {
-    var canvas = buildShareCanvas(designNum, retailRaw, desc);
-
+  buildShareCanvas(designNum, retailRaw, photoUrl).then(function(canvas) {
     canvas.toBlob(function(blob) {
       if (!blob) { doFallbackShare(fallbackText); return; }
 
@@ -1261,22 +1280,18 @@ function shareDesign(designNum, retailRaw, desc, photoUrl) {
 
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         navigator.share({
-          title: 'Design ' + designNum + ' · JTC',
+          title: 'Design ' + designNum + ' \u00B7 JTC',
           text: 'Jariwala Trading Company\nDesign No: ' + designNum +
-                (retailRaw ? '\n₹' + retailRaw : ''),
+                (retailRaw ? '\n\u20B9' + retailRaw : ''),
           files: [file]
         }).catch(function(e) {
           if (e.name !== 'AbortError') doFallbackShare(fallbackText);
         });
       } else {
-        // Web Share API not available or doesn't support files — WhatsApp fallback
         doFallbackShare(fallbackText);
       }
     }, 'image/png');
-
-  } catch(e) {
-    doFallbackShare(fallbackText);
-  }
+  });
 }
 
 function doFallbackShare(text) {
