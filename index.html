@@ -319,72 +319,68 @@
   }
 
   /* ── TAB BAR ── */
-  .tab-bar { display:flex; background:var(--card-bg); border-radius:16px; border:1px solid var(--border); box-shadow:var(--shadow); overflow:hidden; margin-bottom:16px; }
-  .tab-btn { flex:1; padding:13px 8px; background:transparent; border:none; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:#b090a0; cursor:pointer; letter-spacing:0.3px; transition:background 0.2s,color 0.2s; border-right:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:5px; }
-  .tab-btn:last-child { border-right:none; }
-  .tab-btn.active { background:var(--rose); color:white; }
-  .tab-btn:not(.active):hover { background:var(--rose-pale); color:var(--rose); }
-  .tab-panel { display:none; }
-  .tab-panel.active { display:block; }
-
+  .tab-bar{display:flex;background:var(--card-bg);border-radius:16px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px;}
+  .tab-btn{flex:1;padding:13px 8px;background:transparent;border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#b090a0;cursor:pointer;letter-spacing:0.3px;transition:background 0.2s,color 0.2s;border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:5px;}
+  .tab-btn:last-child{border-right:none;}
+  .tab-btn.active{background:var(--rose);color:white;}
+  .tab-btn:not(.active):hover{background:var(--rose-pale);color:var(--rose);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
   /* ── BROWSE GRID ── */
-  .browse-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
-  .grid-card { background:var(--card-bg); border-radius:18px; overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer; transition:box-shadow 0.2s,transform 0.15s; animation:slideUp 0.3s cubic-bezier(0.2,0.8,0.3,1) both; }
-  .grid-card:hover { box-shadow:var(--shadow-hover); transform:translateY(-2px); }
-  .grid-card:active { transform:scale(0.97); }
-  .grid-img-wrap { width:100%; aspect-ratio:3/4; background:#f8f0f2; overflow:hidden; position:relative; display:flex; align-items:center; justify-content:center; }
-  .grid-img-wrap img { width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 0.3s; }
-  .grid-img-wrap img.loaded { opacity:1; }
-  .grid-no-photo { font-size:28px; opacity:0.25; }
-  .grid-spinner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#f8f0f2; }
-  .grid-spinner-ring { width:22px; height:22px; border:2px solid var(--border); border-top-color:var(--rose); border-radius:50%; animation:spin 0.7s linear infinite; }
-  .grid-info { padding:10px 12px 12px; }
-  .grid-dn { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--ink); line-height:1; margin-bottom:4px; }
-  .grid-price { font-size:11px; color:var(--rose); font-weight:600; }
-  .grid-stock { font-size:10px; color:#b090a0; margin-top:2px; }
-  .grid-stock.low { color:#e53935; }
-  .load-more-btn { width:100%; padding:14px; background:transparent; border:2px dashed var(--rose-mid); border-radius:14px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--rose); cursor:pointer; transition:all 0.2s; margin-bottom:20px; }
-  .load-more-btn:hover { background:var(--rose-pale); border-color:var(--rose); }
-
+  .browse-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+  .grid-card{background:var(--card-bg);border-radius:18px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow);cursor:pointer;transition:box-shadow 0.2s,transform 0.15s;animation:slideUp 0.3s cubic-bezier(0.2,0.8,0.3,1) both;}
+  .grid-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px);}
+  .grid-card:active{transform:scale(0.97);}
+  .grid-img-wrap{width:100%;aspect-ratio:3/4;background:#f8f0f2;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+  .grid-img-wrap img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.3s;}
+  .grid-img-wrap img.loaded{opacity:1;}
+  .grid-no-photo{font-size:28px;opacity:0.25;}
+  .grid-spinner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#f8f0f2;}
+  .grid-spinner-ring{width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--rose);border-radius:50%;animation:spin 0.7s linear infinite;}
+  .grid-info{padding:10px 12px 12px;}
+  .grid-dn{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);line-height:1;margin-bottom:4px;}
+  .grid-price{font-size:11px;color:var(--rose);font-weight:600;}
+  .grid-stock{font-size:10px;color:#b090a0;margin-top:2px;}
+  .grid-stock.low{color:#e53935;}
+  .load-more-btn{width:100%;padding:14px;background:transparent;border:2px dashed var(--rose-mid);border-radius:14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--rose);cursor:pointer;transition:all 0.2s;margin-bottom:20px;}
+  .load-more-btn:hover{background:var(--rose-pale);border-color:var(--rose);}
   /* ── SERIES FILTER ── */
-  .series-filter-wrap { margin-bottom:14px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; }
-  .series-filter-wrap::-webkit-scrollbar { display:none; }
-  .series-pills { display:flex; gap:8px; width:max-content; }
-  .series-pill {
-    padding:8px 16px; border-radius:20px;
-    border:1.5px solid var(--border);
-    background:var(--card-bg);
-    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600;
-    color:#b090a0; cursor:pointer; white-space:nowrap;
-    transition:all 0.2s;
-  }
-  .series-pill:hover { border-color:var(--rose); color:var(--rose); background:var(--rose-pale); }
-  .series-pill.active { background:var(--rose); color:white; border-color:var(--rose); }
+  .series-filter-wrap{margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
+  .series-filter-wrap::-webkit-scrollbar{display:none;}
+  .series-pills{display:flex;gap:8px;width:max-content;}
+  .series-pill{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--card-bg);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#b090a0;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+  .series-pill:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-pale);}
+  .series-pill.active{background:var(--rose);color:white;border-color:var(--rose);}
+  /* ── SHARE BUTTON ── */
+  .share-btn-wrap{padding:0 14px 14px;}
+  .share-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px;background:#25D366;border:none;color:white;}
+  .share-btn:hover{background:#1ebe5d;}
+  .share-btn:active{transform:scale(0.97);}
+  /* ── STOCK FIELD ── */
+  .field-value.price-stock{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;line-height:1;}
 
-  /* ── SHARE BUTTONS ── */
-  .share-btn-wrap { padding:0 14px 14px; display:flex; gap:8px; }
-  .share-btn {
-    flex:1; display:flex; align-items:center; justify-content:center; gap:7px;
-    padding:13px 8px; border-radius:14px;
-    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700;
-    cursor:pointer; transition:all 0.2s; letter-spacing:0.3px;
-    text-decoration:none;
-  }
-  .share-btn-save {
-    background:transparent; border:2px solid var(--rose);
-    color:var(--rose);
-  }
-  .share-btn-save:hover { background:var(--rose-pale); }
-  .share-btn-save:active { transform:scale(0.97); }
-  .share-btn-wa {
-    background:#25D366; border:2px solid #25D366;
-    color:white;
-  }
-  .share-btn-wa:hover { background:#1ebe5d; border-color:#1ebe5d; }
-  .share-btn-wa:active { transform:scale(0.97); }
+  /* ── SORT BAR ── */
+  .sort-wrap{margin-bottom:12px;display:flex;align-items:center;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;}
+  .sort-wrap::-webkit-scrollbar{display:none;}
+  .sort-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b090a0;white-space:nowrap;flex-shrink:0;}
+  .sort-btn{padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card-bg);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:#b090a0;cursor:pointer;white-space:nowrap;transition:all 0.2s;flex-shrink:0;}
+  .sort-btn:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-pale);}
+  .sort-btn.active{background:var(--ink);color:white;border-color:var(--ink);}
 
-  /* ── PRICE STOCK ── */
-  .field-value.price-stock { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; line-height:1; }
+  /* ── PRICE FILTER ── */
+  .price-filter-wrap{margin-bottom:14px;}
+  .price-filter-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b090a0;margin-bottom:8px;display:block;}
+  .price-pills{display:flex;gap:8px;flex-wrap:wrap;}
+  .price-pill{padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card-bg);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:#b090a0;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+  .price-pill:hover{border-color:var(--gold);color:var(--gold);background:#fffbf0;}
+  .price-pill.active{background:var(--gold);color:white;border-color:var(--gold);}
+
+  /* ── COPY BUTTON ── */
+  .copy-btn-wrap{padding:0 14px 10px;}
+  .copy-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px;background:transparent;border:1.5px solid var(--border);color:var(--ink-soft);}
+  .copy-btn:hover{background:var(--rose-pale);border-color:var(--rose);color:var(--rose);}
+  .copy-btn:active{transform:scale(0.97);}
+  .copy-btn.copied{background:var(--rose-pale);border-color:var(--rose);color:var(--rose);}
 </style>
 </head>
 <body>
@@ -406,7 +402,7 @@
     <div class="search-card">
       <span class="search-label">Search by Design Number</span>
       <div class="search-row">
-        <input class="search-input" id="searchInput" type="text" placeholder="e.g. K-101, D-205&hellip;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+        <input class="search-input" id="searchInput" type="text" placeholder="e.g. 1317, 2025…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
         <button class="search-btn" onclick="doSearch()">Search</button>
       </div>
     </div>
@@ -415,23 +411,37 @@
     </div>
     <div class="data-status">
       <div class="dot loading" id="statusDot"></div>
-      <span id="statusText">Loading catalogue&hellip;</span>
+      <span id="statusText">Loading catalogue…</span>
     </div>
     <div id="output"></div>
   </div>
   <div class="tab-panel" id="panel-browse">
     <div class="data-status" id="browseStatus" style="display:none">
-      <div class="dot loading"></div><span>Loading&hellip;</span>
+      <div class="dot loading"></div><span>Loading…</span>
     </div>
-    <div class="series-filter-wrap">
-      <div class="series-pills" id="seriesPills"></div>
+    <div class="series-filter-wrap"><div class="series-pills" id="seriesPills"></div></div>
+    <div class="price-filter-wrap">
+      <span class="price-filter-label">Price Range</span>
+      <div class="price-pills">
+        <button class="price-pill active" data-price="all"     onclick="setPriceFilter('all')">All Prices</button>
+        <button class="price-pill"        data-price="u500"    onclick="setPriceFilter('u500')">Under &#x20B9;500</button>
+        <button class="price-pill"        data-price="500-1000" onclick="setPriceFilter('500-1000')">&#x20B9;500&#x2013;&#x20B9;1000</button>
+        <button class="price-pill"        data-price="o1000"   onclick="setPriceFilter('o1000')">Above &#x20B9;1000</button>
+      </div>
+    </div>
+    <div class="sort-wrap">
+      <span class="sort-label">Sort</span>
+      <button class="sort-btn active" data-sort="default"    onclick="setSortOrder('default')">Default</button>
+      <button class="sort-btn"        data-sort="stock-asc"  onclick="setSortOrder('stock-asc')">&#x26A0; Low Stock First</button>
+      <button class="sort-btn"        data-sort="price-asc"  onclick="setSortOrder('price-asc')">Price &#x2191;</button>
+      <button class="sort-btn"        data-sort="price-desc" onclick="setSortOrder('price-desc')">Price &#x2193;</button>
     </div>
     <div class="browse-grid" id="browseGrid"></div>
     <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreGrid()" style="display:none">Load More Designs</button>
   </div>
   <div class="watermark">
     <img src="JTC.jpg" alt="JTC" class="watermark-logo">
-    <div>Jariwala Trading Company &middot; Kurti Catalogue</div>
+    <div>Jariwala Trading Company · Kurti Catalogue</div>
   </div>
 </div>
 
@@ -459,25 +469,28 @@ var allRows = [];  // array of cleaned row arrays
 // ─────────────────────────────────────────────────────────────────
 // FETCH — tries direct first, then CORS proxies
 // ─────────────────────────────────────────────────────────────────
-async function fetchCSV(url) {
+function fetchCSV(url) {
   var attempts = [
-    url,  // direct — works for "published to web" sheets
+    url,
     'https://corsproxy.io/?url=' + encodeURIComponent(url),
     'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
     'https://cors-anywhere.herokuapp.com/' + url
   ];
-  for (var i = 0; i < attempts.length; i++) {
-    try {
-      var resp = await fetch(attempts[i], { cache: 'no-cache' });
-      if (!resp.ok) continue;
-      var text = await resp.text();
-      // Make sure it looks like CSV, not an HTML error page
-      if (text && text.length > 30 && text.indexOf('<!DOCTYPE') === -1 && text.indexOf('<html') === -1) {
-        return text;
-      }
-    } catch (e) { /* try next */ }
+  function tryNext(i) {
+    if (i >= attempts.length) return Promise.resolve(null);
+    return fetch(attempts[i], { cache: 'no-cache' })
+      .then(function(resp) {
+        if (!resp.ok) return tryNext(i + 1);
+        return resp.text().then(function(text) {
+          if (text && text.length > 30 && text.indexOf('<!DOCTYPE') === -1 && text.indexOf('<html') === -1) {
+            return text;
+          }
+          return tryNext(i + 1);
+        });
+      })
+      .catch(function() { return tryNext(i + 1); });
   }
-  return null;
+  return tryNext(0);
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -509,32 +522,27 @@ function parseCSV(text) {
 // ─────────────────────────────────────────────────────────────────
 // LOAD
 // ─────────────────────────────────────────────────────────────────
-async function loadData() {
+function loadData() {
   updateStatus('loading', 'Loading catalogue…');
-  var text = await fetchCSV(CSV_URL);
-
-  if (!text) {
-    updateStatus('error', 'Could not load data');
-    document.getElementById('output').innerHTML =
-      '<div class="status-msg error">⚠️ Could not load the catalogue.<br><small>Check that the Google Sheet is published to the web.</small></div>';
-    return;
-  }
-
-  var parsed = parseCSV(text);
-
-  // Skip header row (row 0) and filter out rows with no design number
-  allRows = parsed.slice(1).filter(function(r) {
-    return r[COL_DESIGN] && r[COL_DESIGN].trim() !== '';
+  fetchCSV(CSV_URL).then(function(text) {
+    if (!text) {
+      updateStatus('error', 'Could not load data');
+      document.getElementById('output').innerHTML =
+        '<div class="status-msg error">⚠️ Could not load the catalogue.<br><small>Check that the Google Sheet is published to the web.</small></div>';
+      return;
+    }
+    var parsed = parseCSV(text);
+    allRows = parsed.slice(1).filter(function(r) {
+      return r[COL_DESIGN] && r[COL_DESIGN].trim() !== '';
+    });
+    if (!allRows.length) {
+      updateStatus('error', 'No data found');
+      document.getElementById('output').innerHTML =
+        '<div class="status-msg error">No design rows found in the sheet.</div>';
+      return;
+    }
+    updateStatus('green', allRows.length + ' designs loaded');
   });
-
-  if (!allRows.length) {
-    updateStatus('error', 'No data found');
-    document.getElementById('output').innerHTML =
-      '<div class="status-msg error">No design rows found in the sheet.</div>';
-    return;
-  }
-
-  updateStatus('green', allRows.length + ' designs loaded');
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -575,9 +583,9 @@ function esc(s) {
 
 function makeWaUrl(designNum, retailRaw, desc, photoUrl) {
   var lines = ['*Jariwala Trading Company*', 'Design No: *' + designNum + '*'];
-  if (desc) lines.push('Description: ' + desc);
-  if (retailRaw) lines.push('Rate: ₹' + retailRaw);
-  if (photoUrl) lines.push('Photo: ' + photoUrl);
+  if (desc) lines.push(desc);
+  if (retailRaw) lines.push('₹' + retailRaw);
+  if (photoUrl) lines.push(photoUrl);
   return 'https://wa.me/?text=' + encodeURIComponent(lines.join('\n'));
 }
 
@@ -698,17 +706,16 @@ function renderCard(row) {
         '</div>' +
       '</div>' +
 
-      // Share buttons — only show if photo exists
-      (photoUrl ? (
-        '<div class="share-btn-wrap">' +
-          '<a class="share-btn share-btn-save" href="' + esc(photoUrl || '') + '" target="_blank" rel="noopener">' +
-            '&#x1F4F7; Save Photo' +
-          '</a>' +
-          '<a class="share-btn share-btn-wa" href="' + makeWaUrl(designNum, retailRaw, desc, '') + '" target="_blank" rel="noopener">' +
-            '&#x1F4AC; WhatsApp' +
-          '</a>' +
-        '</div>'
-      ) : '') +
+      '<div class="copy-btn-wrap">' +
+        '<button class="copy-btn" id="cb-' + id + '" onclick="copyDetails(\'' + id + '\',\'' + designNum + '\',' + (retailRaw ? '\'' + esc(retailRaw) + '\'' : 'null') + ',\'' + esc(desc||'') + '\')">' +
+          '&#x1F4CB; Copy Details' +
+        '</button>' +
+      '</div>' +
+      '<div class="share-btn-wrap">' +
+        '<button class="share-btn" onclick="shareDesign(\'' + designNum + '\',' + (retailRaw ? '\'' + esc(retailRaw) + '\'' : 'null') + ',\'' + esc(desc||'') + '\',' + '\'' + esc(photoUrl||'') + '\')">' +
+          '&#x1F4E4; Share Design' +
+        '</button>' +
+      '</div>' +
       '<div class="card-bottom"></div>' +
 
     '</div>'
@@ -882,17 +889,20 @@ function switchTab(tab) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// BROWSE GRID
+// SERIES FILTER + SORT + PRICE FILTER + BROWSE GRID
 // ─────────────────────────────────────────────────────────────────
-var GRID_PAGE_SIZE=20, gridOffset=0, activeSeriesFilter='all';
+var GRID_PAGE_SIZE=20, gridOffset=0;
+var activeSeriesFilter='all';
+var activeSortOrder='default';
+var activePriceFilter='all';
 
+// ── Series pills ──
 function buildSeriesPills() {
-  // Extract unique 2-digit prefixes from all design numbers
   var seen={}, series=[];
   allRows.forEach(function(row){
     var dn=(row[COL_DESIGN]||'').trim();
     var prefix=dn.substring(0,2);
-    if (prefix && /^\d{2}$/.test(prefix) && !seen[prefix]) {
+    if (prefix && /^[0-9]{2}$/.test(prefix) && !seen[prefix]) {
       seen[prefix]=true; series.push(prefix);
     }
   });
@@ -900,16 +910,16 @@ function buildSeriesPills() {
   var pills=document.getElementById('seriesPills');
   if (!pills) return;
   pills.innerHTML='';
-  // All pill
   var allPill=document.createElement('button');
-  allPill.className='series-pill active'; allPill.textContent='All';
+  allPill.className='series-pill active';
+  allPill.textContent='All';
   allPill.setAttribute('data-series','all');
   allPill.onclick=function(){ setSeriesFilter('all'); };
   pills.appendChild(allPill);
-  // One pill per prefix
   series.forEach(function(s){
     var pill=document.createElement('button');
-    pill.className='series-pill'; pill.textContent=s+'__';
+    pill.className='series-pill';
+    pill.textContent=s+'__';
     pill.setAttribute('data-series',s);
     pill.onclick=function(){ setSeriesFilter(s); };
     pills.appendChild(pill);
@@ -921,38 +931,103 @@ function setSeriesFilter(series) {
   document.querySelectorAll('.series-pill').forEach(function(p){
     p.classList.toggle('active', p.getAttribute('data-series')===series);
   });
+  resetGrid();
+}
+
+// ── Sort ──
+function setSortOrder(order) {
+  activeSortOrder=order;
+  document.querySelectorAll('.sort-btn').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-sort')===order);
+  });
+  resetGrid();
+}
+
+// ── Price filter ──
+function setPriceFilter(range) {
+  activePriceFilter=range;
+  document.querySelectorAll('.price-pill').forEach(function(p){
+    p.classList.toggle('active', p.getAttribute('data-price')===range);
+  });
+  resetGrid();
+}
+
+function priceInRange(retailRaw, range) {
+  if (range==='all') return true;
+  var n=parseFloat((retailRaw||'').replace(/[^0-9.]/g,''));
+  if (isNaN(n)) return range==='all';
+  if (range==='u500')    return n < 500;
+  if (range==='500-1000') return n >= 500 && n <= 1000;
+  if (range==='o1000')   return n > 1000;
+  return true;
+}
+
+// ── Combined filter + sort ──
+function getFilteredRows() {
+  var rows=allRows;
+
+  // Series filter
+  if (activeSeriesFilter!=='all') {
+    rows=rows.filter(function(row){
+      return (row[COL_DESIGN]||'').trim().substring(0,2)===activeSeriesFilter;
+    });
+  }
+
+  // Price filter
+  if (activePriceFilter!=='all') {
+    rows=rows.filter(function(row){
+      return priceInRange(row[COL_RETAIL]||'', activePriceFilter);
+    });
+  }
+
+  // Sort — work on a copy so allRows order is preserved
+  rows=rows.slice();
+  if (activeSortOrder==='price-asc') {
+    rows.sort(function(a,b){
+      return (parseFloat(a[COL_RETAIL])||0) - (parseFloat(b[COL_RETAIL])||0);
+    });
+  } else if (activeSortOrder==='price-desc') {
+    rows.sort(function(a,b){
+      return (parseFloat(b[COL_RETAIL])||0) - (parseFloat(a[COL_RETAIL])||0);
+    });
+  } else if (activeSortOrder==='stock-asc') {
+    rows.sort(function(a,b){
+      var sa=parseFloat(a[COL_STOCK]);
+      var sb=parseFloat(b[COL_STOCK]);
+      if (isNaN(sa)) sa=999999;
+      if (isNaN(sb)) sb=999999;
+      return sa-sb;
+    });
+  }
+
+  return rows;
+}
+
+function resetGrid() {
   gridOffset=0;
   document.getElementById('browseGrid').innerHTML='';
   appendGridCards();
-}
-
-function getFilteredRows() {
-  if (activeSeriesFilter==='all') return allRows;
-  return allRows.filter(function(row){
-    var dn=(row[COL_DESIGN]||'').trim();
-    return dn.substring(0,2)===activeSeriesFilter;
-  });
 }
 
 function renderBrowseGrid() {
   if (!allRows.length) {
     document.getElementById('browseStatus').style.display='flex';
-    var chk=setInterval(function(){if(allRows.length){clearInterval(chk);renderBrowseGrid();}},400);
+    var chk=setInterval(function(){
+      if (allRows.length) { clearInterval(chk); renderBrowseGrid(); }
+    }, 400);
     return;
   }
   document.getElementById('browseStatus').style.display='none';
   buildSeriesPills();
-  gridOffset=0;
-  document.getElementById('browseGrid').innerHTML='';
-  appendGridCards();
+  resetGrid();
 }
 
-function loadMoreGrid(){appendGridCards();}
+function loadMoreGrid() { appendGridCards(); }
 
 function appendGridCards() {
   var grid=document.getElementById('browseGrid');
   var filtered=getFilteredRows();
-  var batch=filtered.slice(gridOffset,gridOffset+GRID_PAGE_SIZE);
+  var batch=filtered.slice(gridOffset, gridOffset+GRID_PAGE_SIZE);
   var ctr=gridOffset;
   batch.forEach(function(row){
     var gid='g'+ctr++;
@@ -961,7 +1036,7 @@ function appendGridCards() {
     var photoUrl=makePhotoUrl(row[COL_PHOTO]||'');
     var stockRaw=(row[COL_STOCK]||'').toString().trim();
     var stockNum=parseFloat(stockRaw);
-    var priceStr=retailRaw?'₹'+esc(retailRaw):'';
+    var priceStr=retailRaw?'\u20B9'+esc(retailRaw):'';
     var stockStr=(stockRaw!==''&&stockRaw!=='-')?stockRaw+' PCS':'';
     var stockLow=(!isNaN(stockNum)&&stockNum<=0)?' low':'';
     var imgHTML=photoUrl
@@ -976,7 +1051,7 @@ function appendGridCards() {
         (priceStr?'<div class="grid-price">'+priceStr+'</div>':'')+
         (stockStr?'<div class="grid-stock'+stockLow+'">'+stockStr+' in stock</div>':'')+
       '</div>';
-    card.addEventListener('click',function(){
+    card.addEventListener('click', function(){
       switchTab('search');
       document.getElementById('searchInput').value=(row[COL_DESIGN]||'').trim();
       doSearch();
@@ -993,10 +1068,228 @@ function appendGridCards() {
     }
   });
   gridOffset+=batch.length;
-  document.getElementById('loadMoreBtn').style.display=gridOffset<getFilteredRows().length?'block':'none';
+  document.getElementById('loadMoreBtn').style.display=gridOffset<filtered.length?'block':'none';
 }
 
+// ─────────────────────────────────────────────────────────────────
+// COPY DETAILS
+// ─────────────────────────────────────────────────────────────────
+function copyDetails(id, designNum, retailRaw, desc) {
+  var lines = ['Jariwala Trading Company', 'Design No: ' + designNum];
+  if (desc)      lines.push(desc);
+  if (retailRaw) lines.push('\u20B9' + retailRaw);
+  var text = lines.join('\n');
 
+  var btn = document.getElementById('cb-' + id);
+  function markCopied() {
+    if (btn) { btn.textContent = '\u2713 Copied!'; btn.classList.add('copied'); }
+    setTimeout(function(){
+      if (btn) { btn.innerHTML = '&#x1F4CB; Copy Details'; btn.classList.remove('copied'); }
+    }, 2000);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(markCopied).catch(function(){
+      fallbackCopy(text); markCopied();
+    });
+  } else {
+    fallbackCopy(text); markCopied();
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// SHARE DESIGN — generates a branded image card via Canvas,
+// shares via Web Share API (with image file), falls back to WhatsApp
+// ─────────────────────────────────────────────────────────────────
+
+function buildShareCanvas(designNum, retailRaw, desc) {
+  var W = 800, H = 800;
+  var canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d');
+
+  // ── Background: dark ink with rose radial glow ──
+  ctx.fillStyle = '#1a0a0e';
+  ctx.fillRect(0, 0, W, H);
+
+  // Rose radial glow from bottom centre
+  var glow = ctx.createRadialGradient(W/2, H+100, 50, W/2, H/2, H*0.9);
+  glow.addColorStop(0, 'rgba(201,24,74,0.45)');
+  glow.addColorStop(1, 'rgba(201,24,74,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── Top gradient band ──
+  var band = ctx.createLinearGradient(0, 0, W, 0);
+  band.addColorStop(0,   '#c9184a');
+  band.addColorStop(0.5, '#c9a84c');
+  band.addColorStop(1,   '#c9184a');
+  ctx.fillStyle = band;
+  ctx.fillRect(0, 0, W, 6);
+
+  // ── Brand label ──
+  ctx.fillStyle = 'rgba(255,179,193,0.75)';
+  ctx.font = '600 22px DM Sans, sans-serif';
+  ctx.letterSpacing = '6px';
+  ctx.textAlign = 'center';
+  ctx.fillText('JARIWALA TRADING COMPANY', W/2, 70);
+
+  // ── Decorative horizontal rule ──
+  var rule = ctx.createLinearGradient(0, 0, W, 0);
+  rule.addColorStop(0,   'transparent');
+  rule.addColorStop(0.5, 'rgba(201,24,74,0.5)');
+  rule.addColorStop(1,   'transparent');
+  ctx.strokeStyle = rule;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(80, 90); ctx.lineTo(W-80, 90); ctx.stroke();
+
+  // ── "Design No." label ──
+  ctx.fillStyle = 'rgba(255,179,193,0.6)';
+  ctx.font = '500 20px DM Sans, sans-serif';
+  ctx.letterSpacing = '4px';
+  ctx.fillText('DESIGN NO.', W/2, 160);
+
+  // ── Large design number ──
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 120px Playfair Display, serif';
+  ctx.letterSpacing = '2px';
+  ctx.fillText(designNum, W/2, 310);
+
+  // ── Description (if any) — wrap to 2 lines ──
+  if (desc) {
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '300 26px DM Sans, sans-serif';
+    ctx.letterSpacing = '0.5px';
+    var maxW = 620, words = desc.split(' '), line = '', lines = [], y = 380;
+    for (var i = 0; i < words.length; i++) {
+      var test = line + (line ? ' ' : '') + words[i];
+      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = words[i]; }
+      else { line = test; }
+    }
+    if (line) lines.push(line);
+    lines.slice(0, 2).forEach(function(l, idx) {
+      ctx.fillText(l, W/2, y + idx * 38);
+    });
+  }
+
+  // ── Bottom price panel ──
+  var panelY = 480, panelH = 230;
+  // subtle panel background
+  ctx.fillStyle = 'rgba(201,24,74,0.12)';
+  roundRect(ctx, 60, panelY, W-120, panelH, 24);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(201,24,74,0.3)';
+  ctx.lineWidth = 1.5;
+  roundRect(ctx, 60, panelY, W-120, panelH, 24);
+  ctx.stroke();
+
+  if (retailRaw) {
+    ctx.fillStyle = 'rgba(255,179,193,0.7)';
+    ctx.font = '600 18px DM Sans, sans-serif';
+    ctx.letterSpacing = '3px';
+    ctx.fillText('RETAIL RATE', W/2, panelY + 54);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 80px Playfair Display, serif';
+    ctx.letterSpacing = '1px';
+    ctx.fillText('₹' + retailRaw, W/2, panelY + 160);
+  } else {
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '300 28px DM Sans, sans-serif';
+    ctx.letterSpacing = '1px';
+    ctx.fillText('Rate on request', W/2, panelY + 120);
+  }
+
+  // ── Bottom gold rule ──
+  var grule = ctx.createLinearGradient(0, 0, W, 0);
+  grule.addColorStop(0,   'transparent');
+  grule.addColorStop(0.5, 'rgba(201,168,76,0.5)');
+  grule.addColorStop(1,   'transparent');
+  ctx.strokeStyle = grule;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(80, 740); ctx.lineTo(W-80, 740); ctx.stroke();
+
+  // ── Footer ──
+  ctx.fillStyle = 'rgba(255,255,255,0.22)';
+  ctx.font = '400 18px DM Sans, sans-serif';
+  ctx.letterSpacing = '2px';
+  ctx.fillText('Kurti Catalogue · JTC', W/2, 780);
+
+  return canvas;
+}
+
+// Helper: rounded rectangle path
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function shareDesign(designNum, retailRaw, desc, photoUrl) {
+  var fallbackText =
+    '*Jariwala Trading Company*\nDesign No: *' + designNum + '*' +
+    (desc       ? '\n' + desc              : '') +
+    (retailRaw  ? '\n₹' + retailRaw        : '') +
+    (photoUrl   ? '\n' + photoUrl          : '');
+
+  // Try to build and share a canvas image
+  try {
+    var canvas = buildShareCanvas(designNum, retailRaw, desc);
+
+    canvas.toBlob(function(blob) {
+      if (!blob) { doFallbackShare(fallbackText); return; }
+
+      var file = new File([blob], 'Design-' + designNum + '.png', { type: 'image/png' });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({
+          title: 'Design ' + designNum + ' · JTC',
+          text: 'Jariwala Trading Company\nDesign No: ' + designNum +
+                (retailRaw ? '\n₹' + retailRaw : ''),
+          files: [file]
+        }).catch(function(e) {
+          if (e.name !== 'AbortError') doFallbackShare(fallbackText);
+        });
+      } else {
+        // Web Share API not available or doesn't support files — WhatsApp fallback
+        doFallbackShare(fallbackText);
+      }
+    }, 'image/png');
+
+  } catch(e) {
+    doFallbackShare(fallbackText);
+  }
+}
+
+function doFallbackShare(text) {
+  if (navigator.share) {
+    navigator.share({ title: 'JTC Design', text: text, url: window.location.href })
+      .catch(function(e) {
+        if (e.name !== 'AbortError')
+          window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+      });
+  } else {
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  }
+}
 
 // ─────────────────────────────────────────────────────────────────
 // INIT
