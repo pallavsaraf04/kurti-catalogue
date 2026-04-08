@@ -1155,52 +1155,64 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-// Returns a Promise<canvas>
+// ─────────────────────────────────────────────────────────────────
+// SHARE CANVAS
+// Layout: full photo (contain-width, full natural height, no crop)
+//         + solid branded panel BELOW photo with DN + price
+// mode = 'retail' | 'wholesale'
+// ─────────────────────────────────────────────────────────────────
 function buildShareCanvas(designNum, priceRaw, photoUrl, mode) {
-  var W = 800;
-  var PANEL_H = 220;   // fixed height of the text panel below photo
+  var W       = 800;
+  var PANEL_H = 240;  // height of info panel below photo
 
   return new Promise(function(resolve) {
 
     function renderFinal(photoImg) {
-      // Photo natural size
-      var photoW = photoImg ? photoImg.naturalWidth  : 0;
-      var photoH = photoImg ? photoImg.naturalHeight : 0;
+      // ── Determine canvas height ──
+      var imgDrawH;
+      if (photoImg) {
+        // Scale photo so width = W exactly, preserve aspect ratio fully
+        var scale = W / photoImg.naturalWidth;
+        imgDrawH  = Math.round(photoImg.naturalHeight * scale);
+      } else {
+        imgDrawH = 700; // fallback height when no photo
+      }
 
-      // Scale photo to fit W exactly (contain width, natural height)
-      var scale   = photoImg ? (W / photoW) : 1;
-      var imgH    = photoImg ? Math.round(photoH * scale) : 600;
-
-      var TOTAL_H = imgH + PANEL_H;
+      var TOTAL_H = imgDrawH + PANEL_H;
       var canvas  = document.createElement('canvas');
       canvas.width  = W;
       canvas.height = TOTAL_H;
       var ctx = canvas.getContext('2d');
 
-      // ── Draw photo ──
-      if (photoImg) {
-        ctx.drawImage(photoImg, 0, 0, W, imgH);
-      } else {
-        // No photo — plain dark background placeholder
-        ctx.fillStyle = '#1a0a0e';
-        ctx.fillRect(0, 0, W, imgH || 600);
-        var glow = ctx.createRadialGradient(W/2, (imgH||600)/2, 40, W/2, (imgH||600)/2, W*0.6);
-        glow.addColorStop(0, 'rgba(201,24,74,0.3)');
-        glow.addColorStop(1, 'rgba(201,24,74,0)');
-        ctx.fillStyle = glow;
-        ctx.fillRect(0, 0, W, imgH || 600);
-      }
-
-      // ── Top gradient band (rose-gold) ──
-      var topBand = ctx.createLinearGradient(0, 0, W, 0);
-      topBand.addColorStop(0,   '#c9184a');
-      topBand.addColorStop(0.5, '#c9a84c');
-      topBand.addColorStop(1,   '#c9184a');
-      ctx.fillStyle = topBand;
+      // ── Top gradient accent band ──
+      var band = ctx.createLinearGradient(0, 0, W, 0);
+      band.addColorStop(0,   '#c9184a');
+      band.addColorStop(0.5, '#c9a84c');
+      band.addColorStop(1,   '#c9184a');
+      ctx.fillStyle = band;
       ctx.fillRect(0, 0, W, 7);
 
-      // ── Panel background ──
-      var panelY = imgH;
+      // ── Photo (or dark placeholder) ──
+      if (photoImg) {
+        ctx.drawImage(photoImg, 0, 0, W, imgDrawH);
+      } else {
+        ctx.fillStyle = '#1a0a0e';
+        ctx.fillRect(0, 0, W, imgDrawH);
+        var glow = ctx.createRadialGradient(W/2, imgDrawH/2, 40, W/2, imgDrawH/2, W*0.6);
+        glow.addColorStop(0, 'rgba(201,24,74,0.28)');
+        glow.addColorStop(1, 'rgba(201,24,74,0)');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, W, imgDrawH);
+        // Faint design number watermark in placeholder
+        ctx.fillStyle = 'rgba(255,255,255,0.07)';
+        ctx.font = 'bold 160px Playfair Display, serif';
+        ctx.textAlign = 'center';
+        ctx.letterSpacing = '2px';
+        ctx.fillText(designNum, W/2, imgDrawH/2 + 55);
+      }
+
+      // ── Panel background (solid dark ink) ──
+      var panelY = imgDrawH;
       ctx.fillStyle = '#1a0a0e';
       ctx.fillRect(0, panelY, W, PANEL_H);
 
@@ -1211,68 +1223,70 @@ function buildShareCanvas(designNum, priceRaw, photoUrl, mode) {
       ctx.fillStyle = pg;
       ctx.fillRect(0, panelY, W, PANEL_H);
 
-      // ── Thin separator line ──
+      // ── Gold separator line at photo/panel boundary ──
       var sep = ctx.createLinearGradient(0, 0, W, 0);
       sep.addColorStop(0,   'transparent');
-      sep.addColorStop(0.5, 'rgba(201,168,76,0.7)');
+      sep.addColorStop(0.5, 'rgba(201,168,76,0.8)');
       sep.addColorStop(1,   'transparent');
       ctx.strokeStyle = sep;
-      ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(40, panelY + 1); ctx.lineTo(W-40, panelY + 1); ctx.stroke();
+      ctx.lineWidth   = 2;
+      ctx.beginPath(); ctx.moveTo(0, panelY); ctx.lineTo(W, panelY); ctx.stroke();
 
-      // ── Brand label ──
-      ctx.textAlign   = 'center';
-      ctx.fillStyle   = 'rgba(255,179,193,0.65)';
-      ctx.font        = '500 17px DM Sans, sans-serif';
+      ctx.textAlign = 'center';
+
+      // ── Brand micro-label ──
+      ctx.fillStyle     = 'rgba(255,179,193,0.6)';
+      ctx.font          = '500 15px DM Sans, sans-serif';
       ctx.letterSpacing = '5px';
-      ctx.fillText('JARIWALA TRADING COMPANY', W/2, panelY + 42);
+      ctx.fillText('JARIWALA TRADING COMPANY', W/2, panelY + 38);
 
-      // ── Design number ──
-      ctx.fillStyle   = '#ffffff';
-      ctx.font        = 'bold 64px Playfair Display, serif';
+      // ── Design number (large) ──
+      ctx.fillStyle     = '#ffffff';
+      ctx.font          = 'bold 62px Playfair Display, serif';
       ctx.letterSpacing = '1px';
-      ctx.fillText('Design No. ' + designNum, W/2, panelY + 122);
+      ctx.fillText('Design No. ' + designNum, W/2, panelY + 120);
 
       // ── Price ──
       if (priceRaw) {
-        // Mode label
-        var modeLabel = (mode === 'wholesale') ? 'Wholesale Rate' : 'Retail Rate';
-        ctx.fillStyle   = 'rgba(201,168,76,0.7)';
-        ctx.font        = '500 15px DM Sans, sans-serif';
+        var modeLabel = (mode === 'wholesale') ? 'WHOLESALE RATE' : 'RETAIL RATE';
+        ctx.fillStyle     = 'rgba(201,168,76,0.65)';
+        ctx.font          = '500 13px DM Sans, sans-serif';
         ctx.letterSpacing = '3px';
-        ctx.fillText(modeLabel.toUpperCase(), W/2, panelY + 152);
+        ctx.fillText(modeLabel, W/2, panelY + 156);
 
-        ctx.fillStyle   = '#c9a84c';
-        ctx.font        = '700 42px DM Sans, sans-serif';
+        ctx.fillStyle     = '#c9a84c';
+        ctx.font          = '700 44px DM Sans, sans-serif';
         ctx.letterSpacing = '1px';
-        ctx.fillText('\u20B9' + priceRaw, W/2, panelY + 200);
+        ctx.fillText('\u20B9' + priceRaw, W/2, panelY + 210);
+      } else {
+        ctx.fillStyle     = 'rgba(255,255,255,0.3)';
+        ctx.font          = '300 24px DM Sans, sans-serif';
+        ctx.letterSpacing = '1px';
+        ctx.fillText('Rate on request', W/2, panelY + 175);
       }
 
       // ── Bottom gold band ──
-      ctx.fillStyle = topBand;
-      ctx.fillRect(0, TOTAL_H - 5, W, 5);
+      ctx.fillStyle = band;
+      ctx.fillRect(0, TOTAL_H - 6, W, 6);
 
       resolve(canvas);
     }
 
     if (photoUrl) {
-      var img = new Image();
+      var img   = new Image();
       img.crossOrigin = 'anonymous';
-      var done = false;
+      var done  = false;
       var timer = setTimeout(function() {
         if (done) return; done = true;
-        img.src = '';
-        renderFinal(null);
+        img.src = ''; renderFinal(null);
       }, 7000);
       img.onload = function() {
         if (done) return; done = true;
-        clearTimeout(timer);
-        renderFinal(img);
+        clearTimeout(timer); renderFinal(img);
       };
       img.onerror = function() {
         if (done) return; done = true;
-        clearTimeout(timer);
-        renderFinal(null);
+        clearTimeout(timer); renderFinal(null);
       };
       img.src = photoUrl;
     } else {
@@ -1281,45 +1295,40 @@ function buildShareCanvas(designNum, priceRaw, photoUrl, mode) {
   });
 }
 
+// ─────────────────────────────────────────────────────────────────
+// SHARE DESIGN — image only, no text body
+// ─────────────────────────────────────────────────────────────────
 function shareDesign(designNum, priceRaw, desc, photoUrl, mode) {
-  var modeLabel = (mode === 'wholesale') ? 'Wholesale' : 'Retail';
-  var fallbackText =
-    '*Jariwala Trading Company*\nDesign No: *' + designNum + '*' +
-    (desc     ? '\n' + desc                        : '') +
-    (priceRaw ? '\n' + modeLabel + ': \u20B9' + priceRaw : '') +
-    (photoUrl ? '\n' + photoUrl                    : '');
-
   buildShareCanvas(designNum, priceRaw, photoUrl, mode).then(function(canvas) {
     canvas.toBlob(function(blob) {
-      if (!blob) { doFallbackShare(fallbackText); return; }
+      if (!blob) { doFallbackShare(photoUrl); return; }
+
+      var modeLabel = (mode === 'wholesale') ? 'Wholesale' : 'Retail';
       var file = new File([blob], 'Design-' + designNum + '-' + modeLabel + '.png', { type: 'image/png' });
+
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({
-          title: 'Design ' + designNum + ' \u00B7 JTC',
-          text: 'Jariwala Trading Company\nDesign No: ' + designNum +
-                (priceRaw ? '\n' + modeLabel + ': \u20B9' + priceRaw : ''),
-          files: [file]
-        }).catch(function(e) {
-          if (e.name !== 'AbortError') doFallbackShare(fallbackText);
-        });
+        // Share image only — no title text, no body text
+        navigator.share({ files: [file] })
+          .catch(function(e) {
+            if (e.name !== 'AbortError') doFallbackShare(photoUrl);
+          });
       } else {
-        doFallbackShare(fallbackText);
+        doFallbackShare(photoUrl);
       }
     }, 'image/png');
   });
 }
 
-function doFallbackShare(text) {
-  if (navigator.share) {
-    navigator.share({ title: 'JTC Design', text: text, url: window.location.href })
-      .catch(function(e) {
-        if (e.name !== 'AbortError')
-          window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
-      });
-  } else {
-    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+// Fallback: if file sharing not supported, just open WhatsApp
+// with the photo URL — no text, clean share
+function doFallbackShare(photoUrl) {
+  if (photoUrl) {
+    window.open('https://wa.me/?text=' + encodeURIComponent(photoUrl), '_blank');
+  } else if (navigator.share) {
+    navigator.share({ url: window.location.href }).catch(function(){});
   }
 }
+
 
 // ─────────────────────────────────────────────────────────────────
 // INIT
