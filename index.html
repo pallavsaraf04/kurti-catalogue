@@ -35,6 +35,12 @@
     position: relative;
     overflow: hidden;
   }
+  .header-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   header::before {
     content: '';
     position: absolute; inset: 0;
@@ -381,17 +387,249 @@
   .copy-btn:hover{background:var(--rose-pale);border-color:var(--rose);color:var(--rose);}
   .copy-btn:active{transform:scale(0.97);}
   .copy-btn.copied{background:var(--rose-pale);border-color:var(--rose);color:var(--rose);}
+
+  /* ── HAMBURGER BUTTON ── */
+  .hamburger {
+    position: absolute;
+    top: 0; right: 0;
+    width: 44px; height: 44px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 5px; cursor: pointer;
+    background: transparent; border: none;
+    padding: 0; z-index: 200;
+    border-radius: 12px;
+    transition: background 0.2s;
+  }
+  .hamburger:hover { background: rgba(255,255,255,0.08); }
+  .hamburger:active { background: rgba(255,255,255,0.14); }
+  .hamburger .bar {
+    display: block;
+    width: 22px; height: 2px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 2px;
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1),
+                opacity 0.25s ease,
+                width 0.3s ease;
+    transform-origin: center;
+  }
+  .hamburger.open .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+    width: 22px;
+  }
+  .hamburger.open .bar:nth-child(2) {
+    opacity: 0; transform: scaleX(0);
+  }
+  .hamburger.open .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+    width: 22px;
+  }
+
+  /* ── NAV DRAWER OVERLAY ── */
+  .nav-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(26,10,14,0.45);
+    z-index: 300;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .nav-overlay.visible { display: block; }
+  .nav-overlay.open    { opacity: 1; }
+
+  /* ── NAV DRAWER ── */
+  .nav-drawer {
+    position: fixed;
+    top: 0; right: 0;
+    width: min(300px, 82vw);
+    height: 100dvh;
+    background: var(--ink);
+    z-index: 400;
+    transform: translateX(100%);
+    transition: transform 0.38s cubic-bezier(0.4,0,0.2,1);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .nav-drawer.open { transform: translateX(0); }
+
+  /* Rose glow inside drawer */
+  .nav-drawer::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 100% 0%, rgba(201,24,74,0.22) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Gold top accent on drawer */
+  .nav-drawer::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--rose), var(--gold), var(--rose));
+  }
+
+  .nav-drawer-header {
+    padding: 52px 24px 20px;
+    border-bottom: 1px solid rgba(201,24,74,0.2);
+    position: relative;
+  }
+  .nav-drawer-brand {
+    font-size: 8px; font-weight: 700; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--rose-mid);
+    margin-bottom: 4px;
+  }
+  .nav-drawer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; color: #fff;
+  }
+  .nav-drawer-title span { color: var(--gold); }
+
+  .nav-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.07);
+    border: none; border-radius: 50%;
+    color: rgba(255,255,255,0.6);
+    font-size: 18px; line-height: 1;
+    cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-close:hover { background: rgba(201,24,74,0.3); color: #fff; }
+
+  .nav-items {
+    flex: 1; padding: 16px 0;
+    overflow-y: auto;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer; border: none;
+    background: transparent; width: 100%; text-align: left;
+    transition: background 0.2s, color 0.2s;
+    border-left: 3px solid transparent;
+    letter-spacing: 0.3px;
+  }
+  .nav-item:hover {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    border-left-color: rgba(201,24,74,0.5);
+  }
+  .nav-item.active {
+    background: rgba(201,24,74,0.15);
+    color: #fff;
+    border-left-color: var(--rose);
+  }
+  .nav-item .nav-icon {
+    font-size: 18px; width: 24px;
+    text-align: center; flex-shrink: 0;
+  }
+  .nav-item .nav-badge {
+    margin-left: auto;
+    font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 8px; border-radius: 20px;
+    background: rgba(201,168,76,0.2); color: var(--gold);
+  }
+
+  .nav-divider {
+    height: 1px;
+    background: rgba(201,24,74,0.12);
+    margin: 8px 24px;
+  }
+
+  .nav-section-label {
+    font-size: 8px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: rgba(255,255,255,0.25);
+    padding: 12px 24px 4px;
+  }
+
+  .nav-drawer-footer {
+    padding: 16px 24px 32px;
+    border-top: 1px solid rgba(201,24,74,0.12);
+    font-size: 10px; color: rgba(255,255,255,0.2);
+    letter-spacing: 1px;
+  }
+
+  /* ── TAB BAR — only search + browse ── */
+  .tab-bar { display: flex; background: var(--card-bg); border-radius: 16px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    overflow: hidden; margin-bottom: 16px; }
+
+  /* -- ANALYTICS TAB -- */
+  .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+  .kpi-card{background:var(--card-bg);border-radius:18px;padding:18px 16px;border:1px solid var(--border);box-shadow:var(--shadow);text-align:center;}
+  .kpi-card.wide{grid-column:1/-1;}
+  .kpi-label{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--rose);margin-bottom:8px;display:block;}
+  .kpi-value{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1;}
+  .kpi-sub{font-size:11px;color:#b090a0;margin-top:4px;}
+  .analytics-section{margin-bottom:20px;}
+  .analytics-section-title{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--rose);margin-bottom:10px;display:block;}
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .bar-label{font-size:12px;font-weight:600;color:var(--ink);width:60px;flex-shrink:0;text-align:right;}
+  .bar-label.wide{width:90px;}
+  .bar-track{flex:1;height:10px;background:var(--rose-pale);border-radius:5px;overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--rose),var(--rose-light));border-radius:5px;transition:width 0.6s cubic-bezier(0.2,0.8,0.3,1);}
+  .bar-fill.gold{background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+  .bar-val{font-size:11px;color:#b090a0;width:52px;flex-shrink:0;text-align:left;}
+  .analytics-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .analytics-table th{text-align:left;padding:8px 10px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--rose);border-bottom:2px solid var(--border);}
+  .analytics-table td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--ink);}
+  .analytics-table tr:last-child td{border-bottom:none;}
+  .analytics-table td.num{font-family:'Playfair Display',serif;font-weight:700;color:var(--rose);}
+  .analytics-card{background:var(--card-bg);border-radius:18px;padding:16px;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:14px;}
+  .analytics-refresh{font-size:10px;color:#b090a0;text-align:center;margin-bottom:16px;letter-spacing:0.5px;}
+  .analytics-empty{text-align:center;padding:40px 20px;color:#b090a0;font-size:13px;}
 </style>
 </head>
 <body>
 <div class="top-band"></div>
 
 <header>
-  <img src="JTC.jpg" alt="JTC Logo" class="header-logo">
-  <div class="brand-label">Jariwala Trading Company</div>
-  <h1>Kurti <span>Catalogue</span></h1>
-  <div class="subtitle">Search · Browse · Share</div>
+  <div class="header-inner">
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleDrawer()" aria-label="Menu">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <img src="JTC.jpg" alt="JTC Logo" class="header-logo">
+    <div class="brand-label">Jariwala Trading Company</div>
+    <h1>Kurti <span>Catalogue</span></h1>
+    <div class="subtitle">Search · Browse · Share</div>
+  </div>
 </header>
+
+<!-- Nav overlay (dim background) -->
+<div class="nav-overlay" id="navOverlay" onclick="closeDrawer()"></div>
+
+<!-- Nav drawer -->
+<div class="nav-drawer" id="navDrawer">
+  <div class="nav-drawer-header">
+    <div class="nav-drawer-brand">Jariwala Trading Co.</div>
+    <div class="nav-drawer-title">JTC <span>Menu</span></div>
+    <button class="nav-close" onclick="closeDrawer()">&#x2715;</button>
+  </div>
+  <div class="nav-items">
+    <div class="nav-section-label">Catalogue</div>
+    <button class="nav-item active" id="nav-search" onclick="navTo('search')">
+      <span class="nav-icon">&#128269;</span> Search Designs
+    </button>
+    <button class="nav-item" id="nav-browse" onclick="navTo('browse')">
+      <span class="nav-icon">&#128193;</span> Browse All
+    </button>
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">Business</div>
+    <button class="nav-item" id="nav-analytics" onclick="navTo('analytics')">
+      <span class="nav-icon">&#128200;</span> Analytics
+      <span class="nav-badge">Live</span>
+    </button>
+  </div>
+  <div class="nav-drawer-footer">Jariwala Trading Company &middot; Kurti Catalogue</div>
+</div>
 
 <div class="main">
   <div class="tab-bar">
@@ -435,12 +673,18 @@
     <div class="sort-wrap">
       <span class="sort-label">Sort</span>
       <button class="sort-btn active" data-sort="default"    onclick="setSortOrder('default')">Default</button>
-      <button class="sort-btn"        data-sort="stock-asc"  onclick="setSortOrder('stock-asc')">&#x26A0; Low Stock First</button>
+      <button class="sort-btn"        data-sort="dn-asc"     onclick="setSortOrder('dn-asc')">DN &#x2191;</button>
+      <button class="sort-btn"        data-sort="dn-desc"    onclick="setSortOrder('dn-desc')">DN &#x2193;</button>
       <button class="sort-btn"        data-sort="price-asc"  onclick="setSortOrder('price-asc')">Price &#x2191;</button>
       <button class="sort-btn"        data-sort="price-desc" onclick="setSortOrder('price-desc')">Price &#x2193;</button>
     </div>
     <div class="browse-grid" id="browseGrid"></div>
     <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreGrid()" style="display:none">Load More Designs</button>
+  </div>
+  <div class="tab-panel" id="panel-analytics">
+    <div id="analyticsContent">
+      <div class="status-msg" style="padding:40px 20px;">&#128200; Loading analytics…</div>
+    </div>
   </div>
   <div class="watermark">
     <img src="JTC.jpg" alt="JTC" class="watermark-logo">
@@ -890,9 +1134,12 @@ function updateStatus(state, text) {
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
-  document.getElementById('tab-'+tab).classList.add('active');
-  document.getElementById('panel-'+tab).classList.add('active');
+  var tabBtn = document.getElementById('tab-'+tab);
+  if (tabBtn) tabBtn.classList.add('active');
+  var panel = document.getElementById('panel-'+tab);
+  if (panel) panel.classList.add('active');
   if (tab==='browse' && document.getElementById('browseGrid').children.length===0) renderBrowseGrid();
+  if (tab==='analytics') loadAnalytics();
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -1331,6 +1578,257 @@ function doFallbackShare(photoUrl) {
 
 
 // ─────────────────────────────────────────────────────────────────
+// -----------------------------------------------------------------
+// HAMBURGER DRAWER
+// -----------------------------------------------------------------
+var _drawerOpen = false;
+
+function toggleDrawer() {
+  _drawerOpen ? closeDrawer() : openDrawer();
+}
+
+function openDrawer() {
+  _drawerOpen = true;
+  var overlay = document.getElementById('navOverlay');
+  var drawer  = document.getElementById('navDrawer');
+  var btn     = document.getElementById('hamburgerBtn');
+  overlay.classList.add('visible');
+  requestAnimationFrame(function() {
+    overlay.classList.add('open');
+    drawer.classList.add('open');
+    btn.classList.add('open');
+  });
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  _drawerOpen = false;
+  var overlay = document.getElementById('navOverlay');
+  var drawer  = document.getElementById('navDrawer');
+  var btn     = document.getElementById('hamburgerBtn');
+  overlay.classList.remove('open');
+  drawer.classList.remove('open');
+  btn.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(function() { overlay.classList.remove('visible'); }, 380);
+}
+
+function navTo(tab) {
+  document.querySelectorAll('.nav-item').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  var navItem = document.getElementById('nav-' + tab);
+  if (navItem) navItem.classList.add('active');
+  closeDrawer();
+  setTimeout(function() { switchTab(tab); }, 120);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && _drawerOpen) closeDrawer();
+});
+
+// -----------------------------------------------------------------
+// ANALYTICS TAB
+// -----------------------------------------------------------------
+var ANALYTICS_CSV_URL = 'PASTE_YOUR_ANALYTICS_SHEET_CSV_URL_HERE';
+
+var AN_BILL=0,AN_DATE=1,AN_BUYER=2,AN_DN=3,AN_QTY=4,AN_RATE=5,AN_DISC=6,AN_AMOUNT=7,AN_TOTAL=8,AN_PCS=9,AN_REMARKS=10;
+var analyticsRows=[], analyticsLoaded=false;
+
+function formatLakh(n) {
+  if (isNaN(n)||n===0) return '\u20B90';
+  if (n>=10000000) return '\u20B9'+(n/10000000).toFixed(2)+' Cr';
+  if (n>=100000)   return '\u20B9'+(n/100000).toFixed(2)+' L';
+  if (n>=1000)     return '\u20B9'+(n/1000).toFixed(1)+'K';
+  return '\u20B9'+Math.round(n);
+}
+
+function loadAnalytics() {
+  if (analyticsLoaded) { renderAnalytics(); return; }
+  if (!ANALYTICS_CSV_URL || ANALYTICS_CSV_URL.indexOf('PASTE') !== -1) {
+    document.getElementById('analyticsContent').innerHTML =
+      '<div class="analytics-empty">&#9881; Analytics not configured yet.<br><small>Paste your published CSV URL into ANALYTICS_CSV_URL in the code.</small></div>';
+    return;
+  }
+  document.getElementById('analyticsContent').innerHTML =
+    '<div class="status-msg">&#128200; Loading analytics...</div>';
+  fetchCSV(ANALYTICS_CSV_URL).then(function(text) {
+    if (!text) {
+      document.getElementById('analyticsContent').innerHTML =
+        '<div class="status-msg error">Could not load analytics. Check the sheet is published.</div>';
+      return;
+    }
+    var parsed = parseCSV(text);
+    analyticsRows = parsed.slice(1).filter(function(r) { return r[AN_BILL] && r[AN_BILL].trim() !== ''; });
+    analyticsLoaded = true;
+    renderAnalytics();
+  });
+}
+
+function getFabricName(dn) {
+  var prefix = String(dn).trim().substring(0, 2);
+  return FABRIC_MAP[prefix] || 'Other';
+}
+
+function renderAnalytics() {
+  var el = document.getElementById('analyticsContent');
+  if (!analyticsRows.length) {
+    el.innerHTML = '<div class="analytics-empty">No bill data yet. Process your first bill to see analytics.</div>';
+    return;
+  }
+
+  var totalRevenue=0, totalPcs=0, bills={}, buyers={}, designs={}, monthly={}, fabrics={};
+
+  analyticsRows.forEach(function(r) {
+    var bill   = (r[AN_BILL]  ||'').trim();
+    var date   = (r[AN_DATE]  ||'').trim();
+    var buyer  = (r[AN_BUYER] ||'').trim();
+    var dn     = (r[AN_DN]    ||'').trim();
+    var qty    = parseFloat(r[AN_QTY])    || 0;
+    var amount = parseFloat(r[AN_AMOUNT]) || 0;
+    var billTotal = parseFloat(r[AN_TOTAL]) || 0;
+
+    totalRevenue += amount;
+    totalPcs     += qty;
+
+    if (!bills[bill])   bills[bill]   = {total:billTotal, buyer:buyer, date:date};
+    if (!buyers[buyer]) buyers[buyer] = {revenue:0, pcs:0, bills:{}};
+    buyers[buyer].revenue += amount;
+    buyers[buyer].pcs     += qty;
+    buyers[buyer].bills[bill] = true;
+
+    if (!designs[dn]) designs[dn] = {revenue:0, pcs:0};
+    designs[dn].revenue += amount;
+    designs[dn].pcs     += qty;
+
+    var monthKey = date ? (date.split('-').slice(1).join(' ')) : 'Unknown';
+    if (!monthly[monthKey]) monthly[monthKey] = {revenue:0, pcs:0};
+    monthly[monthKey].revenue += amount;
+    monthly[monthKey].pcs     += qty;
+
+    // Fabric aggregation
+    var fabric = getFabricName(dn);
+    if (!fabrics[fabric]) fabrics[fabric] = {revenue:0, pcs:0};
+    fabrics[fabric].revenue += amount;
+    fabrics[fabric].pcs     += qty;
+  });
+
+  var billCount  = Object.keys(bills).length;
+  var buyerCount = Object.keys(buyers).length;
+  var avgBill    = billCount ? totalRevenue / billCount : 0;
+
+  var buyerList = Object.keys(buyers).map(function(b) {
+    return {name:b, revenue:buyers[b].revenue, pcs:buyers[b].pcs, bills:Object.keys(buyers[b].bills).length};
+  }).sort(function(a,b){return b.revenue-a.revenue;}).slice(0,8);
+
+  var designList = Object.keys(designs).map(function(d) {
+    return {dn:d, revenue:designs[d].revenue, pcs:designs[d].pcs};
+  }).sort(function(a,b){return b.pcs-a.pcs;}).slice(0,10);
+
+  // Fabric list — sorted by PCS desc, Other always last
+  var fabricList = Object.keys(fabrics).map(function(f) {
+    return {name:f, revenue:fabrics[f].revenue, pcs:fabrics[f].pcs};
+  }).sort(function(a,b){
+    if (a.name==='Other' && b.name!=='Other') return 1;
+    if (b.name==='Other' && a.name!=='Other') return -1;
+    return b.pcs - a.pcs;
+  });
+
+  var monthOrder = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var monthList = Object.keys(monthly).map(function(k) {
+    var p = k.split(' ');
+    return {key:k, revenue:monthly[k].revenue, pcs:monthly[k].pcs,
+            sortIdx:monthOrder.indexOf(p[0])+(parseInt('20'+p[1])||0)*12};
+  }).sort(function(a,b){return a.sortIdx-b.sortIdx;});
+
+  var maxBuyerRev  = buyerList.length  ? buyerList[0].revenue  : 1;
+  var maxMonthRev  = monthList.length  ? Math.max.apply(null, monthList.map(function(m){return m.revenue;})) : 1;
+  var maxFabricPcs = fabricList.length ? fabricList.filter(function(f){return f.name!=='Other';})[0] : null;
+  maxFabricPcs = maxFabricPcs ? maxFabricPcs.pcs : (fabricList.length ? fabricList[0].pcs : 1);
+
+  var lastDate = analyticsRows[analyticsRows.length-1][AN_DATE] || '';
+
+  // ── Render ──────────────────────────────────────────────────────
+  var html = '<div class="analytics-refresh">Last bill: '+esc(lastDate)+' &middot; Auto-updates with every new bill</div>';
+
+  // KPIs
+  html += '<div class="analytics-grid">';
+  html += '<div class="kpi-card"><span class="kpi-label">Total Revenue</span><div class="kpi-value">'+formatLakh(totalRevenue)+'</div><div class="kpi-sub">all bills combined</div></div>';
+  html += '<div class="kpi-card"><span class="kpi-label">Kurtis Sold</span><div class="kpi-value">'+totalPcs+'</div><div class="kpi-sub">PCS across all bills</div></div>';
+  html += '<div class="kpi-card"><span class="kpi-label">Bills Processed</span><div class="kpi-value">'+billCount+'</div><div class="kpi-sub">unique invoices</div></div>';
+  html += '<div class="kpi-card"><span class="kpi-label">Avg Bill Value</span><div class="kpi-value">'+formatLakh(avgBill)+'</div><div class="kpi-sub">per invoice</div></div>';
+  html += '<div class="kpi-card wide"><span class="kpi-label">Unique Buyers</span><div class="kpi-value">'+buyerCount+'</div><div class="kpi-sub">parties billed</div></div>';
+  html += '</div>';
+
+  // Monthly revenue
+  if (monthList.length) {
+    html += '<div class="analytics-card analytics-section"><span class="analytics-section-title">Monthly Revenue</span>';
+    monthList.forEach(function(m) {
+      var pct = maxMonthRev ? Math.round(m.revenue/maxMonthRev*100) : 0;
+      html += '<div class="bar-row">'
+            + '<div class="bar-label">'+esc(m.key)+'</div>'
+            + '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div>'
+            + '<div class="bar-val">'+formatLakh(m.revenue)+'</div>'
+            + '</div>';
+    });
+    html += '</div>';
+  }
+
+  // Sales by fabric
+  if (fabricList.length) {
+    html += '<div class="analytics-card analytics-section"><span class="analytics-section-title">Sales by Fabric Type</span>';
+    html += '<table class="analytics-table"><thead><tr><th>Fabric</th><th>PCS Sold</th><th>Revenue</th><th></th></tr></thead><tbody>';
+    var maxFab = fabricList[0].pcs || 1;
+    fabricList.forEach(function(f) {
+      var pct = Math.round(f.pcs / maxFab * 100);
+      var isOther = f.name === 'Other';
+      html += '<tr>'
+            + '<td><strong>'+esc(f.name)+'</strong></td>'
+            + '<td class="num">'+f.pcs+'</td>'
+            + '<td class="num">'+formatLakh(f.revenue)+'</td>'
+            + '<td style="width:90px;padding-right:10px;">'
+            +   '<div class="bar-track" style="height:8px;">'
+            +     '<div class="bar-fill'+(isOther?' gold':'')+'" style="width:'+pct+'%"></div>'
+            +   '</div>'
+            + '</td>'
+            + '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
+  // Top buyers
+  if (buyerList.length) {
+    html += '<div class="analytics-card analytics-section"><span class="analytics-section-title">Top Buyers by Revenue</span>';
+    buyerList.forEach(function(b) {
+      var pct = maxBuyerRev ? Math.round(b.revenue/maxBuyerRev*100) : 0;
+      html += '<div class="bar-row">'
+            + '<div class="bar-label wide" style="font-size:10px;width:90px;">'+esc(b.name.substring(0,14))+'</div>'
+            + '<div class="bar-track"><div class="bar-fill gold" style="width:'+pct+'%"></div></div>'
+            + '<div class="bar-val">'+formatLakh(b.revenue)+'</div>'
+            + '</div>';
+    });
+    html += '</div>';
+  }
+
+  // Top designs
+  if (designList.length) {
+    html += '<div class="analytics-card analytics-section"><span class="analytics-section-title">Top Designs by Units Sold</span>';
+    html += '<table class="analytics-table"><thead><tr><th>DN</th><th>Fabric</th><th>PCS Sold</th><th>Revenue</th></tr></thead><tbody>';
+    designList.forEach(function(d) {
+      html += '<tr>'
+            + '<td><strong>'+esc(d.dn)+'</strong></td>'
+            + '<td style="color:#b090a0;font-size:11px;">'+esc(getFabricName(d.dn))+'</td>'
+            + '<td class="num">'+d.pcs+'</td>'
+            + '<td class="num">'+formatLakh(d.revenue)+'</td>'
+            + '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
+  el.innerHTML = html;
+}
+
+
 // INIT
 // ─────────────────────────────────────────────────────────────────
 loadData();
