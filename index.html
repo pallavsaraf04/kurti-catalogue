@@ -735,6 +735,14 @@
     <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreGrid()" style="display:none">Load More Designs</button>
   </div>
   <div class="tab-panel" id="panel-analytics">
+    <div class="analytics-party-wrap">
+      <span class="search-label" style="margin-bottom:8px;display:block;">Filter by Party</span>
+      <div class="analytics-party-row">
+        <input class="analytics-party-input" id="partyFilterInput" type="text" placeholder="Type party name to filter…" autocomplete="off" oninput="onPartyFilterInput()" onkeydown="if(event.key==='Escape')clearPartyFilter()"/>
+        <button class="analytics-party-clear" onclick="clearPartyFilter()">Clear</button>
+      </div>
+      <div class="analytics-party-badge" id="partyFilterBadge"></div>
+    </div>
     <div id="analyticsContent">
       <div class="status-msg" style="padding:40px 20px;">&#128200; Loading analytics…</div>
     </div>
@@ -1715,6 +1723,37 @@ var ANALYTICS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTu9P5y
 
 var AN_BILL=0,AN_DATE=1,AN_BUYER=2,AN_DN=3,AN_QTY=4,AN_RATE=5,AN_DISC=6,AN_AMOUNT=7,AN_TOTAL=8,AN_PCS=9,AN_REMARKS=10;
 var analyticsRows=[], analyticsLoaded=false;
+var activePartyFilter=''; // '' = show all parties
+
+// ─────────────────────────────────────────────────────────────────
+// PARTY FILTER CONTROLS
+// ─────────────────────────────────────────────────────────────────
+function onPartyFilterInput() {
+  var q = (document.getElementById('partyFilterInput').value || '').trim();
+  activePartyFilter = q;
+  _updatePartyBadge();
+  if (analyticsLoaded) renderAnalytics();
+}
+
+function clearPartyFilter() {
+  activePartyFilter = '';
+  var inp = document.getElementById('partyFilterInput');
+  if (inp) inp.value = '';
+  _updatePartyBadge();
+  if (analyticsLoaded) renderAnalytics();
+}
+
+function _updatePartyBadge() {
+  var badge = document.getElementById('partyFilterBadge');
+  if (!badge) return;
+  if (activePartyFilter) {
+    badge.className = 'analytics-party-badge visible';
+    badge.innerHTML = 'Showing data for <strong>' + esc(activePartyFilter) + '</strong>';
+  } else {
+    badge.className = 'analytics-party-badge';
+    badge.innerHTML = '';
+  }
+}
 
 function formatLakh(n) {
   if (isNaN(n)||n===0) return '\u20B90';
@@ -1758,16 +1797,27 @@ function renderAnalytics() {
     return;
   }
 
+  // ── Apply party filter ────────────────────────────────────────────
+  var q = activePartyFilter.toLowerCase().trim();
+  var rows = q
+    ? analyticsRows.filter(function(r) { return (r[AN_BUYER]||'').trim().toLowerCase().indexOf(q) !== -1; })
+    : analyticsRows;
+
+  if (!rows.length) {
+    el.innerHTML = '<div class="analytics-empty">No data found for party <strong>&ldquo;' + esc(activePartyFilter) + '&rdquo;</strong>.<br><small>Try a different name or clear the filter.</small></div>';
+    return;
+  }
+
   var totalRevenue=0, totalPcs=0, bills={}, buyers={}, designs={}, monthly={}, fabrics={};
 
-  analyticsRows.forEach(function(r) {
-    var bill   = (r[AN_BILL]  ||'').trim();
-    var date   = (r[AN_DATE]  ||'').trim();
-    var buyer  = (r[AN_BUYER] ||'').trim();
-    var dn     = (r[AN_DN]    ||'').trim();
-    var qty    = parseFloat(r[AN_QTY])    || 0;
-    var amount = parseFloat(r[AN_AMOUNT]) || 0;
-    var billTotal = parseFloat(r[AN_TOTAL]) || 0;
+  rows.forEach(function(r) {
+    var bill      = (r[AN_BILL]  ||'').trim();
+    var date      = (r[AN_DATE]  ||'').trim();
+    var buyer     = (r[AN_BUYER] ||'').trim();
+    var dn        = (r[AN_DN]    ||'').trim();
+    var qty       = parseFloat(r[AN_QTY])    || 0;
+    var amount    = parseFloat(r[AN_AMOUNT]) || 0;
+    var billTotal = parseFloat(r[AN_TOTAL])  || 0;
 
     totalRevenue += amount;
     totalPcs     += qty;
@@ -1787,7 +1837,6 @@ function renderAnalytics() {
     monthly[monthKey].revenue += amount;
     monthly[monthKey].pcs     += qty;
 
-    // Fabric aggregation
     var fabric = getFabricName(dn);
     if (!fabrics[fabric]) fabrics[fabric] = {revenue:0, pcs:0};
     fabrics[fabric].revenue += amount;
@@ -1806,7 +1855,6 @@ function renderAnalytics() {
     return {dn:d, revenue:designs[d].revenue, pcs:designs[d].pcs};
   }).sort(function(a,b){return b.pcs-a.pcs;}).slice(0,10);
 
-  // Fabric list — sorted by PCS desc, Other always last
   var fabricList = Object.keys(fabrics).map(function(f) {
     return {name:f, revenue:fabrics[f].revenue, pcs:fabrics[f].pcs};
   }).sort(function(a,b){
@@ -1822,23 +1870,25 @@ function renderAnalytics() {
             sortIdx:monthOrder.indexOf(p[0])+(parseInt('20'+p[1])||0)*12};
   }).sort(function(a,b){return a.sortIdx-b.sortIdx;});
 
-  var maxBuyerRev  = buyerList.length  ? buyerList[0].revenue  : 1;
-  var maxMonthRev  = monthList.length  ? Math.max.apply(null, monthList.map(function(m){return m.revenue;})) : 1;
-  var maxFabricPcs = fabricList.length ? fabricList.filter(function(f){return f.name!=='Other';})[0] : null;
-  maxFabricPcs = maxFabricPcs ? maxFabricPcs.pcs : (fabricList.length ? fabricList[0].pcs : 1);
+  var maxBuyerRev = buyerList.length ? buyerList[0].revenue : 1;
+  var maxMonthRev = monthList.length ? Math.max.apply(null, monthList.map(function(m){return m.revenue;})) : 1;
 
-  var lastDate = analyticsRows[analyticsRows.length-1][AN_DATE] || '';
+  // ── Filtered label shown inside the analytics content area ────────
+  var filterLabel = q
+    ? '<div class="analytics-refresh">Filtered: <strong style="color:var(--rose);">'+esc(activePartyFilter)+'</strong> &middot; '+billCount+' bill(s)</div>'
+    : '<div class="analytics-refresh">Last bill: '+esc(rows[rows.length-1][AN_DATE]||'')+' &middot; Auto-updates with every new bill</div>';
 
-  // ── Render ──────────────────────────────────────────────────────
-  var html = '<div class="analytics-refresh">Last bill: '+esc(lastDate)+' &middot; Auto-updates with every new bill</div>';
+  var html = filterLabel;
 
   // KPIs
   html += '<div class="analytics-grid">';
-  html += '<div class="kpi-card"><span class="kpi-label">Total Revenue</span><div class="kpi-value">'+formatLakh(totalRevenue)+'</div><div class="kpi-sub">all bills combined</div></div>';
-  html += '<div class="kpi-card"><span class="kpi-label">Kurtis Sold</span><div class="kpi-value">'+totalPcs+'</div><div class="kpi-sub">PCS across all bills</div></div>';
-  html += '<div class="kpi-card"><span class="kpi-label">Bills Processed</span><div class="kpi-value">'+billCount+'</div><div class="kpi-sub">unique invoices</div></div>';
+  html += '<div class="kpi-card"><span class="kpi-label">Total Revenue</span><div class="kpi-value">'+formatLakh(totalRevenue)+'</div><div class="kpi-sub">'+(q?'for this party':'all bills combined')+'</div></div>';
+  html += '<div class="kpi-card"><span class="kpi-label">Kurtis Sold</span><div class="kpi-value">'+totalPcs+'</div><div class="kpi-sub">PCS</div></div>';
+  html += '<div class="kpi-card"><span class="kpi-label">Bills</span><div class="kpi-value">'+billCount+'</div><div class="kpi-sub">unique invoices</div></div>';
   html += '<div class="kpi-card"><span class="kpi-label">Avg Bill Value</span><div class="kpi-value">'+formatLakh(avgBill)+'</div><div class="kpi-sub">per invoice</div></div>';
-  html += '<div class="kpi-card wide"><span class="kpi-label">Unique Buyers</span><div class="kpi-value">'+buyerCount+'</div><div class="kpi-sub">parties billed</div></div>';
+  if (!q) {
+    html += '<div class="kpi-card wide"><span class="kpi-label">Unique Buyers</span><div class="kpi-value">'+buyerCount+'</div><div class="kpi-sub">parties billed</div></div>';
+  }
   html += '</div>';
 
   // Monthly revenue
@@ -1877,8 +1927,8 @@ function renderAnalytics() {
     html += '</tbody></table></div>';
   }
 
-  // Top buyers
-  if (buyerList.length) {
+  // Top buyers (hidden when filtering by a single party — redundant then)
+  if (buyerList.length && !q) {
     html += '<div class="analytics-card analytics-section"><span class="analytics-section-title">Top Buyers by Revenue</span>';
     buyerList.forEach(function(b) {
       var pct = maxBuyerRev ? Math.round(b.revenue/maxBuyerRev*100) : 0;
@@ -1889,6 +1939,23 @@ function renderAnalytics() {
             + '</div>';
     });
     html += '</div>';
+  }
+
+  // When a party is filtered, show their bills list instead of top-buyers
+  if (q && billCount) {
+    var billEntries = Object.keys(bills).map(function(bn) {
+      return {no:bn, total:bills[bn].total, date:bills[bn].date};
+    }).sort(function(a,b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    html += '<div class="analytics-card analytics-section"><span class="analytics-section-title">Bills — '+esc(activePartyFilter)+'</span>';
+    html += '<table class="analytics-table"><thead><tr><th>Date</th><th>Bill No.</th><th>Value</th></tr></thead><tbody>';
+    billEntries.forEach(function(b) {
+      html += '<tr>'
+            + '<td style="color:#b090a0;font-size:11px;">'+esc(b.date)+'</td>'
+            + '<td><strong>'+esc(b.no)+'</strong></td>'
+            + '<td class="num">'+formatLakh(b.total)+'</td>'
+            + '</tr>';
+    });
+    html += '</tbody></table></div>';
   }
 
   // Top designs
@@ -1917,7 +1984,7 @@ function renderAnalytics() {
 // The CSV URL below must be published from the "Fabric Balance" tab
 // of the JTC Fabric Inventory sheet.
 // =================================================================
-var FABRIC_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR5U5NacHlgkVdY8O6S_vyYDTi7L397WtPNS1OzBWTv1bq0FU0NuYK_AxFSC1UFYYd1H5-mcvPThLTF/pub?gid=149033011&single=true&output=csv';
+var FABRIC_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS_YOUR_FABRIC_SHEET_PUBLISHED_URL/pub?gid=FABRIC_BALANCE_GID&single=true&output=csv';
 // ↑ IMPORTANT: Replace this with the published CSV URL of your "Fabric Balance" tab.
 //   Go to JTC Fabric Inventory sheet → File → Share → Publish to web
 //   → Choose "Fabric Balance" tab → CSV → Publish → Copy URL and paste above.
