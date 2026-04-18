@@ -583,6 +583,38 @@
   .analytics-table td.num{font-family:'Playfair Display',serif;font-weight:700;color:var(--rose);}
   .analytics-card{background:var(--card-bg);border-radius:18px;padding:16px;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:14px;}
   .analytics-refresh{font-size:10px;color:#b090a0;text-align:center;margin-bottom:16px;letter-spacing:0.5px;}
+
+  /* ── ANALYTICS PARTY DROPDOWN ── */
+  .analytics-party-wrap { margin-bottom: 16px; }
+  .analytics-party-row { display: flex; }
+  .analytics-party-select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 500;
+    color: var(--ink); background: var(--rose-pale);
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%23c9184a' d='M5 7l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 20px;
+    padding-right: 42px;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+  .analytics-party-select:focus { border-color: var(--rose); background-color: #fff; }
+  .analytics-party-badge {
+    font-size: 12px; color: var(--ink-soft);
+    margin-top: 8px; display: none;
+    padding: 8px 12px; background: var(--rose-pale);
+    border-radius: 10px; border: 1px solid var(--border);
+  }
+  .analytics-party-badge.visible { display: block; }
+  .analytics-party-badge strong { color: var(--rose); }
   /* ── FABRIC STOCK CARDS ── */
   .fabric-card {
     background: var(--card-bg);
@@ -738,8 +770,9 @@
     <div class="analytics-party-wrap">
       <span class="search-label" style="margin-bottom:8px;display:block;">Filter by Party</span>
       <div class="analytics-party-row">
-        <input class="analytics-party-input" id="partyFilterInput" type="text" placeholder="Type party name to filter…" autocomplete="off" oninput="onPartyFilterInput()" onkeydown="if(event.key==='Escape')clearPartyFilter()"/>
-        <button class="analytics-party-clear" onclick="clearPartyFilter()">Clear</button>
+        <select class="analytics-party-select" id="partyFilterSelect" onchange="onPartyFilterChange()">
+          <option value="">All Parties</option>
+        </select>
       </div>
       <div class="analytics-party-badge" id="partyFilterBadge"></div>
     </div>
@@ -1728,19 +1761,39 @@ var activePartyFilter=''; // '' = show all parties
 // ─────────────────────────────────────────────────────────────────
 // PARTY FILTER CONTROLS
 // ─────────────────────────────────────────────────────────────────
-function onPartyFilterInput() {
-  var q = (document.getElementById('partyFilterInput').value || '').trim();
-  activePartyFilter = q;
+function onPartyFilterChange() {
+  var sel = document.getElementById('partyFilterSelect');
+  activePartyFilter = sel ? sel.value : '';
   _updatePartyBadge();
   if (analyticsLoaded) renderAnalytics();
 }
 
 function clearPartyFilter() {
   activePartyFilter = '';
-  var inp = document.getElementById('partyFilterInput');
-  if (inp) inp.value = '';
+  var sel = document.getElementById('partyFilterSelect');
+  if (sel) sel.value = '';
   _updatePartyBadge();
   if (analyticsLoaded) renderAnalytics();
+}
+
+function populatePartyDropdown() {
+  var sel = document.getElementById('partyFilterSelect');
+  if (!sel) return;
+  var current = sel.value;
+  var names = {};
+  analyticsRows.forEach(function(r) {
+    var b = (r[AN_BUYER]||'').trim();
+    if (b) names[b] = true;
+  });
+  var sorted = Object.keys(names).sort(function(a,b) { return a.localeCompare(b); });
+  sel.innerHTML = '<option value="">All Parties</option>';
+  sorted.forEach(function(name) {
+    var opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    if (name === current) opt.selected = true;
+    sel.appendChild(opt);
+  });
 }
 
 function _updatePartyBadge() {
@@ -1781,6 +1834,7 @@ function loadAnalytics() {
     var parsed = parseCSV(text);
     analyticsRows = parsed.slice(1).filter(function(r) { return r[AN_BILL] && r[AN_BILL].trim() !== ''; });
     analyticsLoaded = true;
+    populatePartyDropdown();
     renderAnalytics();
   });
 }
@@ -1798,9 +1852,9 @@ function renderAnalytics() {
   }
 
   // ── Apply party filter ────────────────────────────────────────────
-  var q = activePartyFilter.toLowerCase().trim();
+  var q = activePartyFilter.trim();
   var rows = q
-    ? analyticsRows.filter(function(r) { return (r[AN_BUYER]||'').trim().toLowerCase().indexOf(q) !== -1; })
+    ? analyticsRows.filter(function(r) { return (r[AN_BUYER]||'').trim() === q; })
     : analyticsRows;
 
   if (!rows.length) {
