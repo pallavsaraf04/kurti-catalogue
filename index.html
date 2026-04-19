@@ -666,6 +666,378 @@
   .fabric-stat-divider {
     height: 1px; background: var(--border); margin: 2px 0;
   }
+
+  /* ── CHALLAN CONTROL TAB ── */
+  .cc-webapp-url-wrap {
+    background: var(--card-bg); border-radius: 18px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    padding: 16px; margin-bottom: 14px;
+  }
+  .cc-url-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rose); margin-bottom: 8px; display: block; }
+  .cc-url-input {
+    width: 100%; padding: 12px 14px;
+    border: 2px solid var(--border); border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink);
+    background: var(--rose-pale); outline: none;
+    transition: border-color 0.2s; margin-bottom: 8px;
+  }
+  .cc-url-input:focus { border-color: var(--rose); background: #fff; }
+  .cc-url-note { font-size: 10px; color: #b090a0; line-height: 1.6; }
+
+  .cc-actions-card {
+    background: var(--card-bg); border-radius: 18px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    padding: 16px; margin-bottom: 14px;
+  }
+  .cc-action-title { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rose); margin-bottom: 12px; display: block; }
+  .cc-btn {
+    width: 100%; padding: 15px; border: none; border-radius: 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
+    margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .cc-btn:last-child { margin-bottom: 0; }
+  .cc-btn:active { transform: scale(0.98); }
+  .cc-btn.primary { background: var(--ink); color: #fff; }
+  .cc-btn.primary:hover { background: #2d0f1a; }
+  .cc-btn.danger { background: #fff0f3; color: var(--rose); border: 1.5px solid var(--rose-mid); }
+  .cc-btn.danger:hover { background: var(--rose-pale); }
+  .cc-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  /* Status bar */
+  .cc-status {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; border-radius: 12px;
+    background: var(--rose-pale); border: 1px solid var(--border);
+    margin-bottom: 14px; font-size: 12px; color: var(--ink-soft);
+    min-height: 44px;
+  }
+  .cc-status.success { background: #eafaf1; border-color: #a9dfbf; color: #1e8449; }
+  .cc-status.error   { background: #fff0f3; border-color: var(--rose-mid); color: var(--rose); }
+  .cc-status.loading { background: #fffbf0; border-color: #f0d080; color: #7a6010; }
+  .cc-spinner {
+    width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+    border: 2px solid var(--border); border-top-color: var(--rose);
+    animation: spin 0.7s linear infinite;
+  }
+
+  /* Preview table */
+  .cc-preview-card {
+    background: var(--card-bg); border-radius: 18px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    padding: 16px; margin-bottom: 14px; display: none;
+  }
+  .cc-preview-card.visible { display: block; }
+  .cc-preview-title { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rose); margin-bottom: 4px; display: block; }
+  .cc-preview-sub { font-size: 11px; color: #b090a0; margin-bottom: 14px; display: block; }
+  .cc-preview-meta {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;
+  }
+  .cc-meta-item {
+    background: var(--rose-pale); border-radius: 10px; padding: 10px 12px; border: 1px solid var(--border);
+  }
+  .cc-meta-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--rose); display: block; margin-bottom: 3px; }
+  .cc-meta-val { font-size: 14px; font-weight: 600; color: var(--ink); }
+
+  /* Editable rows */
+  .cc-row {
+    border-bottom: 1px solid var(--border); padding: 10px 0;
+    animation: slideUp 0.25s cubic-bezier(0.2,0.8,0.3,1) both;
+  }
+  .cc-row:last-child { border-bottom: none; }
+  .cc-row-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .cc-row-status {
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px;
+    flex-shrink: 0; letter-spacing: 0.5px;
+  }
+  .cc-row-status.ok      { background: #d9ead3; color: #274e13; }
+  .cc-row-status.warn    { background: #fce8b2; color: #7f4f00; }
+  .cc-row-status.fail    { background: #f4cccc; color: #cc0000; }
+  .cc-row-challan { font-size: 12px; font-weight: 600; color: var(--ink); flex: 1; }
+  .cc-row-del {
+    width: 26px; height: 26px; border-radius: 50%; background: #fff0f3;
+    border: 1px solid var(--border); cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: var(--rose); transition: background 0.15s;
+  }
+  .cc-row-del:hover { background: var(--rose); color: white; }
+  .cc-row-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .cc-field { display: flex; flex-direction: column; gap: 3px; }
+  .cc-field-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #b090a0; }
+  .cc-field-input {
+    padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 9px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--ink); background: var(--rose-pale); outline: none;
+    transition: border-color 0.2s; width: 100%;
+  }
+  .cc-field-input:focus { border-color: var(--rose); background: #fff; }
+  .cc-field-input.wide { grid-column: 1 / -1; }
+
+  /* Approve / Discard */
+  .cc-decision-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px;
+  }
+  .cc-approve-btn {
+    padding: 16px; border: none; border-radius: 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
+  }
+  .cc-approve-btn:active { transform: scale(0.98); }
+  .cc-approve { background: var(--ink); color: #fff; }
+  .cc-approve:hover { background: #2d0f1a; }
+  .cc-discard { background: #fff0f3; color: var(--rose); border: 1.5px solid var(--rose-mid) !important; }
+  .cc-discard:hover { background: var(--rose-pale); }
+  .cc-approve-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+</style>
+  .od-section { margin-bottom: 14px; }
+  .od-section-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--rose);
+    margin-bottom: 10px; display: block;
+  }
+  .od-card {
+    background: var(--card-bg); border-radius: 18px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    padding: 16px; margin-bottom: 14px;
+  }
+
+  /* Party row */
+  .od-party-row {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--card-bg); border-radius: 18px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    padding: 14px 16px; margin-bottom: 10px;
+  }
+  .od-party-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--rose); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  .od-party-info { flex: 1; min-width: 0; }
+  .od-party-name { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .od-party-meta { font-size: 11px; color: #b090a0; margin-top: 2px; }
+
+  /* Party selector card */
+  .od-select { width: 100%; margin-bottom: 10px; }
+  .od-select select, .od-select input[type=text] {
+    width: 100%;
+    padding: 13px 16px;
+    border: 2px solid var(--border); border-radius: 13px;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+    color: var(--ink); background: var(--rose-pale); outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 8px;
+  }
+  .od-select select { appearance: none; -webkit-appearance: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%23c9184a' d='M5 7l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center; background-size: 20px; padding-right: 42px; }
+  .od-select select:focus, .od-select input[type=text]:focus { border-color: var(--rose); background: #fff; }
+  .od-select input[type=text]::placeholder { color: #c4a0ab; font-weight: 300; }
+
+  /* Rate mode pills */
+  .od-rate-pills { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .od-rate-pill {
+    padding: 8px 16px; border-radius: 20px;
+    border: 1.5px solid var(--border); background: var(--card-bg);
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+    color: #b090a0; cursor: pointer; transition: all 0.2s;
+  }
+  .od-rate-pill:hover { border-color: var(--rose); color: var(--rose); background: var(--rose-pale); }
+  .od-rate-pill.active { background: var(--rose); color: white; border-color: var(--rose); }
+
+  /* Design search in draft */
+  .od-search-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .od-search-input {
+    flex: 1; padding: 12px 14px;
+    border: 2px solid var(--border); border-radius: 13px;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+    color: var(--ink); background: var(--rose-pale); outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .od-search-input:focus { border-color: var(--rose); background: #fff; }
+  .od-search-input::placeholder { color: #c4a0ab; font-weight: 300; }
+  .od-add-btn {
+    padding: 12px 18px; background: var(--rose); color: white;
+    border: none; border-radius: 13px; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .od-add-btn:hover { background: var(--rose-light); }
+  .od-add-btn:active { transform: scale(0.97); }
+
+  /* Suggestions dropdown in draft */
+  .od-suggestions {
+    background: white; border: 1px solid var(--border);
+    border-radius: 14px; box-shadow: 0 8px 30px rgba(201,24,74,0.12);
+    overflow: hidden; max-height: 200px; overflow-y: auto;
+    margin-bottom: 10px; display: none;
+  }
+  .od-sug-item {
+    padding: 10px 14px; cursor: pointer; font-size: 13px;
+    color: var(--ink); display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border); transition: background 0.15s;
+  }
+  .od-sug-item:last-child { border-bottom: none; }
+  .od-sug-item:hover { background: var(--rose-pale); }
+  .od-sug-dn { font-weight: 700; color: var(--rose); font-size: 14px; width: 48px; flex-shrink: 0; }
+  .od-sug-desc { font-size: 11px; color: var(--ink-soft); opacity: 0.75; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .od-sug-price { font-size: 12px; color: var(--ink); font-weight: 600; flex-shrink: 0; }
+
+  /* Draft items list */
+  .od-items-wrap { margin-bottom: 10px; }
+  .od-empty {
+    text-align: center; padding: 30px 20px;
+    font-size: 13px; color: #b090a0; line-height: 1.8;
+    border: 1.5px dashed var(--border); border-radius: 14px;
+  }
+  .od-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    animation: slideUp 0.25s cubic-bezier(0.2,0.8,0.3,1) both;
+  }
+  .od-item:last-child { border-bottom: none; }
+  .od-item-photo {
+    width: 44px; height: 56px; border-radius: 10px;
+    background: #f8f0f2; flex-shrink: 0; overflow: hidden;
+    border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  }
+  .od-item-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .od-item-photo .no-img { font-size: 18px; opacity: 0.3; }
+  .od-item-info { flex: 1; min-width: 0; }
+  .od-item-dn { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); }
+  .od-item-desc { font-size: 10px; color: #b090a0; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .od-item-rate-wrap { display: flex; align-items: center; gap: 5px; margin-top: 4px; }
+  .od-item-rate {
+    font-size: 12px; font-weight: 600; color: var(--rose);
+    border: none; background: var(--rose-pale); border-radius: 8px;
+    padding: 3px 8px; font-family: 'DM Sans', sans-serif;
+    width: 80px; outline: none;
+  }
+  .od-item-rate-label { font-size: 10px; color: #b090a0; }
+  .od-item-qty { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .od-qty-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1.5px solid var(--border); background: var(--rose-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: var(--rose); font-weight: 700;
+    cursor: pointer; line-height: 1; transition: background 0.15s;
+  }
+  .od-qty-btn:hover { background: var(--rose-mid); color: white; }
+  .od-qty-val {
+    font-size: 16px; font-weight: 700; color: var(--ink);
+    min-width: 22px; text-align: center;
+    border: none; background: transparent; font-family: 'DM Sans', sans-serif;
+    width: 30px; outline: none;
+  }
+  .od-item-del {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #fff0f3; border: 1px solid var(--border);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 13px; color: var(--rose); transition: background 0.15s;
+  }
+  .od-item-del:hover { background: var(--rose); color: white; }
+
+  /* Summary */
+  .od-summary {
+    background: var(--card-bg); border-radius: 18px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    overflow: hidden; margin-bottom: 14px;
+  }
+  .od-sum-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .od-sum-row:last-child { border-bottom: none; }
+  .od-sum-label { color: #b090a0; }
+  .od-sum-val { font-weight: 600; color: var(--ink); }
+  .od-sum-total { background: var(--ink); }
+  .od-sum-total .od-sum-label { color: rgba(255,255,255,0.5); font-size: 12px; }
+  .od-sum-total .od-sum-val { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
+  .od-disc-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+  }
+  .od-disc-label { font-size: 13px; color: #b090a0; }
+  .od-disc-input-wrap { display: flex; align-items: center; gap: 6px; }
+  .od-disc-input {
+    width: 56px; padding: 5px 8px; text-align: right;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--rose); background: var(--rose-pale); outline: none;
+    transition: border-color 0.2s;
+  }
+  .od-disc-input:focus { border-color: var(--rose); background: #fff; }
+  .od-disc-pct { font-size: 13px; color: #b090a0; }
+
+  /* Export area */
+  .od-export-card {
+    background: var(--card-bg); border-radius: 18px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    padding: 16px; margin-bottom: 14px;
+  }
+  .od-export-title { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rose); margin-bottom: 12px; display: block; }
+  .od-img-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; padding: 12px 14px;
+    background: var(--rose-pale); border-radius: 12px; border: 1px solid var(--border);
+  }
+  .od-img-toggle-label { font-size: 13px; color: var(--ink); font-weight: 500; }
+  .od-img-toggle-sub { font-size: 10px; color: #b090a0; margin-top: 2px; }
+  .od-toggle-switch {
+    width: 44px; height: 24px; border-radius: 12px;
+    background: #d0b0b8; cursor: pointer; position: relative;
+    transition: background 0.2s; flex-shrink: 0;
+    border: none; outline: none;
+  }
+  .od-toggle-switch.on { background: var(--rose); }
+  .od-toggle-switch::after {
+    content: ''; position: absolute;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: white; top: 3px; left: 3px;
+    transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .od-toggle-switch.on::after { transform: translateX(20px); }
+  .od-export-btn {
+    width: 100%; padding: 15px; border: none; border-radius: 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+    margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .od-export-btn.primary { background: var(--ink); color: white; }
+  .od-export-btn.primary:hover { background: #2d0f1a; }
+  .od-export-btn.wa { background: #25D366; color: white; }
+  .od-export-btn.wa:hover { background: #1ebe5d; }
+  .od-export-btn:active { transform: scale(0.98); }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    body * { visibility: hidden; }
+    #od-print-area, #od-print-area * { visibility: visible; }
+    #od-print-area {
+      position: fixed; top: 0; left: 0; width: 100%; height: auto;
+      background: white; padding: 32px; box-sizing: border-box;
+    }
+    .od-print-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; border-bottom: 2px solid #c9184a; padding-bottom: 16px; }
+    .od-print-logo { width: 60px; height: 60px; object-fit: contain; }
+    .od-print-brand { font-family: 'Playfair Display', serif; }
+    .od-print-brand h2 { font-size: 20px; color: #1a0a0e; margin: 0; }
+    .od-print-brand p { font-size: 11px; color: #b090a0; margin: 2px 0 0; letter-spacing: 1px; }
+    .od-print-meta { margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .od-print-meta-item { font-size: 12px; color: #4a2030; }
+    .od-print-meta-item strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #b090a0; margin-bottom: 2px; }
+    .od-print-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .od-print-table th { text-align: left; padding: 8px 10px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #c9184a; border-bottom: 2px solid #f0d6dc; }
+    .od-print-table td { padding: 10px; border-bottom: 1px solid #f0d6dc; font-size: 12px; color: #1a0a0e; vertical-align: middle; }
+    .od-print-table tr:last-child td { border-bottom: none; }
+    .od-print-img { width: 48px; height: 60px; object-fit: cover; border-radius: 6px; }
+    .od-print-img-blank { width: 48px; height: 60px; background: #f8f0f2; border-radius: 6px; border: 1px dashed #f0d6dc; }
+    .od-print-totals { margin-left: auto; width: 260px; }
+    .od-print-tot-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f0d6dc; font-size: 12px; }
+    .od-print-tot-row.final { font-weight: 700; font-size: 15px; color: #c9184a; border-bottom: none; padding-top: 10px; }
+    .od-print-footer { margin-top: 30px; text-align: center; font-size: 10px; color: #b090a0; letter-spacing: 1.5px; border-top: 1px solid #f0d6dc; padding-top: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -711,6 +1083,14 @@
     </button>
     <button class="nav-item" id="nav-fabric" onclick="navTo('fabric')">
       <span class="nav-icon">&#129523;</span> Fabric Stock
+    </button>
+    <button class="nav-item" id="nav-challan" onclick="navTo('challan')">
+      <span class="nav-icon">&#9881;</span> Challan Control
+    </button>
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">Orders</div>
+    <button class="nav-item" id="nav-draft" onclick="navTo('draft')">
+      <span class="nav-icon">&#128203;</span> Order Draft
     </button>
   </div>
   <div class="nav-drawer-footer">Jariwala Trading Company &middot; Kurti Catalogue</div>
@@ -795,6 +1175,148 @@
     <div class="browse-grid" id="fabricGrid"></div>
     <div id="fabricEmpty" style="display:none;" class="status-msg">No fabrics match your search.</div>
   </div>
+  </div><!-- /panel-fabric -->
+
+  <div class="tab-panel" id="panel-challan">
+
+    <!-- Web App URL config -->
+    <div class="cc-webapp-url-wrap">
+      <span class="cc-url-label">Apps Script Web App URL</span>
+      <input class="cc-url-input" id="ccWebAppUrl" type="url"
+        placeholder="https://script.google.com/macros/s/…/exec"
+        oninput="ccSaveUrl()" />
+      <div class="cc-url-note">
+        Paste your deployed Apps Script Web App URL above. It is saved in your browser — you only need to do this once.<br>
+        In Apps Script: Deploy → New deployment → Web App → Execute as <strong>Me</strong> → Access <strong>Anyone</strong>.
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="cc-actions-card">
+      <span class="cc-action-title">Fabric Challan Actions</span>
+      <button class="cc-btn primary" id="ccProcessBtn" onclick="ccProcessChallans()">
+        &#9654; Process Challans → Generate Preview
+      </button>
+      <button class="cc-btn primary" id="ccLoadPreviewBtn" onclick="ccLoadExistingPreview()">
+        &#128203; Load Existing Preview from Sheet
+      </button>
+      <button class="cc-btn danger" id="ccClearBtn" onclick="ccClearPreview()">
+        &#128465; Clear Pending Preview
+      </button>
+    </div>
+
+    <!-- Status bar -->
+    <div class="cc-status" id="ccStatus">
+      <span>&#128203; Configure the Web App URL above, then tap an action.</span>
+    </div>
+
+    <!-- Preview card with editable rows -->
+    <div class="cc-preview-card" id="ccPreviewCard">
+      <span class="cc-preview-title">Pending Review</span>
+      <span class="cc-preview-sub" id="ccPreviewSub">Edit any row before approving. Deleting a row removes it from the commit.</span>
+
+      <div class="cc-preview-meta" id="ccPreviewMeta"></div>
+
+      <div id="ccPreviewRows"></div>
+
+      <div class="cc-decision-row">
+        <button class="cc-approve-btn cc-approve" id="ccApproveBtn" onclick="ccApprove()">&#10003; Approve &amp; Push</button>
+        <button class="cc-approve-btn cc-discard" onclick="ccDiscard()">&#x2715; Discard All</button>
+      </div>
+    </div>
+
+  </div><!-- /panel-challan -->
+
+  <div class="tab-panel" id="panel-draft">
+
+    <!-- Party selection -->
+    <div class="od-card od-section">
+      <span class="od-section-title">Party</span>
+      <div class="od-select">
+        <select id="odPartySelect" onchange="odOnPartySelect()">
+          <option value="">— Select existing party —</option>
+        </select>
+        <input type="text" id="odPartyNew" placeholder="Or type new party name &amp; city…" oninput="odOnNewPartyInput()" style="display:none"/>
+      </div>
+      <button class="od-rate-pill" id="odNewPartyToggle" onclick="odToggleNewParty()" style="font-size:11px;padding:6px 12px;">+ New party</button>
+      <div id="odPartyDisplay" style="display:none; margin-top:12px;">
+        <div class="od-party-row" style="padding:10px 12px; margin-bottom:0;">
+          <div class="od-party-avatar" id="odPartyAvatar">?</div>
+          <div class="od-party-info">
+            <div class="od-party-name" id="odPartyName">—</div>
+            <div class="od-party-meta" id="odPartyMeta"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rate mode -->
+    <div class="od-card od-section">
+      <span class="od-section-title">Rate Mode</span>
+      <div class="od-rate-pills">
+        <button class="od-rate-pill active" data-mode="wholesale" onclick="odSetRateMode('wholesale')">Wholesale</button>
+        <button class="od-rate-pill"        data-mode="retail"    onclick="odSetRateMode('retail')">Retail</button>
+        <button class="od-rate-pill"        data-mode="net"       onclick="odSetRateMode('net')">Net Rate (custom)</button>
+      </div>
+      <div id="odRateModeNote" style="font-size:11px;color:#b090a0;margin-top:4px;">Rates pulled from wholesale column.</div>
+    </div>
+
+    <!-- Add designs -->
+    <div class="od-card od-section">
+      <span class="od-section-title">Add Designs</span>
+      <div class="od-search-row">
+        <input class="od-search-input" id="odDnInput" type="text" placeholder="Type DN to search…" autocomplete="off" oninput="odOnDnInput()" onkeydown="odOnDnKey(event)"/>
+        <button class="od-add-btn" onclick="odAddFromInput()">Add</button>
+      </div>
+      <div class="od-suggestions" id="odSuggestions"></div>
+    </div>
+
+    <!-- Items list -->
+    <div class="od-card od-section">
+      <span class="od-section-title">Draft Items</span>
+      <div class="od-items-wrap" id="odItemsWrap">
+        <div class="od-empty">No designs added yet.<br>Search by DN above to add items.</div>
+      </div>
+    </div>
+
+    <!-- Summary + discount -->
+    <div class="od-summary" id="odSummaryWrap" style="display:none;">
+      <div class="od-sum-row">
+        <span class="od-sum-label" id="odSumPcs">0 pcs</span>
+        <span class="od-sum-val" id="odSumSubtotal">&#x20B9;0</span>
+      </div>
+      <div class="od-disc-row">
+        <span class="od-disc-label">Discount</span>
+        <div class="od-disc-input-wrap">
+          <input class="od-disc-input" id="odDiscInput" type="number" min="0" max="100" step="0.5" value="0" oninput="odRenderSummary()"/>
+          <span class="od-disc-pct">%</span>
+        </div>
+      </div>
+      <div class="od-sum-row od-sum-total">
+        <span class="od-sum-label">Total Payable</span>
+        <span class="od-sum-val" id="odSumTotal">&#x20B9;0</span>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div class="od-export-card" id="odExportCard" style="display:none;">
+      <span class="od-export-title">Export</span>
+      <div class="od-img-toggle">
+        <div>
+          <div class="od-img-toggle-label">Include design images</div>
+          <div class="od-img-toggle-sub">Fetches photos from catalogue; leave off for faster export</div>
+        </div>
+        <button class="od-toggle-switch" id="odImgToggle" onclick="odToggleImages()"></button>
+      </div>
+      <button class="od-export-btn primary" onclick="odExportPDF()">&#x1F4C4; Save as PDF</button>
+      <button class="od-export-btn wa" onclick="odSendWhatsApp()">&#x1F4AC; Send on WhatsApp</button>
+    </div>
+
+  </div><!-- /panel-draft -->
+
+  <!-- Hidden print area (populated just before print) -->
+  <div id="od-print-area" style="display:none;"></div>
+
   <div class="watermark">
     <img src="JTC.jpg" alt="JTC" class="watermark-logo">
     <div>Jariwala Trading Company · Kurti Catalogue</div>
@@ -2198,6 +2720,652 @@ function renderFabricGrid(query) {
 // INIT
 // ─────────────────────────────────────────────────────────────────
 loadData();
+
+// =================================================================
+// ORDER DRAFT
+// =================================================================
+var odItems      = [];   // [{dn, desc, rate, qty, photoUrl}]
+var odRateMode   = 'wholesale';
+var odPartyName  = '';
+var odImagesOn   = false;
+var odIsNewParty = false;
+
+// Called when analytics loads — also populate order draft party dropdown
+function odPopulatePartyDropdown() {
+  var sel = document.getElementById('odPartySelect');
+  if (!sel) return;
+  var names = {};
+  if (analyticsRows && analyticsRows.length) {
+    analyticsRows.forEach(function(r) {
+      var b = (r[AN_BUYER]||'').trim();
+      if (b) names[b] = true;
+    });
+  }
+  var sorted = Object.keys(names).sort(function(a,b){ return a.localeCompare(b); });
+  sel.innerHTML = '<option value="">— Select existing party —</option>';
+  sorted.forEach(function(n) {
+    var o = document.createElement('option'); o.value = n; o.textContent = n; sel.appendChild(o);
+  });
+}
+
+function odOnPartySelect() {
+  var sel = document.getElementById('odPartySelect');
+  odPartyName = (sel ? sel.value : '').trim();
+  odRefreshPartyDisplay();
+  odRenderExportArea();
+}
+
+function odToggleNewParty() {
+  odIsNewParty = !odIsNewParty;
+  var inp  = document.getElementById('odPartyNew');
+  var sel  = document.getElementById('odPartySelect');
+  var btn  = document.getElementById('odNewPartyToggle');
+  if (odIsNewParty) {
+    inp.style.display = 'block'; sel.style.display = 'none';
+    btn.textContent = '← Back to list';
+    odPartyName = inp.value.trim();
+  } else {
+    inp.style.display = 'none'; sel.style.display = 'block';
+    btn.textContent = '+ New party';
+    odPartyName = (sel.value||'').trim();
+  }
+  odRefreshPartyDisplay();
+  odRenderExportArea();
+}
+
+function odOnNewPartyInput() {
+  odPartyName = (document.getElementById('odPartyNew').value||'').trim();
+  odRefreshPartyDisplay();
+  odRenderExportArea();
+}
+
+function odRefreshPartyDisplay() {
+  var disp   = document.getElementById('odPartyDisplay');
+  var avatar = document.getElementById('odPartyAvatar');
+  var name   = document.getElementById('odPartyName');
+  var meta   = document.getElementById('odPartyMeta');
+  if (!odPartyName) { disp.style.display = 'none'; return; }
+  disp.style.display = 'block';
+  var initials = odPartyName.split(/\s+/).map(function(w){ return w[0]||''; }).join('').toUpperCase().slice(0,2);
+  avatar.textContent = initials || '?';
+  name.textContent   = odPartyName;
+  meta.textContent   = odIsNewParty ? 'New party' : 'Existing party';
+}
+
+// Rate mode
+function odSetRateMode(mode) {
+  odRateMode = mode;
+  document.querySelectorAll('.od-rate-pill[data-mode]').forEach(function(p) {
+    p.classList.toggle('active', p.dataset.mode === mode);
+  });
+  var note = document.getElementById('odRateModeNote');
+  if (mode === 'wholesale') note.textContent = 'Rates pulled from wholesale column.';
+  else if (mode === 'retail') note.textContent = 'Rates pulled from retail column.';
+  else note.textContent = 'Enter a custom net rate per item below.';
+  // Re-apply rates to existing items
+  odItems.forEach(function(item) {
+    if (mode !== 'net') {
+      var row = allRows.find(function(r){ return (r[COL_DESIGN]||'').trim() === item.dn; });
+      if (row) item.rate = parseFloat(row[mode === 'wholesale' ? COL_WHOLESALE : COL_RETAIL]) || 0;
+    }
+  });
+  odRenderItems();
+  odRenderSummary();
+}
+
+// DN search / suggestions
+function odGetRate(row) {
+  if (odRateMode === 'retail')    return parseFloat(row[COL_RETAIL])    || 0;
+  if (odRateMode === 'wholesale') return parseFloat(row[COL_WHOLESALE]) || 0;
+  return parseFloat(row[COL_WHOLESALE]) || parseFloat(row[COL_RETAIL]) || 0;
+}
+
+function odOnDnInput() {
+  var q    = (document.getElementById('odDnInput').value||'').trim().toLowerCase();
+  var box  = document.getElementById('odSuggestions');
+  if (!q || !allRows.length) { box.style.display = 'none'; return; }
+  var hits = allRows.filter(function(r){ return (r[COL_DESIGN]||'').toLowerCase().indexOf(q) !== -1; }).slice(0,8);
+  if (!hits.length) { box.style.display = 'none'; return; }
+  box.innerHTML = hits.map(function(r) {
+    var dn    = (r[COL_DESIGN]||'').trim();
+    var desc  = (r[COL_DESC]  ||'').trim();
+    var rate  = odGetRate(r);
+    return '<div class="od-sug-item" onclick="odAddDesign(\''+esc(dn)+'\')">'
+         + '<span class="od-sug-dn">'+esc(dn)+'</span>'
+         + '<span class="od-sug-desc">'+esc(desc)+'</span>'
+         + '<span class="od-sug-price">&#x20B9;'+rate+'</span>'
+         + '</div>';
+  }).join('');
+  box.style.display = 'block';
+}
+
+function odOnDnKey(e) {
+  if (e.key === 'Enter') odAddFromInput();
+  if (e.key === 'Escape') document.getElementById('odSuggestions').style.display = 'none';
+}
+
+function odAddFromInput() {
+  var q = (document.getElementById('odDnInput').value||'').trim();
+  if (!q) return;
+  odAddDesign(q);
+}
+
+function odAddDesign(dn) {
+  dn = dn.trim();
+  document.getElementById('odSuggestions').style.display = 'none';
+  document.getElementById('odDnInput').value = '';
+  // check if already in list
+  var existing = odItems.find(function(i){ return i.dn === dn; });
+  if (existing) { existing.qty++; odRenderItems(); odRenderSummary(); return; }
+  var row = allRows.find(function(r){ return (r[COL_DESIGN]||'').trim() === dn; });
+  if (!row) { alert('Design "'+dn+'" not found in catalogue.'); return; }
+  var rate     = odGetRate(row);
+  var desc     = (row[COL_DESC] ||'').trim();
+  var photoRaw = (row[COL_PHOTO]||'').trim();
+  var photoUrl = makePhotoUrl(photoRaw);
+  odItems.push({ dn: dn, desc: desc, rate: rate, qty: 1, photoUrl: photoUrl });
+  odRenderItems();
+  odRenderSummary();
+  odRenderExportArea();
+}
+
+function odRemoveItem(idx) {
+  odItems.splice(idx, 1);
+  odRenderItems();
+  odRenderSummary();
+  odRenderExportArea();
+}
+
+function odChangeQty(idx, delta) {
+  odItems[idx].qty = Math.max(1, (odItems[idx].qty || 1) + delta);
+  odRenderItems();
+  odRenderSummary();
+}
+
+function odChangeRate(idx, val) {
+  odItems[idx].rate = parseFloat(val) || 0;
+  odRenderSummary();
+}
+
+function odChangeQtyDirect(idx, val) {
+  odItems[idx].qty = Math.max(1, parseInt(val)||1);
+  odRenderSummary();
+}
+
+function odRenderItems() {
+  var wrap = document.getElementById('odItemsWrap');
+  if (!odItems.length) {
+    wrap.innerHTML = '<div class="od-empty">No designs added yet.<br>Search by DN above to add items.</div>';
+    return;
+  }
+  var html = '';
+  odItems.forEach(function(item, i) {
+    var rateField = odRateMode === 'net'
+      ? '<input class="od-item-rate" type="number" value="'+item.rate+'" onchange="odChangeRate('+i+',this.value)" />'
+      : '<span class="od-item-rate" style="cursor:default;">&#x20B9;'+item.rate+'</span>';
+    var imgHtml = item.photoUrl
+      ? '<img src="'+item.photoUrl+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\';" /><span class="no-img" style="display:none;">🧣</span>'
+      : '<span class="no-img">🧣</span>';
+    html += '<div class="od-item">'
+      + '<div class="od-item-photo">'+imgHtml+'</div>'
+      + '<div class="od-item-info">'
+        + '<div class="od-item-dn">'+esc(item.dn)+'</div>'
+        + '<div class="od-item-desc">'+esc(item.desc||'—')+'</div>'
+        + '<div class="od-item-rate-wrap">'+rateField+'<span class="od-item-rate-label">/ pc</span></div>'
+      + '</div>'
+      + '<div class="od-item-qty">'
+        + '<div class="od-qty-btn" onclick="odChangeQty('+i+',-1)">&#8722;</div>'
+        + '<input class="od-qty-val" type="number" min="1" value="'+item.qty+'" onchange="odChangeQtyDirect('+i+',this.value)" />'
+        + '<div class="od-qty-btn" onclick="odChangeQty('+i+',1)">&#43;</div>'
+      + '</div>'
+      + '<div class="od-item-del" onclick="odRemoveItem('+i+')">&#x2715;</div>'
+    + '</div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function odGetSubtotal() {
+  return odItems.reduce(function(s,i){ return s + (i.rate * i.qty); }, 0);
+}
+
+function odRenderSummary() {
+  var wrap = document.getElementById('odSummaryWrap');
+  if (!odItems.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  var totalPcs  = odItems.reduce(function(s,i){ return s + i.qty; }, 0);
+  var subtotal  = odGetSubtotal();
+  var disc      = parseFloat(document.getElementById('odDiscInput').value) || 0;
+  var discAmt   = subtotal * disc / 100;
+  var total     = subtotal - discAmt;
+  document.getElementById('odSumPcs').textContent      = totalPcs + ' pcs';
+  document.getElementById('odSumSubtotal').textContent = '\u20B9' + Math.round(subtotal).toLocaleString('en-IN');
+  document.getElementById('odSumTotal').textContent    = '\u20B9' + Math.round(total).toLocaleString('en-IN');
+}
+
+function odRenderExportArea() {
+  var card = document.getElementById('odExportCard');
+  card.style.display = odItems.length ? 'block' : 'none';
+}
+
+function odToggleImages() {
+  odImagesOn = !odImagesOn;
+  var btn = document.getElementById('odImgToggle');
+  btn.classList.toggle('on', odImagesOn);
+}
+
+// ── PDF EXPORT via print ──────────────────────────────────────────
+function odExportPDF() {
+  var subtotal  = odGetSubtotal();
+  var disc      = parseFloat(document.getElementById('odDiscInput').value) || 0;
+  var discAmt   = subtotal * disc / 100;
+  var total     = subtotal - discAmt;
+  var totalPcs  = odItems.reduce(function(s,i){ return s + i.qty; }, 0);
+  var today     = new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'});
+  var withImages = odImagesOn;
+
+  function buildAndPrint(imageDataMap) {
+    var tableRows = '';
+    odItems.forEach(function(item, idx) {
+      var imgCell = '';
+      if (withImages) {
+        if (imageDataMap && imageDataMap[item.dn]) {
+          imgCell = '<img class="od-print-img" src="'+imageDataMap[item.dn]+'" />';
+        } else {
+          imgCell = '<div class="od-print-img-blank"></div>';
+        }
+      }
+      var lineTotal = item.rate * item.qty;
+      tableRows += '<tr>'
+        + (withImages ? '<td>'+imgCell+'</td>' : '')
+        + '<td><strong>'+esc(item.dn)+'</strong></td>'
+        + '<td style="color:#b090a0;font-size:11px;">'+esc(item.desc||'')+'</td>'
+        + '<td style="text-align:right;">\u20B9'+item.rate+'</td>'
+        + '<td style="text-align:center;">'+item.qty+'</td>'
+        + '<td style="text-align:right;font-weight:700;">\u20B9'+Math.round(lineTotal).toLocaleString('en-IN')+'</td>'
+        + '</tr>';
+    });
+
+    var discRow = disc > 0
+      ? '<div class="od-print-tot-row"><span>Discount ('+disc+'%)</span><span>\u2212\u20B9'+Math.round(discAmt).toLocaleString('en-IN')+'</span></div>'
+      : '';
+
+    var html = '<div style="font-family:\'DM Sans\',sans-serif;padding:32px;background:white;min-height:100vh;">'
+      + '<div class="od-print-header">'
+        + '<img src="JTC.jpg" class="od-print-logo" alt="JTC"/>'
+        + '<div class="od-print-brand">'
+          + '<h2>Jariwala Trading Company</h2>'
+          + '<p>ORDER DRAFT · NOT A TAX INVOICE</p>'
+        + '</div>'
+      + '</div>'
+      + '<div class="od-print-meta">'
+        + '<div class="od-print-meta-item"><strong>Party</strong>'+esc(odPartyName||'—')+'</div>'
+        + '<div class="od-print-meta-item"><strong>Date</strong>'+today+'</div>'
+        + '<div class="od-print-meta-item"><strong>Rate Mode</strong>'+odRateMode.charAt(0).toUpperCase()+odRateMode.slice(1)+'</div>'
+        + '<div class="od-print-meta-item"><strong>Total Pieces</strong>'+totalPcs+'</div>'
+      + '</div>'
+      + '<table class="od-print-table">'
+        + '<thead><tr>'
+          + (withImages ? '<th style="width:60px;">Photo</th>' : '')
+          + '<th>DN</th><th>Description</th><th style="text-align:right;">Rate</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Amount</th>'
+        + '</tr></thead>'
+        + '<tbody>'+tableRows+'</tbody>'
+      + '</table>'
+      + '<div style="display:flex;justify-content:flex-end;">'
+        + '<div class="od-print-totals">'
+          + '<div class="od-print-tot-row"><span>Subtotal ('+totalPcs+' pcs)</span><span>\u20B9'+Math.round(subtotal).toLocaleString('en-IN')+'</span></div>'
+          + discRow
+          + '<div class="od-print-tot-row final"><span>Total Payable</span><span>\u20B9'+Math.round(total).toLocaleString('en-IN')+'</span></div>'
+        + '</div>'
+      + '</div>'
+      + '<div class="od-print-footer">Jariwala Trading Company &middot; This is a draft order, not a tax invoice.</div>'
+    + '</div>';
+
+    var area = document.getElementById('od-print-area');
+    area.innerHTML = html;
+    area.style.display = 'block';
+    setTimeout(function() {
+      window.print();
+      setTimeout(function() { area.style.display = 'none'; area.innerHTML = ''; }, 500);
+    }, 200);
+  }
+
+  if (!withImages) { buildAndPrint(null); return; }
+
+  // Load images as data URLs via canvas so they print cross-origin
+  var imageDataMap = {};
+  var pending = odItems.filter(function(i){ return !!i.photoUrl; });
+  if (!pending.length) { buildAndPrint(imageDataMap); return; }
+  var done = 0;
+  pending.forEach(function(item) {
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    var finished = false;
+    var timer = setTimeout(function() {
+      if (finished) return; finished = true;
+      done++; if (done === pending.length) buildAndPrint(imageDataMap);
+    }, 6000);
+    img.onload = function() {
+      if (finished) return; finished = true; clearTimeout(timer);
+      try {
+        var c = document.createElement('canvas');
+        c.width = img.naturalWidth; c.height = img.naturalHeight;
+        c.getContext('2d').drawImage(img, 0, 0);
+        imageDataMap[item.dn] = c.toDataURL('image/jpeg', 0.85);
+      } catch(e) {}
+      done++; if (done === pending.length) buildAndPrint(imageDataMap);
+    };
+    img.onerror = function() {
+      if (finished) return; finished = true; clearTimeout(timer);
+      done++; if (done === pending.length) buildAndPrint(imageDataMap);
+    };
+    img.src = item.photoUrl;
+  });
+}
+
+// ── WhatsApp text export ──────────────────────────────────────────
+function odSendWhatsApp() {
+  var subtotal = odGetSubtotal();
+  var disc     = parseFloat(document.getElementById('odDiscInput').value) || 0;
+  var discAmt  = subtotal * disc / 100;
+  var total    = subtotal - discAmt;
+  var lines    = [];
+  lines.push('*Order Draft — Jariwala Trading Co.*');
+  if (odPartyName) lines.push('Party: ' + odPartyName);
+  lines.push('Date: ' + new Date().toLocaleDateString('en-IN'));
+  lines.push('');
+  odItems.forEach(function(item) {
+    lines.push('DN ' + item.dn + '  ×' + item.qty + ' pcs  @\u20B9' + item.rate + '  =  \u20B9' + Math.round(item.rate * item.qty).toLocaleString('en-IN'));
+  });
+  lines.push('');
+  if (disc > 0) {
+    lines.push('Subtotal: \u20B9' + Math.round(subtotal).toLocaleString('en-IN'));
+    lines.push('Discount (' + disc + '%): \u2212\u20B9' + Math.round(discAmt).toLocaleString('en-IN'));
+  }
+  lines.push('*Total: \u20B9' + Math.round(total).toLocaleString('en-IN') + '*');
+  lines.push('');
+  lines.push('_This is a draft order, not a tax invoice._');
+  var text = lines.join('\n');
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+}
+
+// Patch loadAnalytics to also populate order draft party dropdown
+var _origLoadAnalytics = loadAnalytics;
+loadAnalytics = function() {
+  if (!analyticsLoaded) {
+    var _origFetchCSV = fetchCSV;
+    var origRef = ANALYTICS_CSV_URL;
+    _origLoadAnalytics();
+    // Use a polling approach to detect when analyticsLoaded becomes true
+    var poll = setInterval(function() {
+      if (analyticsLoaded) { clearInterval(poll); odPopulatePartyDropdown(); }
+    }, 300);
+  } else {
+    _origLoadAnalytics();
+    odPopulatePartyDropdown();
+  }
+};
+
+// Also populate when draft tab is opened (if analytics already loaded)
+var _origSwitchTab = switchTab;
+switchTab = function(tab) {
+  _origSwitchTab(tab);
+  if (tab === 'draft' && analyticsLoaded) odPopulatePartyDropdown();
+  if (tab === 'draft' && !analyticsLoaded) {
+    // Load analytics silently to get party names
+    if (!ANALYTICS_CSV_URL || ANALYTICS_CSV_URL.indexOf('PASTE') !== -1) return;
+    fetchCSV(ANALYTICS_CSV_URL).then(function(text) {
+      if (!text) return;
+      var parsed = parseCSV(text);
+      analyticsRows = parsed.slice(1).filter(function(r){ return r[AN_BILL] && r[AN_BILL].trim() !== ''; });
+      analyticsLoaded = true;
+      odPopulatePartyDropdown();
+    });
+  }
+};
+
+// =================================================================
+// CHALLAN CONTROL
+// =================================================================
+// Architecture:
+//   This page is static (GitHub Pages). It cannot call Apps Script
+//   directly. Instead it calls a Google Apps Script Web App that you
+//   deploy separately (challan_webapp.gs). That web app wraps your
+//   existing processFabricChallans / confirmFabricPreview /
+//   clearPendingReview functions and also exposes the Pending Review
+//   sheet as JSON so this page can display and edit it.
+//
+//   The Web App URL is stored in localStorage so it survives page reloads.
+// =================================================================
+
+var CC_URL_KEY     = 'jtc_cc_webapp_url';
+var ccPreviewData  = [];   // array of row objects currently shown
+
+// ── Init: restore saved URL on page load ─────────────────────────
+(function() {
+  var saved = localStorage.getItem(CC_URL_KEY);
+  if (saved) {
+    var inp = document.getElementById('ccWebAppUrl');
+    if (inp) inp.value = saved;
+  }
+})();
+
+function ccSaveUrl() {
+  var val = (document.getElementById('ccWebAppUrl').value || '').trim();
+  if (val) localStorage.setItem(CC_URL_KEY, val);
+}
+
+function ccGetUrl() {
+  return (document.getElementById('ccWebAppUrl').value || '').trim();
+}
+
+// ── Status helpers ────────────────────────────────────────────────
+function ccSetStatus(msg, type, spinner) {
+  var el = document.getElementById('ccStatus');
+  el.className = 'cc-status' + (type ? ' ' + type : '');
+  el.innerHTML = (spinner ? '<div class="cc-spinner"></div>' : '') + '<span>' + msg + '</span>';
+}
+
+function ccSetBtnsDisabled(disabled) {
+  ['ccProcessBtn','ccLoadPreviewBtn','ccClearBtn','ccApproveBtn'].forEach(function(id) {
+    var b = document.getElementById(id);
+    if (b) b.disabled = disabled;
+  });
+}
+
+// ── Call Web App ──────────────────────────────────────────────────
+function ccCall(action, payload) {
+  var url = ccGetUrl();
+  if (!url) {
+    ccSetStatus('Please paste your Apps Script Web App URL above first.', 'error');
+    return Promise.reject('no url');
+  }
+  var params = Object.assign({ action: action }, payload || {});
+  var qs = Object.keys(params).map(function(k) {
+    return encodeURIComponent(k) + '=' + encodeURIComponent(
+      typeof params[k] === 'object' ? JSON.stringify(params[k]) : params[k]
+    );
+  }).join('&');
+  // Apps Script Web Apps require GET for simple triggers, POST for doPost
+  return fetch(url + '?' + qs, { method: 'GET', redirect: 'follow' })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
+}
+
+// ── Process challans ──────────────────────────────────────────────
+function ccProcessChallans() {
+  ccSetBtnsDisabled(true);
+  ccSetStatus('Calling Apps Script — processing challan images via Claude…', 'loading', true);
+  ccCall('process')
+    .then(function(res) {
+      ccSetBtnsDisabled(false);
+      if (res.error) { ccSetStatus('Error: ' + res.error, 'error'); return; }
+      ccSetStatus('Preview generated: ' + (res.rows || 0) + ' rows — load it below.', 'success');
+      if (res.preview && res.preview.length) {
+        ccPreviewData = res.preview;
+        ccRenderPreview();
+      }
+    })
+    .catch(function(e) {
+      ccSetBtnsDisabled(false);
+      ccSetStatus('Request failed: ' + e.message, 'error');
+    });
+}
+
+// ── Load existing preview from sheet ─────────────────────────────
+function ccLoadExistingPreview() {
+  ccSetBtnsDisabled(true);
+  ccSetStatus('Loading Pending Review from sheet…', 'loading', true);
+  ccCall('getPreview')
+    .then(function(res) {
+      ccSetBtnsDisabled(false);
+      if (res.error) { ccSetStatus('Error: ' + res.error, 'error'); return; }
+      if (!res.preview || !res.preview.length) {
+        ccSetStatus('No pending preview found in the sheet.', '');
+        document.getElementById('ccPreviewCard').classList.remove('visible');
+        return;
+      }
+      ccPreviewData = res.preview;
+      ccSetStatus('Loaded ' + res.preview.length + ' row(s) from Pending Review.', 'success');
+      ccRenderPreview();
+    })
+    .catch(function(e) {
+      ccSetBtnsDisabled(false);
+      ccSetStatus('Request failed: ' + e.message, 'error');
+    });
+}
+
+// ── Render preview rows ───────────────────────────────────────────
+function ccRenderPreview() {
+  var card = document.getElementById('ccPreviewCard');
+  card.classList.add('visible');
+
+  // Summary meta
+  var ok   = ccPreviewData.filter(function(r){ return r.status === 'ok'; }).length;
+  var warn = ccPreviewData.filter(function(r){ return r.status === 'warn'; }).length;
+  var fail = ccPreviewData.filter(function(r){ return r.status === 'fail'; }).length;
+  document.getElementById('ccPreviewMeta').innerHTML =
+    '<div class="cc-meta-item"><span class="cc-meta-label">Total Rows</span><span class="cc-meta-val">'+ccPreviewData.length+'</span></div>' +
+    '<div class="cc-meta-item"><span class="cc-meta-label">Matched</span><span class="cc-meta-val" style="color:#274e13;">'+ok+'</span></div>' +
+    '<div class="cc-meta-item"><span class="cc-meta-label">Unmatched</span><span class="cc-meta-val" style="color:#7f4f00;">'+warn+'</span></div>' +
+    '<div class="cc-meta-item"><span class="cc-meta-label">Failed</span><span class="cc-meta-val" style="color:#cc0000;">'+fail+'</span></div>';
+
+  var wrap = document.getElementById('ccPreviewRows');
+  wrap.innerHTML = '';
+
+  ccPreviewData.forEach(function(row, i) {
+    var statusLabel = row.status === 'ok' ? '✓ OK' : row.status === 'warn' ? '⚠ Unmatched' : '✗ Failed';
+    var statusClass = row.status === 'ok' ? 'ok' : row.status === 'warn' ? 'warn' : 'fail';
+
+    var div = document.createElement('div');
+    div.className = 'cc-row';
+    div.id = 'ccRow_' + i;
+    div.innerHTML =
+      '<div class="cc-row-top">' +
+        '<span class="cc-row-status '+statusClass+'">'+esc(statusLabel)+'</span>' +
+        '<span class="cc-row-challan">'+esc(row.challanNo||'—')+' · '+esc(row.supplier||'—')+'</span>' +
+        '<div class="cc-row-del" onclick="ccDeleteRow('+i+')">&#x2715;</div>' +
+      '</div>' +
+      '<div class="cc-row-fields">' +
+        '<div class="cc-field">' +
+          '<span class="cc-field-label">Fabric (matched)</span>' +
+          '<input class="cc-field-input" data-idx="'+i+'" data-key="fabricMatched" value="'+esc(row.fabricMatched||row.fabricRaw||'')+'" oninput="ccUpdateField('+i+',\'fabricMatched\',this.value)" />' +
+        '</div>' +
+        '<div class="cc-field">' +
+          '<span class="cc-field-label">Width</span>' +
+          '<input class="cc-field-input" data-idx="'+i+'" data-key="width" value="'+esc(row.width||'')+'" oninput="ccUpdateField('+i+',\'width\',this.value)" />' +
+        '</div>' +
+        '<div class="cc-field">' +
+          '<span class="cc-field-label">Meters</span>' +
+          '<input class="cc-field-input" type="number" step="0.1" data-idx="'+i+'" data-key="meters" value="'+(row.meters||0)+'" oninput="ccUpdateField('+i+',\'meters\',parseFloat(this.value)||0)" />' +
+        '</div>' +
+        '<div class="cc-field">' +
+          '<span class="cc-field-label">Date</span>' +
+          '<input class="cc-field-input" data-idx="'+i+'" data-key="date" value="'+esc(row.date||'')+'" oninput="ccUpdateField('+i+',\'date\',this.value)" />' +
+        '</div>' +
+        '<div class="cc-field" style="grid-column:1/-1;">' +
+          '<span class="cc-field-label">Notes</span>' +
+          '<input class="cc-field-input" data-idx="'+i+'" data-key="notes" value="'+esc(row.notes||'')+'" oninput="ccUpdateField('+i+',\'notes\',this.value)" />' +
+        '</div>' +
+      '</div>';
+    wrap.appendChild(div);
+  });
+}
+
+function ccUpdateField(idx, key, val) {
+  if (ccPreviewData[idx]) ccPreviewData[idx][key] = val;
+}
+
+function ccDeleteRow(idx) {
+  ccPreviewData.splice(idx, 1);
+  if (!ccPreviewData.length) {
+    document.getElementById('ccPreviewCard').classList.remove('visible');
+    ccSetStatus('All rows removed. Preview is empty.', '');
+    return;
+  }
+  ccRenderPreview();
+}
+
+// ── Approve & Push ────────────────────────────────────────────────
+function ccApprove() {
+  if (!ccPreviewData.length) { ccSetStatus('No rows to approve.', 'error'); return; }
+  var active = ccPreviewData.filter(function(r){ return r.status !== 'fail'; });
+  if (!active.length) { ccSetStatus('No approvable rows (all are PARSE FAILED).', 'error'); return; }
+
+  ccSetBtnsDisabled(true);
+  ccSetStatus('Pushing ' + active.length + ' row(s) to Challan Log and Fabric Balance…', 'loading', true);
+
+  // Send edited data to web app for commit
+  var url = ccGetUrl();
+  if (!url) { ccSetBtnsDisabled(false); ccSetStatus('No Web App URL set.', 'error'); return; }
+
+  fetch(url, {
+    method : 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body   : 'action=confirm&rows=' + encodeURIComponent(JSON.stringify(active)),
+    redirect: 'follow',
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    ccSetBtnsDisabled(false);
+    if (res.error) { ccSetStatus('Error: ' + res.error, 'error'); return; }
+    ccSetStatus('Done! ' + res.committed + ' row(s) committed. Fabric Balance (Used) updated.', 'success');
+    ccPreviewData = [];
+    document.getElementById('ccPreviewCard').classList.remove('visible');
+  })
+  .catch(function(e) {
+    ccSetBtnsDisabled(false);
+    ccSetStatus('Request failed: ' + e.message, 'error');
+  });
+}
+
+// ── Discard ───────────────────────────────────────────────────────
+function ccDiscard() {
+  if (!confirm('Discard all preview rows? This only clears the view — it does not clear the sheet. Use "Clear Pending Preview" to also clear the sheet.')) return;
+  ccPreviewData = [];
+  document.getElementById('ccPreviewCard').classList.remove('visible');
+  ccSetStatus('Preview cleared from view.', '');
+}
+
+// ── Clear sheet preview ───────────────────────────────────────────
+function ccClearPreview() {
+  if (!confirm('Clear Pending Review in the sheet? This discards unconfirmed challan data.')) return;
+  ccSetBtnsDisabled(true);
+  ccSetStatus('Clearing Pending Review sheet…', 'loading', true);
+  ccCall('clear')
+    .then(function(res) {
+      ccSetBtnsDisabled(false);
+      if (res.error) { ccSetStatus('Error: ' + res.error, 'error'); return; }
+      ccSetStatus('Pending Review cleared in sheet.', 'success');
+      ccPreviewData = [];
+      document.getElementById('ccPreviewCard').classList.remove('visible');
+    })
+    .catch(function(e) {
+      ccSetBtnsDisabled(false);
+      ccSetStatus('Request failed: ' + e.message, 'error');
+    });
+}
 </script>
 </body>
 </html>
