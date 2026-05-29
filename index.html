@@ -2452,7 +2452,7 @@ loadData();
 // Columns: Date(A), Party(B), Agent(C), DN(D), Colours(E), Qty(F), Sizes(G), Rate(H), TotalPcs(I), Status(J), Notes(K)
 // =================================================================
 
-var ORDERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTLTuNGcPdbbLI_Ik2W3vGCy1hqnnKqNDC-L7X8se4VgbRe0z7M-nQMd-LFmqPXiRTmGr1Q_iq1Enm4/pub?gid=266625497&single=true&output=csv';
+var ORDERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/ORDERS_SHEET_PUBLISHED_ID/pub?output=csv';
 // ↑ Replace with the published CSV URL of JTC Order Tracker
 
 var OR_DATE=0, OR_PARTY=1, OR_AGENT=2, OR_DN=3, OR_COLOURS=4, OR_QTY=5, OR_SIZES=6, OR_RATE=7, OR_TOTALPCS=8, OR_STATUS=9, OR_NOTES=10;
@@ -2544,9 +2544,9 @@ function renderOrders() {
     html += '<div class="orders-party-header">';
     html +=   '<div>';
     html +=     '<div class="orders-party-name">' + esc(party) + '</div>';
-    html +=     '<div class="orders-party-meta">' + esc(latestDate) + (agent ? ' &middot; ' + esc(agent) : '') + '</div>';
+    html +=     '<div class="orders-party-meta">' + esc(latestDate) + (agent ? ' · ' + esc(agent) : '') + '</div>';
     html +=   '</div>';
-    html +=   '<div class="orders-party-count">' + dnCount + ' DN' + (dnCount !== 1 ? 's' : '') + ' &middot; ' + totalPcs + ' pcs</div>';
+    html +=   '<div class="orders-party-count">' + dnCount + ' DN' + (dnCount !== 1 ? 's' : '') + ' · ' + totalPcs + ' pcs</div>';
     html += '</div>';
 
     // Notes row (show once per party if any item in this group has notes)
@@ -2576,7 +2576,7 @@ function renderOrders() {
       html +=   '<div class="orders-dn-left">';
       html +=     '<div class="orders-dn-num">DN ' + esc(dn) + '</div>';
       if (metaParts.length) {
-        html +=   '<div class="orders-dn-meta">' + esc(metaParts.join(' &middot; ')) + '</div>';
+        html +=   '<div class="orders-dn-meta">' + metaParts.map(esc).join(' · ') + '</div>';
       }
       html +=   '</div>';
       html +=   '<div class="orders-dn-right">';
