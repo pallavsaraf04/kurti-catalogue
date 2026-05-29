@@ -789,256 +789,44 @@
   .cc-discard:hover { background: var(--rose-pale); }
   .cc-approve-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-  /* ── ORDER DRAFT TAB ── */
-  .od-section { margin-bottom: 14px; }
-  .od-section-title {
-    font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
-    text-transform: uppercase; color: var(--rose);
-    margin-bottom: 10px; display: block;
-  }
-  .od-card {
-    background: var(--card-bg); border-radius: 18px;
-    border: 1px solid var(--border); box-shadow: var(--shadow);
-    padding: 16px; margin-bottom: 14px;
-  }
 
-  /* Party row */
-  .od-party-row {
-    display: flex; align-items: center; gap: 12px;
-    background: var(--card-bg); border-radius: 18px;
-    border: 1px solid var(--border); box-shadow: var(--shadow);
-    padding: 14px 16px; margin-bottom: 10px;
-  }
-  .od-party-avatar {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: var(--rose); color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 700; flex-shrink: 0;
-  }
-  .od-party-info { flex: 1; min-width: 0; }
-  .od-party-name { font-size: 15px; font-weight: 600; color: var(--ink); }
-  .od-party-meta { font-size: 11px; color: #b090a0; margin-top: 2px; }
+  /* ── ORDERS TAB ── */
+  .orders-filter-wrap{margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
+  .orders-filter-wrap::-webkit-scrollbar{display:none;}
+  .orders-pills{display:flex;gap:8px;width:max-content;}
+  .orders-pill{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--card-bg);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#b090a0;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+  .orders-pill:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-pale);}
+  .orders-pill.active{background:var(--rose);color:white;border-color:var(--rose);}
+  .orders-party-card{background:var(--card-bg);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:18px;animation:slideUp 0.35s cubic-bezier(0.2,0.8,0.3,1) both;}
+  .orders-party-header{background:var(--ink);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;}
+  .orders-party-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,rgba(201,24,74,0.22) 0%,transparent 60%);}
+  .orders-party-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;position:relative;}
+  .orders-party-meta{font-size:11px;color:var(--rose-mid);position:relative;margin-top:2px;}
+  .orders-party-count{font-size:11px;color:rgba(255,255,255,0.35);position:relative;white-space:nowrap;flex-shrink:0;}
+  .orders-dn-row{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;border-bottom:1px solid var(--border);}
+  .orders-dn-row:last-child{border-bottom:none;}
+  .orders-dn-left{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+  .orders-dn-num{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--ink);}
+  .orders-dn-meta{font-size:11px;color:#b090a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .orders-dn-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;margin-left:10px;}
+  .orders-status{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+  .orders-status.pending{background:#FAEEDA;color:#633806;}
+  .orders-status.dye{background:#E6F1FB;color:#0C447C;}
+  .orders-status.work{background:#FBEAF0;color:#72243E;}
+  .orders-status.stitch{background:#EEEDFE;color:#3C3489;}
+  .orders-status.complete{background:#EAF3DE;color:#27500A;}
+  .orders-dn-date{font-size:10px;color:#c4a0ab;}
+  .orders-notes-row{display:flex;align-items:flex-start;gap:6px;padding:8px 18px 12px;font-size:12px;color:var(--ink-soft);background:var(--rose-pale);border-top:1px solid var(--border);}
+  .orders-notes-icon{flex-shrink:0;margin-top:1px;opacity:0.5;}
+  .orders-empty{text-align:center;padding:40px 20px;font-size:13px;color:#b090a0;line-height:1.9;}
+  .orders-summary-bar{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;}
+  .orders-summary-bar::-webkit-scrollbar{display:none;}
+  .orders-kpi{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:12px 16px;flex-shrink:0;min-width:90px;text-align:center;box-shadow:var(--shadow);}
+  .orders-kpi-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1;}
+  .orders-kpi-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--rose);margin-top:4px;}
+  .orders-refresh{font-size:10px;color:#b090a0;text-align:center;margin-bottom:14px;letter-spacing:0.5px;}
 
-  /* Party selector card */
-  .od-select { width: 100%; margin-bottom: 10px; }
-  .od-select select, .od-select input[type=text] {
-    width: 100%;
-    padding: 13px 16px;
-    border: 2px solid var(--border); border-radius: 13px;
-    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
-    color: var(--ink); background: var(--rose-pale); outline: none;
-    transition: border-color 0.2s, background 0.2s;
-    margin-bottom: 8px;
-  }
-  .od-select select { appearance: none; -webkit-appearance: none; cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%23c9184a' d='M5 7l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 14px center; background-size: 20px; padding-right: 42px; }
-  .od-select select:focus, .od-select input[type=text]:focus { border-color: var(--rose); background: #fff; }
-  .od-select input[type=text]::placeholder { color: #c4a0ab; font-weight: 300; }
 
-  /* Rate mode pills */
-  .od-rate-pills { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-  .od-rate-pill {
-    padding: 8px 16px; border-radius: 20px;
-    border: 1.5px solid var(--border); background: var(--card-bg);
-    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
-    color: #b090a0; cursor: pointer; transition: all 0.2s;
-  }
-  .od-rate-pill:hover { border-color: var(--rose); color: var(--rose); background: var(--rose-pale); }
-  .od-rate-pill.active { background: var(--rose); color: white; border-color: var(--rose); }
-
-  /* Design search in draft */
-  .od-search-row { display: flex; gap: 8px; margin-bottom: 8px; }
-  .od-search-input {
-    flex: 1; padding: 12px 14px;
-    border: 2px solid var(--border); border-radius: 13px;
-    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
-    color: var(--ink); background: var(--rose-pale); outline: none;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .od-search-input:focus { border-color: var(--rose); background: #fff; }
-  .od-search-input::placeholder { color: #c4a0ab; font-weight: 300; }
-  .od-add-btn {
-    padding: 12px 18px; background: var(--rose); color: white;
-    border: none; border-radius: 13px; font-family: 'DM Sans', sans-serif;
-    font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;
-    transition: background 0.2s;
-  }
-  .od-add-btn:hover { background: var(--rose-light); }
-  .od-add-btn:active { transform: scale(0.97); }
-
-  /* Suggestions dropdown in draft */
-  .od-suggestions {
-    background: white; border: 1px solid var(--border);
-    border-radius: 14px; box-shadow: 0 8px 30px rgba(201,24,74,0.12);
-    overflow: hidden; max-height: 200px; overflow-y: auto;
-    margin-bottom: 10px; display: none;
-  }
-  .od-sug-item {
-    padding: 10px 14px; cursor: pointer; font-size: 13px;
-    color: var(--ink); display: flex; align-items: center; gap: 10px;
-    border-bottom: 1px solid var(--border); transition: background 0.15s;
-  }
-  .od-sug-item:last-child { border-bottom: none; }
-  .od-sug-item:hover { background: var(--rose-pale); }
-  .od-sug-dn { font-weight: 700; color: var(--rose); font-size: 14px; width: 48px; flex-shrink: 0; }
-  .od-sug-desc { font-size: 11px; color: var(--ink-soft); opacity: 0.75; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .od-sug-price { font-size: 12px; color: var(--ink); font-weight: 600; flex-shrink: 0; }
-
-  /* Draft items list */
-  .od-items-wrap { margin-bottom: 10px; }
-  .od-empty {
-    text-align: center; padding: 30px 20px;
-    font-size: 13px; color: #b090a0; line-height: 1.8;
-    border: 1.5px dashed var(--border); border-radius: 14px;
-  }
-  .od-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 0; border-bottom: 1px solid var(--border);
-    animation: slideUp 0.25s cubic-bezier(0.2,0.8,0.3,1) both;
-  }
-  .od-item:last-child { border-bottom: none; }
-  .od-item-photo {
-    width: 44px; height: 56px; border-radius: 10px;
-    background: #f8f0f2; flex-shrink: 0; overflow: hidden;
-    border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
-  }
-  .od-item-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .od-item-photo .no-img { font-size: 18px; opacity: 0.3; }
-  .od-item-info { flex: 1; min-width: 0; }
-  .od-item-dn { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); }
-  .od-item-desc { font-size: 10px; color: #b090a0; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .od-item-rate-wrap { display: flex; align-items: center; gap: 5px; margin-top: 4px; }
-  .od-item-rate {
-    font-size: 12px; font-weight: 600; color: var(--rose);
-    border: none; background: var(--rose-pale); border-radius: 8px;
-    padding: 3px 8px; font-family: 'DM Sans', sans-serif;
-    width: 80px; outline: none;
-  }
-  .od-item-rate-label { font-size: 10px; color: #b090a0; }
-  .od-item-qty { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-  .od-qty-btn {
-    width: 28px; height: 28px; border-radius: 50%;
-    border: 1.5px solid var(--border); background: var(--rose-pale);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; color: var(--rose); font-weight: 700;
-    cursor: pointer; line-height: 1; transition: background 0.15s;
-  }
-  .od-qty-btn:hover { background: var(--rose-mid); color: white; }
-  .od-qty-val {
-    font-size: 16px; font-weight: 700; color: var(--ink);
-    min-width: 22px; text-align: center;
-    border: none; background: transparent; font-family: 'DM Sans', sans-serif;
-    width: 30px; outline: none;
-  }
-  .od-item-del {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: #fff0f3; border: 1px solid var(--border);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; font-size: 13px; color: var(--rose); transition: background 0.15s;
-  }
-  .od-item-del:hover { background: var(--rose); color: white; }
-
-  /* Summary */
-  .od-summary {
-    background: var(--card-bg); border-radius: 18px;
-    border: 1px solid var(--border); box-shadow: var(--shadow);
-    overflow: hidden; margin-bottom: 14px;
-  }
-  .od-sum-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 16px; border-bottom: 1px solid var(--border);
-    font-size: 13px;
-  }
-  .od-sum-row:last-child { border-bottom: none; }
-  .od-sum-label { color: #b090a0; }
-  .od-sum-val { font-weight: 600; color: var(--ink); }
-  .od-sum-total { background: var(--ink); }
-  .od-sum-total .od-sum-label { color: rgba(255,255,255,0.5); font-size: 12px; }
-  .od-sum-total .od-sum-val { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
-  .od-disc-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 16px; border-bottom: 1px solid var(--border);
-  }
-  .od-disc-label { font-size: 13px; color: #b090a0; }
-  .od-disc-input-wrap { display: flex; align-items: center; gap: 6px; }
-  .od-disc-input {
-    width: 56px; padding: 5px 8px; text-align: right;
-    border: 1.5px solid var(--border); border-radius: 8px;
-    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
-    color: var(--rose); background: var(--rose-pale); outline: none;
-    transition: border-color 0.2s;
-  }
-  .od-disc-input:focus { border-color: var(--rose); background: #fff; }
-  .od-disc-pct { font-size: 13px; color: #b090a0; }
-
-  /* Export area */
-  .od-export-card {
-    background: var(--card-bg); border-radius: 18px;
-    border: 1px solid var(--border); box-shadow: var(--shadow);
-    padding: 16px; margin-bottom: 14px;
-  }
-  .od-export-title { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rose); margin-bottom: 12px; display: block; }
-  .od-img-toggle {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 14px; padding: 12px 14px;
-    background: var(--rose-pale); border-radius: 12px; border: 1px solid var(--border);
-  }
-  .od-img-toggle-label { font-size: 13px; color: var(--ink); font-weight: 500; }
-  .od-img-toggle-sub { font-size: 10px; color: #b090a0; margin-top: 2px; }
-  .od-toggle-switch {
-    width: 44px; height: 24px; border-radius: 12px;
-    background: #d0b0b8; cursor: pointer; position: relative;
-    transition: background 0.2s; flex-shrink: 0;
-    border: none; outline: none;
-  }
-  .od-toggle-switch.on { background: var(--rose); }
-  .od-toggle-switch::after {
-    content: ''; position: absolute;
-    width: 18px; height: 18px; border-radius: 50%;
-    background: white; top: 3px; left: 3px;
-    transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-  }
-  .od-toggle-switch.on::after { transform: translateX(20px); }
-  .od-export-btn {
-    width: 100%; padding: 15px; border: none; border-radius: 14px;
-    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
-    margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .od-export-btn.primary { background: var(--ink); color: white; }
-  .od-export-btn.primary:hover { background: #2d0f1a; }
-  .od-export-btn.wa { background: #25D366; color: white; }
-  .od-export-btn.wa:hover { background: #1ebe5d; }
-  .od-export-btn:active { transform: scale(0.98); }
-
-  /* ── PRINT STYLES ── */
-  @media print {
-    body * { visibility: hidden; }
-    #od-print-area, #od-print-area * { visibility: visible; }
-    #od-print-area {
-      position: fixed; top: 0; left: 0; width: 100%; height: auto;
-      background: white; padding: 32px; box-sizing: border-box;
-    }
-    .od-print-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; border-bottom: 2px solid #c9184a; padding-bottom: 16px; }
-    .od-print-logo { width: 60px; height: 60px; object-fit: contain; }
-    .od-print-brand { font-family: 'Playfair Display', serif; }
-    .od-print-brand h2 { font-size: 20px; color: #1a0a0e; margin: 0; }
-    .od-print-brand p { font-size: 11px; color: #b090a0; margin: 2px 0 0; letter-spacing: 1px; }
-    .od-print-meta { margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .od-print-meta-item { font-size: 12px; color: #4a2030; }
-    .od-print-meta-item strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #b090a0; margin-bottom: 2px; }
-    .od-print-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    .od-print-table th { text-align: left; padding: 8px 10px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #c9184a; border-bottom: 2px solid #f0d6dc; }
-    .od-print-table td { padding: 10px; border-bottom: 1px solid #f0d6dc; font-size: 12px; color: #1a0a0e; vertical-align: middle; }
-    .od-print-table tr:last-child td { border-bottom: none; }
-    .od-print-img { width: 48px; height: 60px; object-fit: cover; border-radius: 6px; }
-    .od-print-img-blank { width: 48px; height: 60px; background: #f8f0f2; border-radius: 6px; border: 1px dashed #f0d6dc; }
-    .od-print-totals { margin-left: auto; width: 260px; }
-    .od-print-tot-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f0d6dc; font-size: 12px; }
-    .od-print-tot-row.final { font-weight: 700; font-size: 15px; color: #c9184a; border-bottom: none; padding-top: 10px; }
-    .od-print-footer { margin-top: 30px; text-align: center; font-size: 10px; color: #b090a0; letter-spacing: 1.5px; border-top: 1px solid #f0d6dc; padding-top: 12px; }
-  }
 </style>
 </head>
 <body>
@@ -1090,8 +878,8 @@
     </button>
     <div class="nav-divider"></div>
     <div class="nav-section-label">Orders</div>
-    <button class="nav-item" id="nav-draft" onclick="navTo('draft')">
-      <span class="nav-icon">&#128203;</span> Order Draft
+    <button class="nav-item" id="nav-orders" onclick="navTo('orders')">
+      <span class="nav-icon">&#128203;</span> Order Tracker
     </button>
   </div>
   <div class="nav-drawer-footer">Jariwala Trading Company &middot; Kurti Catalogue</div>
@@ -1228,95 +1016,29 @@
 
   </div><!-- /panel-challan -->
 
-  <div class="tab-panel" id="panel-draft">
 
-    <!-- Party selection -->
-    <div class="od-card od-section">
-      <span class="od-section-title">Party</span>
-      <div class="od-select">
-        <select id="odPartySelect" onchange="odOnPartySelect()">
-          <option value="">— Select existing party —</option>
-        </select>
-        <input type="text" id="odPartyNew" placeholder="Or type new party name &amp; city…" oninput="odOnNewPartyInput()" style="display:none"/>
-      </div>
-      <button class="od-rate-pill" id="odNewPartyToggle" onclick="odToggleNewParty()" style="font-size:11px;padding:6px 12px;">+ New party</button>
-      <div id="odPartyDisplay" style="display:none; margin-top:12px;">
-        <div class="od-party-row" style="padding:10px 12px; margin-bottom:0;">
-          <div class="od-party-avatar" id="odPartyAvatar">?</div>
-          <div class="od-party-info">
-            <div class="od-party-name" id="odPartyName">—</div>
-            <div class="od-party-meta" id="odPartyMeta"></div>
-          </div>
-        </div>
+
+  <div class="tab-panel" id="panel-orders">
+    <div class="data-status" id="ordersStatus">
+      <div class="dot loading" id="ordersDot"></div>
+      <span id="ordersStatusText">Loading orders…</span>
+    </div>
+    <div id="ordersSummaryBar" style="display:none;">
+      <div class="orders-summary-bar" id="ordersSummaryKpis"></div>
+    </div>
+    <div class="orders-filter-wrap">
+      <div class="orders-pills" id="ordersPills">
+        <button class="orders-pill active" data-status="all"      onclick="ordersSetFilter('all')">All</button>
+        <button class="orders-pill"        data-status="pending"  onclick="ordersSetFilter('pending')">Pending</button>
+        <button class="orders-pill"        data-status="dye"      onclick="ordersSetFilter('dye')">Dye</button>
+        <button class="orders-pill"        data-status="work"     onclick="ordersSetFilter('work')">Work</button>
+        <button class="orders-pill"        data-status="stitch"   onclick="ordersSetFilter('stitch')">Stitch</button>
+        <button class="orders-pill"        data-status="complete" onclick="ordersSetFilter('complete')">Complete</button>
       </div>
     </div>
+    <div id="ordersContent"></div>
+  </div><!-- /panel-orders -->
 
-    <!-- Rate mode -->
-    <div class="od-card od-section">
-      <span class="od-section-title">Rate Mode</span>
-      <div class="od-rate-pills">
-        <button class="od-rate-pill active" data-mode="wholesale" onclick="odSetRateMode('wholesale')">Wholesale</button>
-        <button class="od-rate-pill"        data-mode="retail"    onclick="odSetRateMode('retail')">Retail</button>
-        <button class="od-rate-pill"        data-mode="net"       onclick="odSetRateMode('net')">Net Rate (custom)</button>
-      </div>
-      <div id="odRateModeNote" style="font-size:11px;color:#b090a0;margin-top:4px;">Rates pulled from wholesale column.</div>
-    </div>
-
-    <!-- Add designs -->
-    <div class="od-card od-section">
-      <span class="od-section-title">Add Designs</span>
-      <div class="od-search-row">
-        <input class="od-search-input" id="odDnInput" type="text" placeholder="Type DN to search…" autocomplete="off" oninput="odOnDnInput()" onkeydown="odOnDnKey(event)"/>
-        <button class="od-add-btn" onclick="odAddFromInput()">Add</button>
-      </div>
-      <div class="od-suggestions" id="odSuggestions"></div>
-    </div>
-
-    <!-- Items list -->
-    <div class="od-card od-section">
-      <span class="od-section-title">Draft Items</span>
-      <div class="od-items-wrap" id="odItemsWrap">
-        <div class="od-empty">No designs added yet.<br>Search by DN above to add items.</div>
-      </div>
-    </div>
-
-    <!-- Summary + discount -->
-    <div class="od-summary" id="odSummaryWrap" style="display:none;">
-      <div class="od-sum-row">
-        <span class="od-sum-label" id="odSumPcs">0 pcs</span>
-        <span class="od-sum-val" id="odSumSubtotal">&#x20B9;0</span>
-      </div>
-      <div class="od-disc-row">
-        <span class="od-disc-label">Discount</span>
-        <div class="od-disc-input-wrap">
-          <input class="od-disc-input" id="odDiscInput" type="number" min="0" max="100" step="0.5" value="0" oninput="odRenderSummary()"/>
-          <span class="od-disc-pct">%</span>
-        </div>
-      </div>
-      <div class="od-sum-row od-sum-total">
-        <span class="od-sum-label">Total Payable</span>
-        <span class="od-sum-val" id="odSumTotal">&#x20B9;0</span>
-      </div>
-    </div>
-
-    <!-- Export -->
-    <div class="od-export-card" id="odExportCard" style="display:none;">
-      <span class="od-export-title">Export</span>
-      <div class="od-img-toggle">
-        <div>
-          <div class="od-img-toggle-label">Include design images</div>
-          <div class="od-img-toggle-sub">Fetches photos from catalogue; leave off for faster export</div>
-        </div>
-        <button class="od-toggle-switch" id="odImgToggle" onclick="odToggleImages()"></button>
-      </div>
-      <button class="od-export-btn primary" onclick="odExportPDF()">&#x1F4C4; Save as PDF</button>
-      <button class="od-export-btn wa" onclick="odSendWhatsApp()">&#x1F4AC; Send on WhatsApp</button>
-    </div>
-
-  </div><!-- /panel-draft -->
-
-  <!-- Hidden print area (populated just before print) -->
-  <div id="od-print-area" style="display:none;"></div>
 
   <div class="watermark">
     <img src="JTC.jpg" alt="JTC" class="watermark-logo">
@@ -1773,6 +1495,7 @@ function switchTab(tab) {
   if (tab==='browse' && document.getElementById('browseGrid').children.length===0) renderBrowseGrid();
   if (tab==='analytics') loadAnalytics();
   if (tab==='fabric') loadFabricStock();
+  if (tab==='orders') loadOrders();
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -2723,406 +2446,165 @@ function renderFabricGrid(query) {
 loadData();
 
 // =================================================================
-// ORDER DRAFT
+// ORDER TRACKER
 // =================================================================
-var odItems      = [];   // [{dn, desc, rate, qty, photoUrl}]
-var odRateMode   = 'wholesale';
-var odPartyName  = '';
-var odImagesOn   = false;
-var odIsNewParty = false;
+// Reads from JTC Order Tracker sheet (published CSV)
+// Columns: Date(A), Party(B), Agent(C), DN(D), Colours(E), Qty(F), Sizes(G), Rate(H), TotalPcs(I), Status(J), Notes(K)
+// =================================================================
 
-// Called when analytics loads — also populate order draft party dropdown
-function odPopulatePartyDropdown() {
-  var sel = document.getElementById('odPartySelect');
-  if (!sel) return;
-  var names = {};
-  if (analyticsRows && analyticsRows.length) {
-    analyticsRows.forEach(function(r) {
-      var b = (r[AN_BUYER]||'').trim();
-      if (b) names[b] = true;
-    });
-  }
-  var sorted = Object.keys(names).sort(function(a,b){ return a.localeCompare(b); });
-  sel.innerHTML = '<option value="">— Select existing party —</option>';
-  sorted.forEach(function(n) {
-    var o = document.createElement('option'); o.value = n; o.textContent = n; sel.appendChild(o);
-  });
-}
+var ORDERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTLTuNGcPdbbLI_Ik2W3vGCy1hqnnKqNDC-L7X8se4VgbRe0z7M-nQMd-LFmqPXiRTmGr1Q_iq1Enm4/pub?gid=266625497&single=true&output=csv';
+// ↑ Replace with the published CSV URL of JTC Order Tracker
 
-function odOnPartySelect() {
-  var sel = document.getElementById('odPartySelect');
-  odPartyName = (sel ? sel.value : '').trim();
-  odRefreshPartyDisplay();
-  odRenderExportArea();
-}
+var OR_DATE=0, OR_PARTY=1, OR_AGENT=2, OR_DN=3, OR_COLOURS=4, OR_QTY=5, OR_SIZES=6, OR_RATE=7, OR_TOTALPCS=8, OR_STATUS=9, OR_NOTES=10;
+var ordersRows = [], ordersLoaded = false;
+var ordersActiveFilter = 'all';
 
-function odToggleNewParty() {
-  odIsNewParty = !odIsNewParty;
-  var inp  = document.getElementById('odPartyNew');
-  var sel  = document.getElementById('odPartySelect');
-  var btn  = document.getElementById('odNewPartyToggle');
-  if (odIsNewParty) {
-    inp.style.display = 'block'; sel.style.display = 'none';
-    btn.textContent = '← Back to list';
-    odPartyName = inp.value.trim();
-  } else {
-    inp.style.display = 'none'; sel.style.display = 'block';
-    btn.textContent = '+ New party';
-    odPartyName = (sel.value||'').trim();
-  }
-  odRefreshPartyDisplay();
-  odRenderExportArea();
-}
-
-function odOnNewPartyInput() {
-  odPartyName = (document.getElementById('odPartyNew').value||'').trim();
-  odRefreshPartyDisplay();
-  odRenderExportArea();
-}
-
-function odRefreshPartyDisplay() {
-  var disp   = document.getElementById('odPartyDisplay');
-  var avatar = document.getElementById('odPartyAvatar');
-  var name   = document.getElementById('odPartyName');
-  var meta   = document.getElementById('odPartyMeta');
-  if (!odPartyName) { disp.style.display = 'none'; return; }
-  disp.style.display = 'block';
-  var initials = odPartyName.split(/\s+/).map(function(w){ return w[0]||''; }).join('').toUpperCase().slice(0,2);
-  avatar.textContent = initials || '?';
-  name.textContent   = odPartyName;
-  meta.textContent   = odIsNewParty ? 'New party' : 'Existing party';
-}
-
-// Rate mode
-function odSetRateMode(mode) {
-  odRateMode = mode;
-  document.querySelectorAll('.od-rate-pill[data-mode]').forEach(function(p) {
-    p.classList.toggle('active', p.dataset.mode === mode);
-  });
-  var note = document.getElementById('odRateModeNote');
-  if (mode === 'wholesale') note.textContent = 'Rates pulled from wholesale column.';
-  else if (mode === 'retail') note.textContent = 'Rates pulled from retail column.';
-  else note.textContent = 'Enter a custom net rate per item below.';
-  // Re-apply rates to existing items
-  odItems.forEach(function(item) {
-    if (mode !== 'net') {
-      var row = allRows.find(function(r){ return (r[COL_DESIGN]||'').trim() === item.dn; });
-      if (row) item.rate = parseFloat(row[mode === 'wholesale' ? COL_WHOLESALE : COL_RETAIL]) || 0;
-    }
-  });
-  odRenderItems();
-  odRenderSummary();
-}
-
-// DN search / suggestions
-function odGetRate(row) {
-  if (odRateMode === 'retail')    return parseFloat(row[COL_RETAIL])    || 0;
-  if (odRateMode === 'wholesale') return parseFloat(row[COL_WHOLESALE]) || 0;
-  return parseFloat(row[COL_WHOLESALE]) || parseFloat(row[COL_RETAIL]) || 0;
-}
-
-function odOnDnInput() {
-  var q    = (document.getElementById('odDnInput').value||'').trim().toLowerCase();
-  var box  = document.getElementById('odSuggestions');
-  if (!q || !allRows.length) { box.style.display = 'none'; return; }
-  var hits = allRows.filter(function(r){ return (r[COL_DESIGN]||'').toLowerCase().indexOf(q) !== -1; }).slice(0,8);
-  if (!hits.length) { box.style.display = 'none'; return; }
-  box.innerHTML = hits.map(function(r) {
-    var dn    = (r[COL_DESIGN]||'').trim();
-    var desc  = (r[COL_DESC]  ||'').trim();
-    var rate  = odGetRate(r);
-    return '<div class="od-sug-item" onclick="odAddDesign(\''+esc(dn)+'\')">'
-         + '<span class="od-sug-dn">'+esc(dn)+'</span>'
-         + '<span class="od-sug-desc">'+esc(desc)+'</span>'
-         + '<span class="od-sug-price">&#x20B9;'+rate+'</span>'
-         + '</div>';
-  }).join('');
-  box.style.display = 'block';
-}
-
-function odOnDnKey(e) {
-  if (e.key === 'Enter') odAddFromInput();
-  if (e.key === 'Escape') document.getElementById('odSuggestions').style.display = 'none';
-}
-
-function odAddFromInput() {
-  var q = (document.getElementById('odDnInput').value||'').trim();
-  if (!q) return;
-  odAddDesign(q);
-}
-
-function odAddDesign(dn) {
-  dn = dn.trim();
-  document.getElementById('odSuggestions').style.display = 'none';
-  document.getElementById('odDnInput').value = '';
-  // check if already in list
-  var existing = odItems.find(function(i){ return i.dn === dn; });
-  if (existing) { existing.qty++; odRenderItems(); odRenderSummary(); return; }
-  var row = allRows.find(function(r){ return (r[COL_DESIGN]||'').trim() === dn; });
-  if (!row) { alert('Design "'+dn+'" not found in catalogue.'); return; }
-  var rate     = odGetRate(row);
-  var desc     = (row[COL_DESC] ||'').trim();
-  var photoRaw = (row[COL_PHOTO]||'').trim();
-  var photoUrl = makePhotoUrl(photoRaw);
-  odItems.push({ dn: dn, desc: desc, rate: rate, qty: 1, photoUrl: photoUrl });
-  odRenderItems();
-  odRenderSummary();
-  odRenderExportArea();
-}
-
-function odRemoveItem(idx) {
-  odItems.splice(idx, 1);
-  odRenderItems();
-  odRenderSummary();
-  odRenderExportArea();
-}
-
-function odChangeQty(idx, delta) {
-  odItems[idx].qty = Math.max(1, (odItems[idx].qty || 1) + delta);
-  odRenderItems();
-  odRenderSummary();
-}
-
-function odChangeRate(idx, val) {
-  odItems[idx].rate = parseFloat(val) || 0;
-  odRenderSummary();
-}
-
-function odChangeQtyDirect(idx, val) {
-  odItems[idx].qty = Math.max(1, parseInt(val)||1);
-  odRenderSummary();
-}
-
-function odRenderItems() {
-  var wrap = document.getElementById('odItemsWrap');
-  if (!odItems.length) {
-    wrap.innerHTML = '<div class="od-empty">No designs added yet.<br>Search by DN above to add items.</div>';
+function loadOrders() {
+  if (ordersLoaded) { renderOrders(); return; }
+  if (!ORDERS_CSV_URL || ORDERS_CSV_URL.indexOf('ORDERS_SHEET_PUBLISHED_ID') !== -1) {
+    document.getElementById('ordersStatus').innerHTML =
+      '<div class="dot error"></div><span>Orders sheet URL not configured yet — paste published CSV URL into ORDERS_CSV_URL in the code.</span>';
     return;
   }
+  document.getElementById('ordersDot').className = 'dot loading';
+  document.getElementById('ordersStatusText').textContent = 'Loading orders…';
+  fetchCSV(ORDERS_CSV_URL).then(function(text) {
+    if (!text) {
+      document.getElementById('ordersDot').className = 'dot error';
+      document.getElementById('ordersStatusText').textContent = 'Could not load orders sheet.';
+      return;
+    }
+    var parsed = parseCSV(text);
+    ordersRows = parsed.slice(1).filter(function(r) { return r[OR_DATE] && r[OR_DATE].trim() !== ''; });
+    ordersLoaded = true;
+    document.getElementById('ordersStatus').style.display = 'none';
+    document.getElementById('ordersSummaryBar').style.display = 'block';
+    renderOrders();
+  });
+}
+
+function ordersSetFilter(status) {
+  ordersActiveFilter = status;
+  document.querySelectorAll('.orders-pill').forEach(function(p) {
+    p.classList.toggle('active', p.getAttribute('data-status') === status);
+  });
+  renderOrders();
+}
+
+function renderOrders() {
+  var rows = ordersRows;
+
+  // Apply status filter
+  if (ordersActiveFilter !== 'all') {
+    rows = rows.filter(function(r) {
+      return (r[OR_STATUS]||'').trim().toLowerCase() === ordersActiveFilter;
+    });
+  }
+
+  // KPI bar — always from full dataset
+  var total    = ordersRows.length;
+  var pending  = ordersRows.filter(function(r){ return (r[OR_STATUS]||'').trim().toLowerCase() === 'pending';  }).length;
+  var inProg   = ordersRows.filter(function(r){ var s=(r[OR_STATUS]||'').trim().toLowerCase(); return s==='dye'||s==='work'||s==='stitch'; }).length;
+  var complete = ordersRows.filter(function(r){ return (r[OR_STATUS]||'').trim().toLowerCase() === 'complete'; }).length;
+  document.getElementById('ordersSummaryKpis').innerHTML =
+    kpiBox(total,    'Total') +
+    kpiBox(pending,  'Pending') +
+    kpiBox(inProg,   'In Progress') +
+    kpiBox(complete, 'Complete');
+
+  var content = document.getElementById('ordersContent');
+  if (!rows.length) {
+    content.innerHTML = '<div class="orders-empty">No orders' + (ordersActiveFilter !== 'all' ? ' with status <strong>' + esc(ordersActiveFilter) + '</strong>' : '') + '.</div>';
+    return;
+  }
+
+  // Group by party (preserving first-seen order, most recent date first)
+  var partyMap = {}, partyOrder = [];
+  // Sort rows by date descending (newest first)
+  var sorted = rows.slice().sort(function(a,b) {
+    return new Date(b[OR_DATE]||0) - new Date(a[OR_DATE]||0);
+  });
+  sorted.forEach(function(r) {
+    var party = (r[OR_PARTY]||'—').trim();
+    if (!partyMap[party]) { partyMap[party] = []; partyOrder.push(party); }
+    partyMap[party].push(r);
+  });
+
   var html = '';
-  odItems.forEach(function(item, i) {
-    var rateField = odRateMode === 'net'
-      ? '<input class="od-item-rate" type="number" value="'+item.rate+'" onchange="odChangeRate('+i+',this.value)" />'
-      : '<span class="od-item-rate" style="cursor:default;">&#x20B9;'+item.rate+'</span>';
-    var imgHtml = item.photoUrl
-      ? '<img src="'+item.photoUrl+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\';" /><span class="no-img" style="display:none;">🧣</span>'
-      : '<span class="no-img">🧣</span>';
-    html += '<div class="od-item">'
-      + '<div class="od-item-photo">'+imgHtml+'</div>'
-      + '<div class="od-item-info">'
-        + '<div class="od-item-dn">'+esc(item.dn)+'</div>'
-        + '<div class="od-item-desc">'+esc(item.desc||'—')+'</div>'
-        + '<div class="od-item-rate-wrap">'+rateField+'<span class="od-item-rate-label">/ pc</span></div>'
-      + '</div>'
-      + '<div class="od-item-qty">'
-        + '<div class="od-qty-btn" onclick="odChangeQty('+i+',-1)">&#8722;</div>'
-        + '<input class="od-qty-val" type="number" min="1" value="'+item.qty+'" onchange="odChangeQtyDirect('+i+',this.value)" />'
-        + '<div class="od-qty-btn" onclick="odChangeQty('+i+',1)">&#43;</div>'
-      + '</div>'
-      + '<div class="od-item-del" onclick="odRemoveItem('+i+')">&#x2715;</div>'
-    + '</div>';
-  });
-  wrap.innerHTML = html;
-}
+  partyOrder.forEach(function(party) {
+    var items = partyMap[party];
+    // Get the most recent date + agent for this party group
+    var latestDate  = items[0][OR_DATE]  || '';
+    var agent       = items[0][OR_AGENT] || '';
+    var dnCount     = items.length;
+    var totalPcs    = items.reduce(function(s,r){ return s + (parseInt(r[OR_TOTALPCS])||0); }, 0);
 
-function odGetSubtotal() {
-  return odItems.reduce(function(s,i){ return s + (i.rate * i.qty); }, 0);
-}
+    // Party card header
+    html += '<div class="orders-party-card">';
+    html += '<div class="orders-party-header">';
+    html +=   '<div>';
+    html +=     '<div class="orders-party-name">' + esc(party) + '</div>';
+    html +=     '<div class="orders-party-meta">' + esc(latestDate) + (agent ? ' &middot; ' + esc(agent) : '') + '</div>';
+    html +=   '</div>';
+    html +=   '<div class="orders-party-count">' + dnCount + ' DN' + (dnCount !== 1 ? 's' : '') + ' &middot; ' + totalPcs + ' pcs</div>';
+    html += '</div>';
 
-function odRenderSummary() {
-  var wrap = document.getElementById('odSummaryWrap');
-  if (!odItems.length) { wrap.style.display = 'none'; return; }
-  wrap.style.display = 'block';
-  var totalPcs  = odItems.reduce(function(s,i){ return s + i.qty; }, 0);
-  var subtotal  = odGetSubtotal();
-  var disc      = parseFloat(document.getElementById('odDiscInput').value) || 0;
-  var discAmt   = subtotal * disc / 100;
-  var total     = subtotal - discAmt;
-  document.getElementById('odSumPcs').textContent      = totalPcs + ' pcs';
-  document.getElementById('odSumSubtotal').textContent = '\u20B9' + Math.round(subtotal).toLocaleString('en-IN');
-  document.getElementById('odSumTotal').textContent    = '\u20B9' + Math.round(total).toLocaleString('en-IN');
-}
+    // Notes row (show once per party if any item in this group has notes)
+    // Actually show per-DN notes inside each DN row
 
-function odRenderExportArea() {
-  var card = document.getElementById('odExportCard');
-  card.style.display = odItems.length ? 'block' : 'none';
-}
+    // DN rows
+    items.forEach(function(r) {
+      var dn       = (r[OR_DN]||'—').trim();
+      var colours  = (r[OR_COLOURS]||'').trim();
+      var qty      = (r[OR_QTY]||'').trim();
+      var sizes    = (r[OR_SIZES]||'').trim();
+      var rate     = (r[OR_RATE]||'').trim();
+      var totPcs   = (r[OR_TOTALPCS]||'').trim();
+      var status   = (r[OR_STATUS]||'Pending').trim();
+      var notes    = (r[OR_NOTES]||'').trim();
+      var date     = (r[OR_DATE]||'').trim();
 
-function odToggleImages() {
-  odImagesOn = !odImagesOn;
-  var btn = document.getElementById('odImgToggle');
-  btn.classList.toggle('on', odImagesOn);
-}
+      var statusKey = status.toLowerCase();
+      var metaParts = [];
+      if (colours) metaParts.push(colours);
+      if (qty)     metaParts.push(qty + ' qty/colour');
+      if (sizes)   metaParts.push(sizes);
+      if (rate)    metaParts.push('\u20B9' + rate + '/pc');
+      if (totPcs)  metaParts.push(totPcs + ' pcs total');
 
-// ── PDF EXPORT via print ──────────────────────────────────────────
-function odExportPDF() {
-  var subtotal  = odGetSubtotal();
-  var disc      = parseFloat(document.getElementById('odDiscInput').value) || 0;
-  var discAmt   = subtotal * disc / 100;
-  var total     = subtotal - discAmt;
-  var totalPcs  = odItems.reduce(function(s,i){ return s + i.qty; }, 0);
-  var today     = new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'});
-  var withImages = odImagesOn;
-
-  function buildAndPrint(imageDataMap) {
-    var tableRows = '';
-    odItems.forEach(function(item, idx) {
-      var imgCell = '';
-      if (withImages) {
-        if (imageDataMap && imageDataMap[item.dn]) {
-          imgCell = '<img class="od-print-img" src="'+imageDataMap[item.dn]+'" />';
-        } else {
-          imgCell = '<div class="od-print-img-blank"></div>';
-        }
+      html += '<div class="orders-dn-row">';
+      html +=   '<div class="orders-dn-left">';
+      html +=     '<div class="orders-dn-num">DN ' + esc(dn) + '</div>';
+      if (metaParts.length) {
+        html +=   '<div class="orders-dn-meta">' + esc(metaParts.join(' &middot; ')) + '</div>';
       }
-      var lineTotal = item.rate * item.qty;
-      tableRows += '<tr>'
-        + (withImages ? '<td>'+imgCell+'</td>' : '')
-        + '<td><strong>'+esc(item.dn)+'</strong></td>'
-        + '<td style="color:#b090a0;font-size:11px;">'+esc(item.desc||'')+'</td>'
-        + '<td style="text-align:right;">\u20B9'+item.rate+'</td>'
-        + '<td style="text-align:center;">'+item.qty+'</td>'
-        + '<td style="text-align:right;font-weight:700;">\u20B9'+Math.round(lineTotal).toLocaleString('en-IN')+'</td>'
-        + '</tr>';
+      html +=   '</div>';
+      html +=   '<div class="orders-dn-right">';
+      html +=     '<span class="orders-status ' + esc(statusKey) + '">' + esc(status) + '</span>';
+      if (date) {
+        html +=   '<span class="orders-dn-date">' + esc(date) + '</span>';
+      }
+      html +=   '</div>';
+      html += '</div>';
+
+      if (notes) {
+        html += '<div class="orders-notes-row">';
+        html +=   '<span class="orders-notes-icon">&#128203;</span>';
+        html +=   '<span>' + esc(notes) + '</span>';
+        html += '</div>';
+      }
     });
 
-    var discRow = disc > 0
-      ? '<div class="od-print-tot-row"><span>Discount ('+disc+'%)</span><span>\u2212\u20B9'+Math.round(discAmt).toLocaleString('en-IN')+'</span></div>'
-      : '';
-
-    var html = '<div style="font-family:\'DM Sans\',sans-serif;padding:32px;background:white;min-height:100vh;">'
-      + '<div class="od-print-header">'
-        + '<img src="JTC.jpg" class="od-print-logo" alt="JTC"/>'
-        + '<div class="od-print-brand">'
-          + '<h2>Jariwala Trading Company</h2>'
-          + '<p>ORDER DRAFT · NOT A TAX INVOICE</p>'
-        + '</div>'
-      + '</div>'
-      + '<div class="od-print-meta">'
-        + '<div class="od-print-meta-item"><strong>Party</strong>'+esc(odPartyName||'—')+'</div>'
-        + '<div class="od-print-meta-item"><strong>Date</strong>'+today+'</div>'
-        + '<div class="od-print-meta-item"><strong>Rate Mode</strong>'+odRateMode.charAt(0).toUpperCase()+odRateMode.slice(1)+'</div>'
-        + '<div class="od-print-meta-item"><strong>Total Pieces</strong>'+totalPcs+'</div>'
-      + '</div>'
-      + '<table class="od-print-table">'
-        + '<thead><tr>'
-          + (withImages ? '<th style="width:60px;">Photo</th>' : '')
-          + '<th>DN</th><th>Description</th><th style="text-align:right;">Rate</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Amount</th>'
-        + '</tr></thead>'
-        + '<tbody>'+tableRows+'</tbody>'
-      + '</table>'
-      + '<div style="display:flex;justify-content:flex-end;">'
-        + '<div class="od-print-totals">'
-          + '<div class="od-print-tot-row"><span>Subtotal ('+totalPcs+' pcs)</span><span>\u20B9'+Math.round(subtotal).toLocaleString('en-IN')+'</span></div>'
-          + discRow
-          + '<div class="od-print-tot-row final"><span>Total Payable</span><span>\u20B9'+Math.round(total).toLocaleString('en-IN')+'</span></div>'
-        + '</div>'
-      + '</div>'
-      + '<div class="od-print-footer">Jariwala Trading Company &middot; This is a draft order, not a tax invoice.</div>'
-    + '</div>';
-
-    var area = document.getElementById('od-print-area');
-    area.innerHTML = html;
-    area.style.display = 'block';
-    setTimeout(function() {
-      window.print();
-      setTimeout(function() { area.style.display = 'none'; area.innerHTML = ''; }, 500);
-    }, 200);
-  }
-
-  if (!withImages) { buildAndPrint(null); return; }
-
-  // Load images as data URLs via canvas so they print cross-origin
-  var imageDataMap = {};
-  var pending = odItems.filter(function(i){ return !!i.photoUrl; });
-  if (!pending.length) { buildAndPrint(imageDataMap); return; }
-  var done = 0;
-  pending.forEach(function(item) {
-    var img = new Image();
-    img.crossOrigin = 'anonymous';
-    var finished = false;
-    var timer = setTimeout(function() {
-      if (finished) return; finished = true;
-      done++; if (done === pending.length) buildAndPrint(imageDataMap);
-    }, 6000);
-    img.onload = function() {
-      if (finished) return; finished = true; clearTimeout(timer);
-      try {
-        var c = document.createElement('canvas');
-        c.width = img.naturalWidth; c.height = img.naturalHeight;
-        c.getContext('2d').drawImage(img, 0, 0);
-        imageDataMap[item.dn] = c.toDataURL('image/jpeg', 0.85);
-      } catch(e) {}
-      done++; if (done === pending.length) buildAndPrint(imageDataMap);
-    };
-    img.onerror = function() {
-      if (finished) return; finished = true; clearTimeout(timer);
-      done++; if (done === pending.length) buildAndPrint(imageDataMap);
-    };
-    img.src = item.photoUrl;
+    html += '</div>'; // /orders-party-card
   });
+
+  content.innerHTML = html;
 }
 
-// ── WhatsApp text export ──────────────────────────────────────────
-function odSendWhatsApp() {
-  var subtotal = odGetSubtotal();
-  var disc     = parseFloat(document.getElementById('odDiscInput').value) || 0;
-  var discAmt  = subtotal * disc / 100;
-  var total    = subtotal - discAmt;
-  var lines    = [];
-  lines.push('*Order Draft — Jariwala Trading Co.*');
-  if (odPartyName) lines.push('Party: ' + odPartyName);
-  lines.push('Date: ' + new Date().toLocaleDateString('en-IN'));
-  lines.push('');
-  odItems.forEach(function(item) {
-    lines.push('DN ' + item.dn + '  ×' + item.qty + ' pcs  @\u20B9' + item.rate + '  =  \u20B9' + Math.round(item.rate * item.qty).toLocaleString('en-IN'));
-  });
-  lines.push('');
-  if (disc > 0) {
-    lines.push('Subtotal: \u20B9' + Math.round(subtotal).toLocaleString('en-IN'));
-    lines.push('Discount (' + disc + '%): \u2212\u20B9' + Math.round(discAmt).toLocaleString('en-IN'));
-  }
-  lines.push('*Total: \u20B9' + Math.round(total).toLocaleString('en-IN') + '*');
-  lines.push('');
-  lines.push('_This is a draft order, not a tax invoice._');
-  var text = lines.join('\n');
-  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+function kpiBox(val, label) {
+  return '<div class="orders-kpi"><div class="orders-kpi-val">' + val + '</div><div class="orders-kpi-label">' + label + '</div></div>';
 }
 
-// Patch loadAnalytics to also populate order draft party dropdown
-var _origLoadAnalytics = loadAnalytics;
-loadAnalytics = function() {
-  if (!analyticsLoaded) {
-    var _origFetchCSV = fetchCSV;
-    var origRef = ANALYTICS_CSV_URL;
-    _origLoadAnalytics();
-    // Use a polling approach to detect when analyticsLoaded becomes true
-    var poll = setInterval(function() {
-      if (analyticsLoaded) { clearInterval(poll); odPopulatePartyDropdown(); }
-    }, 300);
-  } else {
-    _origLoadAnalytics();
-    odPopulatePartyDropdown();
-  }
-};
-
-// Also populate when draft tab is opened (if analytics already loaded)
-var _origSwitchTab = switchTab;
-switchTab = function(tab) {
-  _origSwitchTab(tab);
-  if (tab === 'draft' && analyticsLoaded) odPopulatePartyDropdown();
-  if (tab === 'draft' && !analyticsLoaded) {
-    // Load analytics silently to get party names
-    if (!ANALYTICS_CSV_URL || ANALYTICS_CSV_URL.indexOf('PASTE') !== -1) return;
-    fetchCSV(ANALYTICS_CSV_URL).then(function(text) {
-      if (!text) return;
-      var parsed = parseCSV(text);
-      analyticsRows = parsed.slice(1).filter(function(r){ return r[AN_BILL] && r[AN_BILL].trim() !== ''; });
-      analyticsLoaded = true;
-      odPopulatePartyDropdown();
-    });
-  }
-};
 
 // =================================================================
 // CHALLAN CONTROL
