@@ -2118,6 +2118,7 @@ function renderAnalytics() {
     var qty       = parseFloat(r[AN_QTY])    || 0;
     var amount    = parseFloat(r[AN_AMOUNT]) || 0;
     var billTotal = parseFloat(r[AN_TOTAL])  || 0;
+    var isPlaceholder = dn.toUpperCase() === 'N/A'; // zero-Kurti-DN bills: full bill value, no real item
 
     totalRevenue += amount;
     totalPcs     += qty;
@@ -2128,19 +2129,22 @@ function renderAnalytics() {
     buyers[buyer].pcs     += qty;
     buyers[buyer].bills[bill] = true;
 
-    if (!designs[dn]) designs[dn] = {revenue:0, pcs:0};
-    designs[dn].revenue += amount;
-    designs[dn].pcs     += qty;
-
     var monthKey = date ? (date.split('-').slice(1).join(' ')) : 'Unknown';
     if (!monthly[monthKey]) monthly[monthKey] = {revenue:0, pcs:0};
     monthly[monthKey].revenue += amount;
     monthly[monthKey].pcs     += qty;
 
-    var fabric = getFabricName(dn);
-    if (!fabrics[fabric]) fabrics[fabric] = {revenue:0, pcs:0};
-    fabrics[fabric].revenue += amount;
-    fabrics[fabric].pcs     += qty;
+    // Placeholder rows (no real Kurti DN) are excluded from fabric- and design-wise breakdowns
+    if (!isPlaceholder) {
+      if (!designs[dn]) designs[dn] = {revenue:0, pcs:0};
+      designs[dn].revenue += amount;
+      designs[dn].pcs     += qty;
+
+      var fabric = getFabricName(dn);
+      if (!fabrics[fabric]) fabrics[fabric] = {revenue:0, pcs:0};
+      fabrics[fabric].revenue += amount;
+      fabrics[fabric].pcs     += qty;
+    }
   });
 
   var billCount  = Object.keys(bills).length;
