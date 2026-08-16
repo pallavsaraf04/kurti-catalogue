@@ -1519,13 +1519,25 @@ var FABRIC_MAP = {
   '40': 'Giraffe'
 };
 
+// ── Series key (2-digit prefix -> fabric family) ──
+// Indo Western started at DN 2000 and was originally assumed to stay within
+// 2000–2099 (prefix "20"), but the range has since grown past 2099 into
+// 21xx, 22xx, etc. Any prefix from 20–29 is folded into the single "20"
+// series key so it stays one "Indo Western" category instead of spawning
+// a separate, mislabelled "21__" / "22__" bucket for every new hundred.
+function getSeriesKey(dn) {
+  var prefix = String(dn).trim().substring(0, 2);
+  if (/^2[0-9]$/.test(prefix)) return '20';
+  return prefix;
+}
+
 function buildSeriesPills() {
   var seen={}, series=[];
   allRows.forEach(function(row){
     var dn=(row[COL_DESIGN]||'').trim();
-    var prefix=dn.substring(0,2);
-    if (prefix && /^[0-9]{2}$/.test(prefix) && !seen[prefix]) {
-      seen[prefix]=true; series.push(prefix);
+    var key=getSeriesKey(dn);
+    if (key && /^[0-9]{2}$/.test(key) && !seen[key]) {
+      seen[key]=true; series.push(key);
     }
   });
   series.sort();
@@ -1595,7 +1607,7 @@ function getFilteredRows() {
   // Series filter
   if (activeSeriesFilter!=='all') {
     rows=rows.filter(function(row){
-      return (row[COL_DESIGN]||'').trim().substring(0,2)===activeSeriesFilter;
+      return getSeriesKey(row[COL_DESIGN]||'')===activeSeriesFilter;
     });
   }
 
@@ -2086,8 +2098,7 @@ function loadAnalytics() {
 }
 
 function getFabricName(dn) {
-  var prefix = String(dn).trim().substring(0, 2);
-  return FABRIC_MAP[prefix] || 'Other';
+  return FABRIC_MAP[getSeriesKey(dn)] || 'Other';
 }
 
 function renderAnalytics() {
