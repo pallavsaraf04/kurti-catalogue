@@ -870,6 +870,9 @@
       <span class="nav-icon">&#128200;</span> Analytics
       <span class="nav-badge">Live</span>
     </button>
+    <button class="nav-item" id="nav-insight" onclick="navTo('insight')">
+      <span class="nav-icon">&#128204;</span> Design Insight
+    </button>
     <button class="nav-item" id="nav-fabric" onclick="navTo('fabric')">
       <span class="nav-icon">&#129523;</span> Fabric Stock
     </button>
@@ -949,6 +952,18 @@
       <div class="status-msg" style="padding:40px 20px;">&#128200; Loading analytics…</div>
     </div>
   </div>
+  <div class="tab-panel" id="panel-insight">
+    <div class="search-card">
+      <span class="search-label">Design Insight — Search by Design Number</span>
+      <div class="search-row">
+        <input class="search-input" id="insightSearchInput" type="text" placeholder="e.g. 1317, 2025…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+        <button class="search-btn" onclick="doInsightSearch()">Search</button>
+      </div>
+    </div>
+    <div id="insightOutput">
+      <div class="status-msg">Enter a design number above to see its catalogue card and last billing movement.</div>
+    </div>
+  </div><!-- /panel-insight -->
   <div class="tab-panel" id="panel-fabric">
     <div class="search-card" style="margin-bottom:14px;">
       <span class="search-label">Search Fabric Stock</span>
@@ -1494,6 +1509,7 @@ function switchTab(tab) {
   if (panel) panel.classList.add('active');
   if (tab==='browse' && document.getElementById('browseGrid').children.length===0) renderBrowseGrid();
   if (tab==='analytics') loadAnalytics();
+  if (tab==='insight') loadAnalyticsData().catch(function(){});
   if (tab==='fabric') loadFabricStock();
   if (tab==='orders') loadOrders();
 }
@@ -2074,6 +2090,23 @@ function formatLakh(n) {
   return '\u20B9'+Math.round(n);
 }
 
+// Loads & parses the Bill Line Items CSV into analyticsRows once, and
+// caches it (analyticsLoaded). Returns a Promise so any tab (Analytics,
+// Design Insight) can await the same shared dataset without re-fetching.
+function loadAnalyticsData() {
+  if (analyticsLoaded) return Promise.resolve();
+  if (!ANALYTICS_CSV_URL || ANALYTICS_CSV_URL.indexOf('PASTE') !== -1) {
+    return Promise.reject('not-configured');
+  }
+  return fetchCSV(ANALYTICS_CSV_URL).then(function(text) {
+    if (!text) return Promise.reject('fetch-failed');
+    var parsed = parseCSV(text);
+    analyticsRows = parsed.slice(1).filter(function(r) { return r[AN_BILL] && r[AN_BILL].trim() !== ''; });
+    analyticsLoaded = true;
+    populatePartyDropdown();
+  });
+}
+
 function loadAnalytics() {
   if (analyticsLoaded) { renderAnalytics(); return; }
   if (!ANALYTICS_CSV_URL || ANALYTICS_CSV_URL.indexOf('PASTE') !== -1) {
@@ -2083,17 +2116,11 @@ function loadAnalytics() {
   }
   document.getElementById('analyticsContent').innerHTML =
     '<div class="status-msg">&#128200; Loading analytics...</div>';
-  fetchCSV(ANALYTICS_CSV_URL).then(function(text) {
-    if (!text) {
-      document.getElementById('analyticsContent').innerHTML =
-        '<div class="status-msg error">Could not load analytics. Check the sheet is published.</div>';
-      return;
-    }
-    var parsed = parseCSV(text);
-    analyticsRows = parsed.slice(1).filter(function(r) { return r[AN_BILL] && r[AN_BILL].trim() !== ''; });
-    analyticsLoaded = true;
-    populatePartyDropdown();
+  loadAnalyticsData().then(function() {
     renderAnalytics();
+  }).catch(function() {
+    document.getElementById('analyticsContent').innerHTML =
+      '<div class="status-msg error">Could not load analytics. Check the sheet is published.</div>';
   });
 }
 
@@ -2290,6 +2317,148 @@ function renderAnalytics() {
 
   el.innerHTML = html;
 }
+
+
+// -----------------------------------------------------------------
+// DESIGN INSIGHT TAB
+// Search a Design Number -> show its catalogue card (photo, retail
+// rate, etc. — same renderCard() used on the Search tab) plus a
+// separate table with the LAST bill this design appeared in: bill
+// number, party, quantity sent and rate, pulled from the same
+// Bill Line Items data that powers Analytics.
+// -----------------------------------------------------------------
+
+// Parses "DD-Mon-YY" / "DD-Mon-YYYY" (the format used in the Bill Line
+// Items sheet) into a sortable timestamp. Falls back to Date.parse for
+// any other format, and returns 0 if nothing can be parsed.
+function parseBillDateSort(d) {
+  if (!d) return 0;
+  d = d.trim();
+  var months = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  var m = d.match(/^(\d{1,2})-([A-Za-z]{3,})-(\d{2,4})$/);
+  if (m) {
+    var day = parseInt(m[1], 10);
+    var mon = months[m[2].toLowerCase().slice(0,3)];
+    var yr  = parseInt(m[3], 10);
+    if (yr < 100) yr += 2000;
+    if (mon !== undefined && !isNaN(day) && !isNaN(yr)) return new Date(yr, mon, day).getTime();
+  }
+  var t = Date.parse(d);
+  return isNaN(t) ? 0 : t;
+}
+
+// Finds the most recent Bill Line Items row for a given design number.
+// Matches case-insensitively against the DN column; ties on date are
+// broken by whichever row appears later in the sheet (most recently added).
+function findLastBillForDN(dn) {
+  var target = (dn || '').trim().toLowerCase();
+  if (!target) return null;
+  var best = null, bestSort = -1;
+  analyticsRows.forEach(function(r) {
+    var rowDn = (r[AN_DN] || '').trim().toLowerCase();
+    if (rowDn !== target) return;
+    var sortVal = parseBillDateSort(r[AN_DATE]);
+    if (sortVal >= bestSort) { bestSort = sortVal; best = r; }
+  });
+  return best;
+}
+
+function renderInsightBlock(row, billDataFailed) {
+  var designNum = (row[COL_DESIGN] || '').trim();
+
+  // Reuse the exact same catalogue card used on the Search tab
+  // (photo, retail rate, wholesale rate, stock, description, etc.)
+  var cardHTML = renderCard(row);
+
+  var lastBill = billDataFailed ? null : findLastBillForDN(designNum);
+  var tableHTML;
+
+  if (billDataFailed) {
+    tableHTML =
+      '<div class="status-msg error" style="margin:-6px 0 18px;">Could not load bill history right now.<br><small>Check that the Bill Line Items sheet is published to the web.</small></div>';
+  } else if (!lastBill) {
+    tableHTML =
+      '<div class="status-msg" style="margin:-6px 0 18px;">No bill history found yet for Design <strong>' + esc(designNum) + '</strong>.</div>';
+  } else {
+    var billNo   = esc((lastBill[AN_BILL]  || '').trim());
+    var billDate = esc((lastBill[AN_DATE]  || '').trim());
+    var party    = esc((lastBill[AN_BUYER] || '').trim());
+    var qty      = esc((lastBill[AN_QTY]   || '').trim());
+    var rateRaw  = (lastBill[AN_RATE] || '').trim();
+    var rate     = rateRaw ? '\u20B9' + esc(rateRaw) : '—';
+
+    tableHTML =
+      '<div class="analytics-card analytics-section" style="margin:-6px 0 18px;">' +
+        '<span class="analytics-section-title">Last Bill Movement</span>' +
+        '<table class="analytics-table">' +
+          '<thead><tr><th>Bill No.</th><th>Date</th><th>Party</th><th>Qty Sent</th><th>Rate</th></tr></thead>' +
+          '<tbody><tr>' +
+            '<td><strong>' + billNo + '</strong></td>' +
+            '<td style="color:#b090a0;font-size:11px;">' + billDate + '</td>' +
+            '<td>' + party + '</td>' +
+            '<td class="num">' + qty + '</td>' +
+            '<td class="num">' + rate + '</td>' +
+          '</tr></tbody>' +
+        '</table>' +
+      '</div>';
+  }
+
+  return cardHTML + tableHTML;
+}
+
+function doInsightSearch() {
+  var query  = document.getElementById('insightSearchInput').value.trim();
+  var output = document.getElementById('insightOutput');
+
+  if (!query) {
+    output.innerHTML = '<div class="status-msg">Please enter a design number to search.</div>';
+    return;
+  }
+  if (!allRows.length) {
+    output.innerHTML = '<div class="status-msg error">Catalogue data not loaded yet — please wait a moment.</div>';
+    return;
+  }
+
+  var qLower  = query.toLowerCase();
+  var exact   = allRows.filter(function(r){ return (r[COL_DESIGN]||'').trim().toLowerCase() === qLower; });
+  var partial = allRows.filter(function(r){
+    var v = (r[COL_DESIGN]||'').trim().toLowerCase();
+    return v.indexOf(qLower) !== -1 && v !== qLower;
+  });
+  var results = exact.concat(partial);
+
+  if (!results.length) {
+    output.innerHTML =
+      '<div class="status-msg error">No design found for <strong>"' + esc(query) + '"</strong>.<br>' +
+      '<small style="opacity:0.7">Double-check the design number and try again.</small></div>';
+    return;
+  }
+
+  output.innerHTML = '<div class="status-msg">&#128269; Looking up bill history…</div>';
+
+  loadAnalyticsData().then(function() {
+    var html = '';
+    if (results.length > 1) {
+      html += '<div class="multi-header">Found <strong>' + results.length + '</strong> matching design' + (results.length > 1 ? 's' : '') + '</div>';
+    }
+    html += results.map(function(r){ return renderInsightBlock(r, false); }).join('');
+    output.innerHTML = html;
+    initImages();
+  }).catch(function() {
+    // Still show the catalogue card(s) even if bill history couldn't load
+    var html = '';
+    if (results.length > 1) {
+      html += '<div class="multi-header">Found <strong>' + results.length + '</strong> matching design' + (results.length > 1 ? 's' : '') + '</div>';
+    }
+    html += results.map(function(r){ return renderInsightBlock(r, true); }).join('');
+    output.innerHTML = html;
+    initImages();
+  });
+}
+
+document.getElementById('insightSearchInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doInsightSearch();
+});
 
 
 // =================================================================
