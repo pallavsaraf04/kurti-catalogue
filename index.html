@@ -2347,20 +2347,22 @@ function parseBillDateSort(d) {
   return isNaN(t) ? 0 : t;
 }
 
-// Finds the most recent Bill Line Items row for a given design number.
-// Matches case-insensitively against the DN column; ties on date are
-// broken by whichever row appears later in the sheet (most recently added).
-function findLastBillForDN(dn) {
+var INSIGHT_BILL_HISTORY_LIMIT = 8;
+
+// Finds the most recent Bill Line Items rows for a given design number,
+// newest first. Matches case-insensitively against the DN column.
+// Returns up to `limit` rows (default INSIGHT_BILL_HISTORY_LIMIT).
+function findRecentBillsForDN(dn, limit) {
   var target = (dn || '').trim().toLowerCase();
-  if (!target) return null;
-  var best = null, bestSort = -1;
-  analyticsRows.forEach(function(r) {
-    var rowDn = (r[AN_DN] || '').trim().toLowerCase();
-    if (rowDn !== target) return;
-    var sortVal = parseBillDateSort(r[AN_DATE]);
-    if (sortVal >= bestSort) { bestSort = sortVal; best = r; }
+  if (!target) return [];
+  limit = limit || INSIGHT_BILL_HISTORY_LIMIT;
+  var matches = analyticsRows.filter(function(r) {
+    return (r[AN_DN] || '').trim().toLowerCase() === target;
   });
-  return best;
+  matches.sort(function(a, b) {
+    return parseBillDateSort(b[AN_DATE]) - parseBillDateSort(a[AN_DATE]);
+  });
+  return matches.slice(0, limit);
 }
 
 function renderInsightBlock(row, billDataFailed) {
@@ -2370,35 +2372,40 @@ function renderInsightBlock(row, billDataFailed) {
   // (photo, retail rate, wholesale rate, stock, description, etc.)
   var cardHTML = renderCard(row);
 
-  var lastBill = billDataFailed ? null : findLastBillForDN(designNum);
+  var recentBills = billDataFailed ? [] : findRecentBillsForDN(designNum);
   var tableHTML;
 
   if (billDataFailed) {
     tableHTML =
       '<div class="status-msg error" style="margin:-6px 0 18px;">Could not load bill history right now.<br><small>Check that the Bill Line Items sheet is published to the web.</small></div>';
-  } else if (!lastBill) {
+  } else if (!recentBills.length) {
     tableHTML =
       '<div class="status-msg" style="margin:-6px 0 18px;">No bill history found yet for Design <strong>' + esc(designNum) + '</strong>.</div>';
   } else {
-    var billNo   = esc((lastBill[AN_BILL]  || '').trim());
-    var billDate = esc((lastBill[AN_DATE]  || '').trim());
-    var party    = esc((lastBill[AN_BUYER] || '').trim());
-    var qty      = esc((lastBill[AN_QTY]   || '').trim());
-    var rateRaw  = (lastBill[AN_RATE] || '').trim();
-    var rate     = rateRaw ? '\u20B9' + esc(rateRaw) : '—';
+    var rowsHTML = recentBills.map(function(b) {
+      var billNo   = esc((b[AN_BILL]  || '').trim());
+      var billDate = esc((b[AN_DATE]  || '').trim());
+      var party    = esc((b[AN_BUYER] || '').trim());
+      var qty      = esc((b[AN_QTY]   || '').trim());
+      var rateRaw  = (b[AN_RATE] || '').trim();
+      var rate     = rateRaw ? '\u20B9' + esc(rateRaw) : '—';
+      return (
+        '<tr>' +
+          '<td><strong>' + billNo + '</strong></td>' +
+          '<td style="color:#b090a0;font-size:11px;">' + billDate + '</td>' +
+          '<td>' + party + '</td>' +
+          '<td class="num">' + qty + '</td>' +
+          '<td class="num">' + rate + '</td>' +
+        '</tr>'
+      );
+    }).join('');
 
     tableHTML =
       '<div class="analytics-card analytics-section" style="margin:-6px 0 18px;">' +
-        '<span class="analytics-section-title">Last Bill Movement</span>' +
+        '<span class="analytics-section-title">Last ' + recentBills.length + ' Bill Movement' + (recentBills.length !== 1 ? 's' : '') + '</span>' +
         '<table class="analytics-table">' +
           '<thead><tr><th>Bill No.</th><th>Date</th><th>Party</th><th>Qty Sent</th><th>Rate</th></tr></thead>' +
-          '<tbody><tr>' +
-            '<td><strong>' + billNo + '</strong></td>' +
-            '<td style="color:#b090a0;font-size:11px;">' + billDate + '</td>' +
-            '<td>' + party + '</td>' +
-            '<td class="num">' + qty + '</td>' +
-            '<td class="num">' + rate + '</td>' +
-          '</tr></tbody>' +
+          '<tbody>' + rowsHTML + '</tbody>' +
         '</table>' +
       '</div>';
   }
