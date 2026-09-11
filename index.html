@@ -2323,46 +2323,54 @@ function renderAnalytics() {
 // DESIGN INSIGHT TAB
 // Search a Design Number -> show its catalogue card (photo, retail
 // rate, etc. — same renderCard() used on the Search tab) plus a
-// separate table with the LAST bill this design appeared in: bill
-// number, party, quantity sent and rate, pulled from the same
-// Bill Line Items data that powers Analytics.
+// separate summary table: every party this design was billed to,
+// the rate(s) it went at, and total quantity billed at each rate —
+// pulled from the same Bill Line Items data that powers Analytics.
 // -----------------------------------------------------------------
 
-// Parses "DD-Mon-YY" / "DD-Mon-YYYY" (the format used in the Bill Line
-// Items sheet) into a sortable timestamp. Falls back to Date.parse for
-// any other format, and returns 0 if nothing can be parsed.
-function parseBillDateSort(d) {
-  if (!d) return 0;
-  d = d.trim();
-  var months = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
-  var m = d.match(/^(\d{1,2})-([A-Za-z]{3,})-(\d{2,4})$/);
-  if (m) {
-    var day = parseInt(m[1], 10);
-    var mon = months[m[2].toLowerCase().slice(0,3)];
-    var yr  = parseInt(m[3], 10);
-    if (yr < 100) yr += 2000;
-    if (mon !== undefined && !isNaN(day) && !isNaN(yr)) return new Date(yr, mon, day).getTime();
-  }
-  var t = Date.parse(d);
-  return isNaN(t) ? 0 : t;
+// Parses a quantity/rate string like "12", "12.5", "1,234" into a number.
+function parseInsightNum(v) {
+  var n = parseFloat((v || '').toString().replace(/[^0-9.\-]/g, ''));
+  return isNaN(n) ? 0 : n;
 }
 
-var INSIGHT_BILL_HISTORY_LIMIT = 8;
-
-// Finds the most recent Bill Line Items rows for a given design number,
-// newest first. Matches case-insensitively against the DN column.
-// Returns up to `limit` rows (default INSIGHT_BILL_HISTORY_LIMIT).
-function findRecentBillsForDN(dn, limit) {
+// Builds a party-wise, rate-wise summary for a design number:
+// for each party, groups all their bill lines by rate and sums the
+// quantity billed at that rate. Parties are ranked by their total
+// quantity (across all rates) and capped at `limit` parties; within
+// a party, rate line items are sorted by quantity (desc).
+function buildPartyRateSummaryForDN(dn, limit) {
   var target = (dn || '').trim().toLowerCase();
   if (!target) return [];
-  limit = limit || INSIGHT_BILL_HISTORY_LIMIT;
+  limit = limit || 10;
+
   var matches = analyticsRows.filter(function(r) {
     return (r[AN_DN] || '').trim().toLowerCase() === target;
   });
-  matches.sort(function(a, b) {
-    return parseBillDateSort(b[AN_DATE]) - parseBillDateSort(a[AN_DATE]);
+
+  // party -> { total, rates: { rateKey -> qty } }
+  var byParty = {};
+  matches.forEach(function(r) {
+    var party = (r[AN_BUYER] || '').trim() || 'Unknown';
+    var rateRaw = (r[AN_RATE] || '').trim();
+    var rateKey = rateRaw || '—';
+    var qty = parseInsightNum(r[AN_QTY]);
+
+    if (!byParty[party]) byParty[party] = { total: 0, rates: {} };
+    byParty[party].total += qty;
+    byParty[party].rates[rateKey] = (byParty[party].rates[rateKey] || 0) + qty;
   });
-  return matches.slice(0, limit);
+
+  var partyNames = Object.keys(byParty).sort(function(a, b) {
+    return byParty[b].total - byParty[a].total;
+  }).slice(0, limit);
+
+  return partyNames.map(function(party) {
+    var rateEntries = Object.keys(byParty[party].rates).map(function(rateKey) {
+      return { rate: rateKey, qty: byParty[party].rates[rateKey] };
+    }).sort(function(a, b) { return b.qty - a.qty; });
+    return { party: party, total: byParty[party].total, rates: rateEntries };
+  });
 }
 
 function renderInsightBlock(row, billDataFailed) {
@@ -2372,39 +2380,34 @@ function renderInsightBlock(row, billDataFailed) {
   // (photo, retail rate, wholesale rate, stock, description, etc.)
   var cardHTML = renderCard(row);
 
-  var recentBills = billDataFailed ? [] : findRecentBillsForDN(designNum);
+  var summary = billDataFailed ? [] : buildPartyRateSummaryForDN(designNum, 10);
   var tableHTML;
 
   if (billDataFailed) {
     tableHTML =
       '<div class="status-msg error" style="margin:-6px 0 18px;">Could not load bill history right now.<br><small>Check that the Bill Line Items sheet is published to the web.</small></div>';
-  } else if (!recentBills.length) {
+  } else if (!summary.length) {
     tableHTML =
       '<div class="status-msg" style="margin:-6px 0 18px;">No bill history found yet for Design <strong>' + esc(designNum) + '</strong>.</div>';
   } else {
-    var rowsHTML = recentBills.map(function(b) {
-      var billNo   = esc((b[AN_BILL]  || '').trim());
-      var billDate = esc((b[AN_DATE]  || '').trim());
-      var party    = esc((b[AN_BUYER] || '').trim());
-      var qty      = esc((b[AN_QTY]   || '').trim());
-      var rateRaw  = (b[AN_RATE] || '').trim();
-      var rate     = rateRaw ? '\u20B9' + esc(rateRaw) : '—';
-      return (
-        '<tr>' +
-          '<td><strong>' + billNo + '</strong></td>' +
-          '<td style="color:#b090a0;font-size:11px;">' + billDate + '</td>' +
-          '<td>' + party + '</td>' +
-          '<td class="num">' + qty + '</td>' +
-          '<td class="num">' + rate + '</td>' +
-        '</tr>'
-      );
-    }).join('');
+    var rowsHTML = '';
+    summary.forEach(function(p) {
+      p.rates.forEach(function(r, idx) {
+        var rate = (r.rate && r.rate !== '—') ? '\u20B9' + esc(r.rate) : '—';
+        rowsHTML +=
+          '<tr>' +
+            '<td>' + (idx === 0 ? '<strong>' + esc(p.party) + '</strong>' : '<span style="opacity:0.55;">&#8618; same party</span>') + '</td>' +
+            '<td class="num">' + esc(r.qty) + '</td>' +
+            '<td class="num">' + rate + '</td>' +
+          '</tr>';
+      });
+    });
 
     tableHTML =
       '<div class="analytics-card analytics-section" style="margin:-6px 0 18px;">' +
-        '<span class="analytics-section-title">Last ' + recentBills.length + ' Bill Movement' + (recentBills.length !== 1 ? 's' : '') + '</span>' +
+        '<span class="analytics-section-title">Party-wise Billing Summary (Top ' + summary.length + ' Part' + (summary.length !== 1 ? 'ies' : 'y') + ' by Qty)</span>' +
         '<table class="analytics-table">' +
-          '<thead><tr><th>Bill No.</th><th>Date</th><th>Party</th><th>Qty Sent</th><th>Rate</th></tr></thead>' +
+          '<thead><tr><th>Party</th><th>Qty Billed</th><th>Rate</th></tr></thead>' +
           '<tbody>' + rowsHTML + '</tbody>' +
         '</table>' +
       '</div>';
