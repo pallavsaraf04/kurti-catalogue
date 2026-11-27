@@ -667,129 +667,6 @@
     height: 1px; background: var(--border); margin: 2px 0;
   }
 
-  /* ── CHALLAN CONTROL TAB ── */
-  .cc-webapp-url-wrap {
-    background: var(--card-bg); border-radius: 18px;
-    border: 1px solid var(--border); box-shadow: var(--shadow);
-    padding: 16px; margin-bottom: 14px;
-  }
-  .cc-url-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rose); margin-bottom: 8px; display: block; }
-  .cc-url-input {
-    width: 100%; padding: 12px 14px;
-    border: 2px solid var(--border); border-radius: 12px;
-    font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink);
-    background: var(--rose-pale); outline: none;
-    transition: border-color 0.2s; margin-bottom: 8px;
-  }
-  .cc-url-input:focus { border-color: var(--rose); background: #fff; }
-  .cc-url-note { font-size: 10px; color: #b090a0; line-height: 1.6; }
-
-  .cc-actions-card {
-    background: var(--card-bg); border-radius: 18px;
-    border: 1px solid var(--border); box-shadow: var(--shadow);
-    padding: 16px; margin-bottom: 14px;
-  }
-  .cc-action-title { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rose); margin-bottom: 12px; display: block; }
-  .cc-btn {
-    width: 100%; padding: 15px; border: none; border-radius: 14px;
-    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
-    margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;
-  }
-  .cc-btn:last-child { margin-bottom: 0; }
-  .cc-btn:active { transform: scale(0.98); }
-  .cc-btn.primary { background: var(--ink); color: #fff; }
-  .cc-btn.primary:hover { background: #2d0f1a; }
-  .cc-btn.danger { background: #fff0f3; color: var(--rose); border: 1.5px solid var(--rose-mid); }
-  .cc-btn.danger:hover { background: var(--rose-pale); }
-  .cc-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
-
-  /* Status bar */
-  .cc-status {
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px 16px; border-radius: 12px;
-    background: var(--rose-pale); border: 1px solid var(--border);
-    margin-bottom: 14px; font-size: 12px; color: var(--ink-soft);
-    min-height: 44px;
-  }
-  .cc-status.success { background: #eafaf1; border-color: #a9dfbf; color: #1e8449; }
-  .cc-status.error   { background: #fff0f3; border-color: var(--rose-mid); color: var(--rose); }
-  .cc-status.loading { background: #fffbf0; border-color: #f0d080; color: #7a6010; }
-  .cc-spinner {
-    width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
-    border: 2px solid var(--border); border-top-color: var(--rose);
-    animation: spin 0.7s linear infinite;
-  }
-
-  /* Preview table */
-  .cc-preview-card {
-    background: var(--card-bg); border-radius: 18px;
-    border: 1px solid var(--border); box-shadow: var(--shadow);
-    padding: 16px; margin-bottom: 14px; display: none;
-  }
-  .cc-preview-card.visible { display: block; }
-  .cc-preview-title { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rose); margin-bottom: 4px; display: block; }
-  .cc-preview-sub { font-size: 11px; color: #b090a0; margin-bottom: 14px; display: block; }
-  .cc-preview-meta {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;
-  }
-  .cc-meta-item {
-    background: var(--rose-pale); border-radius: 10px; padding: 10px 12px; border: 1px solid var(--border);
-  }
-  .cc-meta-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--rose); display: block; margin-bottom: 3px; }
-  .cc-meta-val { font-size: 14px; font-weight: 600; color: var(--ink); }
-
-  /* Editable rows */
-  .cc-row {
-    border-bottom: 1px solid var(--border); padding: 10px 0;
-    animation: slideUp 0.25s cubic-bezier(0.2,0.8,0.3,1) both;
-  }
-  .cc-row:last-child { border-bottom: none; }
-  .cc-row-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .cc-row-status {
-    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px;
-    flex-shrink: 0; letter-spacing: 0.5px;
-  }
-  .cc-row-status.ok      { background: #d9ead3; color: #274e13; }
-  .cc-row-status.warn    { background: #fce8b2; color: #7f4f00; }
-  .cc-row-status.fail    { background: #f4cccc; color: #cc0000; }
-  .cc-row-challan { font-size: 12px; font-weight: 600; color: var(--ink); flex: 1; }
-  .cc-row-del {
-    width: 26px; height: 26px; border-radius: 50%; background: #fff0f3;
-    border: 1px solid var(--border); cursor: pointer; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; color: var(--rose); transition: background 0.15s;
-  }
-  .cc-row-del:hover { background: var(--rose); color: white; }
-  .cc-row-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .cc-field { display: flex; flex-direction: column; gap: 3px; }
-  .cc-field-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #b090a0; }
-  .cc-field-input {
-    padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 9px;
-    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
-    color: var(--ink); background: var(--rose-pale); outline: none;
-    transition: border-color 0.2s; width: 100%;
-  }
-  .cc-field-input:focus { border-color: var(--rose); background: #fff; }
-  .cc-field-input.wide { grid-column: 1 / -1; }
-
-  /* Approve / Discard */
-  .cc-decision-row {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px;
-  }
-  .cc-approve-btn {
-    padding: 16px; border: none; border-radius: 14px;
-    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
-  }
-  .cc-approve-btn:active { transform: scale(0.98); }
-  .cc-approve { background: var(--ink); color: #fff; }
-  .cc-approve:hover { background: #2d0f1a; }
-  .cc-discard { background: #fff0f3; color: var(--rose); border: 1.5px solid var(--rose-mid) !important; }
-  .cc-discard:hover { background: var(--rose-pale); }
-  .cc-approve-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-
   /* ── ORDERS TAB ── */
   .orders-filter-wrap{margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
   .orders-filter-wrap::-webkit-scrollbar{display:none;}
@@ -797,34 +674,59 @@
   .orders-pill{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--card-bg);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#b090a0;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
   .orders-pill:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-pale);}
   .orders-pill.active{background:var(--rose);color:white;border-color:var(--rose);}
-  .orders-party-card{background:var(--card-bg);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:18px;animation:slideUp 0.35s cubic-bezier(0.2,0.8,0.3,1) both;}
-  .orders-party-header{background:var(--ink);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;}
-  .orders-party-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,rgba(201,24,74,0.22) 0%,transparent 60%);}
-  .orders-party-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;position:relative;}
-  .orders-party-meta{font-size:11px;color:var(--rose-mid);position:relative;margin-top:2px;}
-  .orders-party-count{font-size:11px;color:rgba(255,255,255,0.35);position:relative;white-space:nowrap;flex-shrink:0;}
-  .orders-dn-row{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;border-bottom:1px solid var(--border);}
-  .orders-dn-row:last-child{border-bottom:none;}
-  .orders-dn-left{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
-  .orders-dn-num{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--ink);}
-  .orders-dn-meta{font-size:11px;color:#b090a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .orders-dn-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;margin-left:10px;}
-  .orders-status{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap;}
-  .orders-status.pending{background:#FAEEDA;color:#633806;}
-  .orders-status.dye{background:#E6F1FB;color:#0C447C;}
-  .orders-status.work{background:#FBEAF0;color:#72243E;}
-  .orders-status.stitch{background:#EEEDFE;color:#3C3489;}
-  .orders-status.complete{background:#EAF3DE;color:#27500A;}
-  .orders-dn-date{font-size:10px;color:#c4a0ab;}
-  .orders-notes-row{display:flex;align-items:flex-start;gap:6px;padding:8px 18px 12px;font-size:12px;color:var(--ink-soft);background:var(--rose-pale);border-top:1px solid var(--border);}
-  .orders-notes-icon{flex-shrink:0;margin-top:1px;opacity:0.5;}
-  .orders-empty{text-align:center;padding:40px 20px;font-size:13px;color:#b090a0;line-height:1.9;}
   .orders-summary-bar{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;}
   .orders-summary-bar::-webkit-scrollbar{display:none;}
-  .orders-kpi{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:12px 16px;flex-shrink:0;min-width:90px;text-align:center;box-shadow:var(--shadow);}
+  .orders-kpi{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:12px 16px;flex:1;flex-shrink:0;min-width:90px;text-align:center;box-shadow:var(--shadow);}
   .orders-kpi-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1;}
   .orders-kpi-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--rose);margin-top:4px;}
-  .orders-refresh{font-size:10px;color:#b090a0;text-align:center;margin-bottom:14px;letter-spacing:0.5px;}
+  .orders-empty{text-align:center;padding:40px 20px;font-size:13px;color:#b090a0;line-height:1.9;}
+
+  .ord-toolbar{display:flex;flex-direction:column;gap:10px;margin-bottom:6px;}
+  .ord-tools-row{display:flex;gap:8px;}
+  .ord-input{flex:1;min-width:0;padding:13px 15px;border:2px solid var(--border);border-radius:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:var(--ink);background:var(--rose-pale);outline:none;transition:border-color 0.2s,background 0.2s;}
+  .ord-input:focus{border-color:var(--rose);background:#fff;}
+  .ord-input::placeholder{color:#c4a0ab;font-weight:300;}
+  .ord-refresh-btn{width:48px;flex-shrink:0;border:2px solid var(--border);border-radius:13px;background:var(--card-bg);color:var(--rose);font-size:20px;cursor:pointer;transition:all 0.2s;}
+  .ord-refresh-btn:hover{background:var(--rose-pale);border-color:var(--rose);}
+  .ord-select{width:100%;padding:13px 42px 13px 15px;border:2px solid var(--border);border-radius:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:var(--ink);background-color:var(--rose-pale);outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%23c9184a' d='M5 7l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:20px;transition:border-color 0.2s,background-color 0.2s;}
+  .ord-select:focus{border-color:var(--rose);background-color:#fff;}
+
+  .ord-card{background:var(--card-bg);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:18px;animation:slideUp 0.35s cubic-bezier(0.2,0.8,0.3,1) both;}
+  .ord-head{background:var(--ink);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;overflow:hidden;}
+  .ord-head::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,rgba(201,24,74,0.22) 0%,transparent 60%);}
+  .ord-head-left{position:relative;min-width:0;}
+  .ord-party{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;}
+  .ord-date{font-size:11px;color:var(--rose-mid);margin-top:2px;}
+  .ord-count{position:relative;font-size:11px;color:rgba(255,255,255,0.5);white-space:nowrap;flex-shrink:0;}
+
+  .ord-row{display:flex;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border);}
+  .ord-row:last-of-type{border-bottom:none;}
+  .ord-thumbs{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+  .ord-thumb{width:88px;height:118px;object-fit:cover;border-radius:12px;border:1px solid var(--border);background:var(--rose-pale);cursor:zoom-in;display:block;}
+  .ord-thumb.small{width:88px;height:60px;}
+  .ord-thumb-empty{display:flex;align-items:center;justify-content:center;font-size:10px;color:#c4a0ab;text-align:center;cursor:default;padding:6px;}
+  .ord-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;}
+  .ord-dn{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);}
+  .ord-field{display:flex;gap:8px;font-size:13px;line-height:1.45;color:var(--ink);}
+  .ord-label{width:54px;flex-shrink:0;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--rose);padding-top:3px;}
+  .ord-val{flex:1;min-width:0;word-break:break-word;}
+  .ord-rate-chip{display:inline-block;font-size:11px;font-weight:600;color:#7a6010;background:#fffbf0;border:1px solid var(--gold-light);border-radius:20px;padding:2px 10px;}
+
+  .ord-foot{padding:14px 18px 16px;background:var(--rose-pale);border-top:1px solid var(--border);}
+  .ord-pdf-btn{width:100%;padding:14px;border:none;border-radius:14px;background:var(--ink);color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
+  .ord-pdf-btn:hover{background:#2d0f1a;}
+  .ord-pdf-btn:active{transform:scale(0.98);}
+  .ord-pdf-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+  .ord-pdf-btn.ok{background:#2e7d32;}
+  .ord-pdf-btn.err{background:#b00020;}
+  .ord-pdf-msg{font-size:11px;color:#b090a0;text-align:center;margin-top:8px;line-height:1.5;min-height:14px;}
+  .ord-pdf-msg.err{color:#b00020;}
+  .ord-spin{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;animation:spin 0.7s linear infinite;display:inline-block;}
+
+  .ord-lightbox{position:fixed;inset:0;background:rgba(26,10,14,0.92);display:none;align-items:center;justify-content:center;z-index:9999;padding:16px;}
+  .ord-lightbox.open{display:flex;}
+  .ord-lightbox img{max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.5);}
+  .ord-lightbox-close{position:absolute;top:14px;right:18px;color:#fff;font-size:28px;line-height:1;cursor:pointer;}
 
 
 </style>
@@ -875,9 +777,6 @@
     </button>
     <button class="nav-item" id="nav-fabric" onclick="navTo('fabric')">
       <span class="nav-icon">&#129523;</span> Fabric Stock
-    </button>
-    <button class="nav-item" id="nav-challan" onclick="navTo('challan')">
-      <span class="nav-icon">&#9881;</span> Challan Control
     </button>
     <div class="nav-divider"></div>
     <div class="nav-section-label">Orders</div>
@@ -981,58 +880,6 @@
   </div>
   </div><!-- /panel-fabric -->
 
-  <div class="tab-panel" id="panel-challan">
-
-    <!-- Web App URL config -->
-    <div class="cc-webapp-url-wrap">
-      <span class="cc-url-label">Apps Script Web App URL</span>
-      <input class="cc-url-input" id="ccWebAppUrl" type="url"
-        placeholder="https://script.google.com/macros/s/…/exec"
-        oninput="ccSaveUrl()" />
-      <div class="cc-url-note">
-        Paste your deployed Apps Script Web App URL above. It is saved in your browser — you only need to do this once.<br>
-        In Apps Script: Deploy → New deployment → Web App → Execute as <strong>Me</strong> → Access <strong>Anyone</strong>.
-      </div>
-    </div>
-
-    <!-- Action buttons -->
-    <div class="cc-actions-card">
-      <span class="cc-action-title">Fabric Challan Actions</span>
-      <button class="cc-btn primary" id="ccProcessBtn" onclick="ccProcessChallans()">
-        &#9654; Process Challans → Generate Preview
-      </button>
-      <button class="cc-btn primary" id="ccLoadPreviewBtn" onclick="ccLoadExistingPreview()">
-        &#128203; Load Existing Preview from Sheet
-      </button>
-      <button class="cc-btn danger" id="ccClearBtn" onclick="ccClearPreview()">
-        &#128465; Clear Pending Preview
-      </button>
-    </div>
-
-    <!-- Status bar -->
-    <div class="cc-status" id="ccStatus">
-      <span>&#128203; Configure the Web App URL above, then tap an action.</span>
-    </div>
-
-    <!-- Preview card with editable rows -->
-    <div class="cc-preview-card" id="ccPreviewCard">
-      <span class="cc-preview-title">Pending Review</span>
-      <span class="cc-preview-sub" id="ccPreviewSub">Edit any row before approving. Deleting a row removes it from the commit.</span>
-
-      <div class="cc-preview-meta" id="ccPreviewMeta"></div>
-
-      <div id="ccPreviewRows"></div>
-
-      <div class="cc-decision-row">
-        <button class="cc-approve-btn cc-approve" id="ccApproveBtn" onclick="ccApprove()">&#10003; Approve &amp; Push</button>
-        <button class="cc-approve-btn cc-discard" onclick="ccDiscard()">&#x2715; Discard All</button>
-      </div>
-    </div>
-
-  </div><!-- /panel-challan -->
-
-
-
   <div class="tab-panel" id="panel-orders">
     <div class="data-status" id="ordersStatus">
       <div class="dot loading" id="ordersDot"></div>
@@ -1041,18 +888,30 @@
     <div id="ordersSummaryBar" style="display:none;">
       <div class="orders-summary-bar" id="ordersSummaryKpis"></div>
     </div>
-    <div class="orders-filter-wrap">
-      <div class="orders-pills" id="ordersPills">
-        <button class="orders-pill active" data-status="all"      onclick="ordersSetFilter('all')">All</button>
-        <button class="orders-pill"        data-status="pending"  onclick="ordersSetFilter('pending')">Pending</button>
-        <button class="orders-pill"        data-status="dye"      onclick="ordersSetFilter('dye')">Dye</button>
-        <button class="orders-pill"        data-status="work"     onclick="ordersSetFilter('work')">Work</button>
-        <button class="orders-pill"        data-status="stitch"   onclick="ordersSetFilter('stitch')">Stitch</button>
-        <button class="orders-pill"        data-status="complete" onclick="ordersSetFilter('complete')">Complete</button>
+    <div class="ord-toolbar" id="ordersToolbar" style="display:none;">
+      <div class="ord-tools-row">
+        <input class="ord-input" id="ordersSearch" type="text" placeholder="Search party, DN or colour…" oninput="ordRender()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+        <button class="ord-refresh-btn" onclick="ordRefresh()" aria-label="Refresh orders">&#8635;</button>
+      </div>
+      <select class="ord-select" id="ordersParty" onchange="ordRender()">
+        <option value="">All parties</option>
+      </select>
+      <div class="orders-filter-wrap">
+        <div class="orders-pills" id="ordersPills">
+          <button class="orders-pill active" data-recency="all" onclick="ordSetRecency('all')">All time</button>
+          <button class="orders-pill"        data-recency="7"   onclick="ordSetRecency('7')">Last 7 days</button>
+          <button class="orders-pill"        data-recency="30"  onclick="ordSetRecency('30')">Last 30 days</button>
+        </div>
       </div>
     </div>
     <div id="ordersContent"></div>
   </div><!-- /panel-orders -->
+
+  <div class="ord-lightbox" id="ordLightbox" onclick="ordCloseImage()">
+    <span class="ord-lightbox-close">&#x2715;</span>
+    <img id="ordLightboxImg" alt="Design">
+  </div>
+
 
 
   <div class="watermark">
@@ -2641,409 +2500,294 @@ function renderFabricGrid(query) {
 loadData();
 
 // =================================================================
-// ORDER TRACKER
+// ORDERS  (Order Sheets — one card per Party + Date)
 // =================================================================
-// Reads from JTC Order Tracker sheet (published CSV)
-// Columns: Date(A), Party(B), Agent(C), DN(D), Colours(E), Qty(F), Sizes(G), Rate(H), TotalPcs(I), Status(J), Notes(K)
+// Reads the "Sorting Sheet" tab of the JTC Order Tracker (published CSV).
+// Columns: Date(A), Party(B), DN(C), Image(D), Colours(E), Sizes(F), Qty(G), Rate(H)
+// The "Email PDF" button calls the Apps Script web app (OrderPdf.gs),
+// which builds the PDF (no rates) and emails it to the sheet owner.
 // =================================================================
 
-var ORDERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTLTuNGcPdbbLI_Ik2W3vGCy1hqnnKqNDC-L7X8se4VgbRe0z7M-nQMd-LFmqPXiRTmGr1Q_iq1Enm4/pub?gid=266625497&single=true&output=csv';
-// ↑ Replace with the published CSV URL of JTC Order Tracker
+var ORDERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTLTuNGcPdbbLI_Ik2W3vGCy1hqnnKqNDC-L7X8se4VgbRe0z7M-nQMd-LFmqPXiRTmGr1Q_iq1Enm4/pub?gid=77500311&single=true&output=csv';
 
-var OR_DATE=0, OR_PARTY=1, OR_AGENT=2, OR_DN=3, OR_COLOURS=4, OR_QTY=5, OR_SIZES=6, OR_RATE=7, OR_TOTALPCS=8, OR_STATUS=9, OR_NOTES=10;
-var ordersRows = [], ordersLoaded = false;
-var ordersActiveFilter = 'all';
+// ↓ Paste the deployed Apps Script Web App URL (ends in /exec) between the quotes.
+var ORDERS_WEBAPP_URL = '';
+// ↓ Optional. If you set a Script Property ORDERS_API_KEY in Apps Script, put the same value here.
+var ORDERS_API_KEY = '';
+
+var OR_DATE=0, OR_PARTY=1, OR_DN=2, OR_IMAGE=3, OR_COLOUR=4, OR_SIZES=5, OR_QTY=6, OR_RATE=7;
+var ordersGroups = [], ordersLoaded = false, ordersRecency = 'all', ordersSawNA = false;
+
+function ordPad(n) { return (n < 10 ? '0' : '') + n; }
+
+// Parses dd/mm/yyyy (also d/m/yy, dd-mm-yyyy). Falls back to the browser's parser.
+function ordParseDate(s) {
+  s = String(s || '').trim();
+  var m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
+  if (m) {
+    var d = parseInt(m[1], 10), mo = parseInt(m[2], 10), y = parseInt(m[3], 10);
+    if (y < 100) y += 2000;
+    if (mo >= 1 && mo <= 12 && d >= 1 && d <= 31) {
+      return { ts: new Date(y, mo - 1, d).getTime(), key: ordPad(d) + '/' + ordPad(mo) + '/' + y };
+    }
+  }
+  var dt = new Date(s);
+  if (!isNaN(dt.getTime())) {
+    return { ts: new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(),
+             key: ordPad(dt.getDate()) + '/' + ordPad(dt.getMonth() + 1) + '/' + dt.getFullYear() };
+  }
+  return null;
+}
+
+// One cell may hold several Drive links (multiple uploads) — return all IDs.
+function ordImageIds(cell) {
+  var ids = [];
+  String(cell || '').split(/[,\s]+(?=https?:)/).forEach(function(part) {
+    var id = extractDriveId(part);
+    if (id && ids.indexOf(id) === -1) ids.push(id);
+  });
+  return ids;
+}
+
+function ordPartyKey(s) { return String(s || '').trim().toLowerCase().replace(/\s+/g, ' '); }
+
+function ordBuildGroups(rows) {
+  var map = {}, groups = [];
+  ordersSawNA = false;
+  rows.forEach(function(r, idx) {
+    var party   = (r[OR_PARTY] || '').trim();
+    var dateRaw = (r[OR_DATE]  || '').trim();
+    if (dateRaw.charAt(0) === '#' || party.charAt(0) === '#') { ordersSawNA = true; return; }
+    if (!party || !dateRaw) return;
+    var dn = (r[OR_DN] || '').trim();
+    var ids = ordImageIds(r[OR_IMAGE]);
+    if (!dn && !ids.length) return;
+
+    var pd  = ordParseDate(dateRaw) || { ts: 0, key: dateRaw };
+    var key = ordPartyKey(party) + '|' + pd.key;
+    if (!map[key]) {
+      map[key] = { party: party, dateKey: pd.key, ts: pd.ts, order: idx, designs: [] };
+      groups.push(map[key]);
+    }
+    map[key].order = idx;   // last row index = most recently added
+    map[key].designs.push({
+      dn: dn, ids: ids,
+      colour: (r[OR_COLOUR] || '').trim(),
+      sizes:  (r[OR_SIZES]  || '').trim(),
+      qty:    (r[OR_QTY]    || '').trim(),
+      rate:   (r[OR_RATE]   || '').trim()
+    });
+  });
+  groups.sort(function(a, b) { return (b.ts - a.ts) || (b.order - a.order); });
+  groups.forEach(function(g, i) { g.id = i; });
+  return groups;
+}
 
 function loadOrders() {
-  if (ordersLoaded) { renderOrders(); return; }
-  if (!ORDERS_CSV_URL || ORDERS_CSV_URL.indexOf('ORDERS_SHEET_PUBLISHED_ID') !== -1) {
-    document.getElementById('ordersStatus').innerHTML =
-      '<div class="dot error"></div><span>Orders sheet URL not configured yet — paste published CSV URL into ORDERS_CSV_URL in the code.</span>';
-    return;
-  }
+  if (ordersLoaded) { ordRender(); return; }
+  document.getElementById('ordersStatus').style.display = '';
   document.getElementById('ordersDot').className = 'dot loading';
   document.getElementById('ordersStatusText').textContent = 'Loading orders…';
   fetchCSV(ORDERS_CSV_URL).then(function(text) {
     if (!text) {
       document.getElementById('ordersDot').className = 'dot error';
-      document.getElementById('ordersStatusText').textContent = 'Could not load orders sheet.';
+      document.getElementById('ordersStatusText').textContent = 'Could not load orders. Tap ↻ to retry.';
+      document.getElementById('ordersToolbar').style.display = '';
       return;
     }
     var parsed = parseCSV(text);
-    ordersRows = parsed.slice(1).filter(function(r) { return r[OR_DATE] && r[OR_DATE].trim() !== ''; });
+    ordersGroups = ordBuildGroups(parsed.slice(1));
     ordersLoaded = true;
     document.getElementById('ordersStatus').style.display = 'none';
     document.getElementById('ordersSummaryBar').style.display = 'block';
-    renderOrders();
+    document.getElementById('ordersToolbar').style.display = '';
+    ordFillPartySelect();
+    ordRender();
   });
 }
 
-function ordersSetFilter(status) {
-  ordersActiveFilter = status;
-  document.querySelectorAll('.orders-pill').forEach(function(p) {
-    p.classList.toggle('active', p.getAttribute('data-status') === status);
-  });
-  renderOrders();
+function ordRefresh() {
+  ordersLoaded = false;
+  document.getElementById('ordersContent').innerHTML = '';
+  loadOrders();
 }
 
-function renderOrders() {
-  var rows = ordersRows;
-
-  // Apply status filter
-  if (ordersActiveFilter !== 'all') {
-    rows = rows.filter(function(r) {
-      return (r[OR_STATUS]||'').trim().toLowerCase() === ordersActiveFilter;
-    });
-  }
-
-  // KPI bar — always from full dataset
-  var total    = ordersRows.length;
-  var pending  = ordersRows.filter(function(r){ return (r[OR_STATUS]||'').trim().toLowerCase() === 'pending';  }).length;
-  var inProg   = ordersRows.filter(function(r){ var s=(r[OR_STATUS]||'').trim().toLowerCase(); return s==='dye'||s==='work'||s==='stitch'; }).length;
-  var complete = ordersRows.filter(function(r){ return (r[OR_STATUS]||'').trim().toLowerCase() === 'complete'; }).length;
-  document.getElementById('ordersSummaryKpis').innerHTML =
-    kpiBox(total,    'Total') +
-    kpiBox(pending,  'Pending') +
-    kpiBox(inProg,   'In Progress') +
-    kpiBox(complete, 'Complete');
-
-  var content = document.getElementById('ordersContent');
-  if (!rows.length) {
-    content.innerHTML = '<div class="orders-empty">No orders' + (ordersActiveFilter !== 'all' ? ' with status <strong>' + esc(ordersActiveFilter) + '</strong>' : '') + '.</div>';
-    return;
-  }
-
-  // Group by party (preserving first-seen order, most recent date first)
-  var partyMap = {}, partyOrder = [];
-  // Sort rows by date descending (newest first)
-  var sorted = rows.slice().sort(function(a,b) {
-    return new Date(b[OR_DATE]||0) - new Date(a[OR_DATE]||0);
+function ordFillPartySelect() {
+  var sel = document.getElementById('ordersParty');
+  var current = sel.value;
+  var seen = {}, names = [];
+  ordersGroups.forEach(function(g) {
+    var k = ordPartyKey(g.party);
+    if (!seen[k]) { seen[k] = true; names.push(g.party); }
   });
-  sorted.forEach(function(r) {
-    var party = (r[OR_PARTY]||'—').trim();
-    if (!partyMap[party]) { partyMap[party] = []; partyOrder.push(party); }
-    partyMap[party].push(r);
-  });
-
-  var html = '';
-  partyOrder.forEach(function(party) {
-    var items = partyMap[party];
-    // Get the most recent date + agent for this party group
-    var latestDate  = items[0][OR_DATE]  || '';
-    var agent       = items[0][OR_AGENT] || '';
-    var dnCount     = items.length;
-    var totalPcs    = items.reduce(function(s,r){ return s + (parseInt(r[OR_TOTALPCS])||0); }, 0);
-
-    // Party card header
-    html += '<div class="orders-party-card">';
-    html += '<div class="orders-party-header">';
-    html +=   '<div>';
-    html +=     '<div class="orders-party-name">' + esc(party) + '</div>';
-    html +=     '<div class="orders-party-meta">' + esc(latestDate) + (agent ? ' · ' + esc(agent) : '') + '</div>';
-    html +=   '</div>';
-    html +=   '<div class="orders-party-count">' + dnCount + ' DN' + (dnCount !== 1 ? 's' : '') + ' · ' + totalPcs + ' pcs</div>';
-    html += '</div>';
-
-    // Notes row (show once per party if any item in this group has notes)
-    // Actually show per-DN notes inside each DN row
-
-    // DN rows
-    items.forEach(function(r) {
-      var dn       = (r[OR_DN]||'—').trim();
-      var colours  = (r[OR_COLOURS]||'').trim();
-      var qty      = (r[OR_QTY]||'').trim();
-      var sizes    = (r[OR_SIZES]||'').trim();
-      var rate     = (r[OR_RATE]||'').trim();
-      var totPcs   = (r[OR_TOTALPCS]||'').trim();
-      var status   = (r[OR_STATUS]||'Pending').trim();
-      var notes    = (r[OR_NOTES]||'').trim();
-      var date     = (r[OR_DATE]||'').trim();
-
-      var statusKey = status.toLowerCase();
-      var metaParts = [];
-      if (colours) metaParts.push(colours);
-      if (qty)     metaParts.push(qty + ' qty/colour');
-      if (sizes)   metaParts.push(sizes);
-      if (rate)    metaParts.push('\u20B9' + rate + '/pc');
-      if (totPcs)  metaParts.push(totPcs + ' pcs total');
-
-      html += '<div class="orders-dn-row">';
-      html +=   '<div class="orders-dn-left">';
-      html +=     '<div class="orders-dn-num">DN ' + esc(dn) + '</div>';
-      if (metaParts.length) {
-        html +=   '<div class="orders-dn-meta">' + metaParts.map(esc).join(' · ') + '</div>';
-      }
-      html +=   '</div>';
-      html +=   '<div class="orders-dn-right">';
-      html +=     '<span class="orders-status ' + esc(statusKey) + '">' + esc(status) + '</span>';
-      if (date) {
-        html +=   '<span class="orders-dn-date">' + esc(date) + '</span>';
-      }
-      html +=   '</div>';
-      html += '</div>';
-
-      if (notes) {
-        html += '<div class="orders-notes-row">';
-        html +=   '<span class="orders-notes-icon">&#128203;</span>';
-        html +=   '<span>' + esc(notes) + '</span>';
-        html += '</div>';
-      }
-    });
-
-    html += '</div>'; // /orders-party-card
-  });
-
-  content.innerHTML = html;
+  names.sort(function(a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); });
+  sel.innerHTML = '<option value="">All parties</option>' +
+    names.map(function(n) { return '<option value="' + esc(ordPartyKey(n)) + '">' + esc(n) + '</option>'; }).join('');
+  sel.value = current;
+  if (sel.value !== current) sel.value = '';
 }
 
-function kpiBox(val, label) {
+function ordSetRecency(val) {
+  ordersRecency = val;
+  document.querySelectorAll('#ordersPills .orders-pill').forEach(function(p) {
+    p.classList.toggle('active', p.getAttribute('data-recency') === val);
+  });
+  ordRender();
+}
+
+function ordKpi(val, label) {
   return '<div class="orders-kpi"><div class="orders-kpi-val">' + val + '</div><div class="orders-kpi-label">' + label + '</div></div>';
 }
 
+function ordRender() {
+  var content = document.getElementById('ordersContent');
 
-// =================================================================
-// CHALLAN CONTROL
-// =================================================================
-// Architecture:
-//   This page is static (GitHub Pages). It cannot call Apps Script
-//   directly. Instead it calls a Google Apps Script Web App that you
-//   deploy separately (challan_webapp.gs). That web app wraps your
-//   existing processFabricChallans / confirmFabricPreview /
-//   clearPendingReview functions and also exposes the Pending Review
-//   sheet as JSON so this page can display and edit it.
-//
-//   The Web App URL is stored in localStorage so it survives page reloads.
-// =================================================================
+  // KPI bar — always from the full dataset
+  var totalDesigns = 0, partySet = {};
+  ordersGroups.forEach(function(g) { totalDesigns += g.designs.length; partySet[ordPartyKey(g.party)] = true; });
+  document.getElementById('ordersSummaryKpis').innerHTML =
+    ordKpi(ordersGroups.length, 'Orders') + ordKpi(totalDesigns, 'Designs') + ordKpi(Object.keys(partySet).length, 'Parties');
 
-var CC_URL_KEY     = 'jtc_cc_webapp_url';
-var ccPreviewData  = [];   // array of row objects currently shown
-
-// ── Init: restore saved URL on page load ─────────────────────────
-(function() {
-  var saved = localStorage.getItem(CC_URL_KEY);
-  if (saved) {
-    var inp = document.getElementById('ccWebAppUrl');
-    if (inp) inp.value = saved;
+  if (!ordersGroups.length) {
+    content.innerHTML = '<div class="orders-empty">' + (ordersSawNA
+      ? 'The Sorting Sheet is returning <strong>#N/A</strong>, so there is nothing to show yet.<br><small>Open the sheet, check the formula in cell A2, then tap &#8635;.</small>'
+      : 'No orders yet.') + '</div>';
+    return;
   }
-})();
 
-function ccSaveUrl() {
-  var val = (document.getElementById('ccWebAppUrl').value || '').trim();
-  if (val) localStorage.setItem(CC_URL_KEY, val);
-}
+  var q       = (document.getElementById('ordersSearch').value || '').trim().toLowerCase();
+  var partyF  = document.getElementById('ordersParty').value;
+  var cutoff  = ordersRecency === 'all' ? 0 : Date.now() - parseInt(ordersRecency, 10) * 86400000;
 
-function ccGetUrl() {
-  return (document.getElementById('ccWebAppUrl').value || '').trim();
-}
-
-// ── Status helpers ────────────────────────────────────────────────
-function ccSetStatus(msg, type, spinner) {
-  var el = document.getElementById('ccStatus');
-  el.className = 'cc-status' + (type ? ' ' + type : '');
-  el.innerHTML = (spinner ? '<div class="cc-spinner"></div>' : '') + '<span>' + msg + '</span>';
-}
-
-function ccSetBtnsDisabled(disabled) {
-  ['ccProcessBtn','ccLoadPreviewBtn','ccClearBtn','ccApproveBtn'].forEach(function(id) {
-    var b = document.getElementById(id);
-    if (b) b.disabled = disabled;
+  var list = ordersGroups.filter(function(g) {
+    if (partyF && ordPartyKey(g.party) !== partyF) return false;
+    if (cutoff && g.ts < cutoff) return false;
+    if (!q) return true;
+    if (g.party.toLowerCase().indexOf(q) !== -1) return true;
+    return g.designs.some(function(d) {
+      return d.dn.toLowerCase().indexOf(q) !== -1 || d.colour.toLowerCase().indexOf(q) !== -1;
+    });
   });
+
+  if (!list.length) {
+    content.innerHTML = '<div class="orders-empty">No orders match your search or filters.</div>';
+    return;
+  }
+
+  var html = '';
+  list.forEach(function(g) {
+    html += '<div class="ord-card">';
+    html +=   '<div class="ord-head">';
+    html +=     '<div class="ord-head-left"><div class="ord-party">' + esc(g.party) + '</div><div class="ord-date">' + esc(g.dateKey) + '</div></div>';
+    html +=     '<div class="ord-count">' + g.designs.length + ' design' + (g.designs.length !== 1 ? 's' : '') + '</div>';
+    html +=   '</div>';
+
+    g.designs.forEach(function(d) {
+      html += '<div class="ord-row">';
+      html +=   '<div class="ord-thumbs">';
+      if (d.ids.length) {
+        d.ids.slice(0, 3).forEach(function(id, i) {
+          html += '<img class="ord-thumb' + (i > 0 ? ' small' : '') + '" loading="lazy" data-id="' + esc(id) + '" src="' + esc(IMG_PROXY + '?id=' + id) + '" alt="DN ' + esc(d.dn) + '" onerror="ordImgFallback(this)" onclick="ordOpenImage(this)">';
+        });
+      } else {
+        html += '<div class="ord-thumb ord-thumb-empty">No image</div>';
+      }
+      html +=   '</div>';
+      html +=   '<div class="ord-info">';
+      html +=     '<div class="ord-dn">DN ' + esc(d.dn || '—') + '</div>';
+      if (d.colour) html += '<div class="ord-field"><span class="ord-label">Colours</span><span class="ord-val">' + esc(d.colour) + '</span></div>';
+      if (d.sizes)  html += '<div class="ord-field"><span class="ord-label">Sizes</span><span class="ord-val">' + esc(d.sizes) + '</span></div>';
+      if (d.qty)    html += '<div class="ord-field"><span class="ord-label">Qty</span><span class="ord-val">' + esc(d.qty) + '</span></div>';
+      if (d.rate)   html += '<div class="ord-field"><span class="ord-label">Rate</span><span class="ord-val"><span class="ord-rate-chip">&#8377;' + esc(d.rate) + '</span></span></div>';
+      html +=   '</div>';
+      html += '</div>';
+    });
+
+    html +=   '<div class="ord-foot">';
+    html +=     '<button class="ord-pdf-btn" id="ordBtn_' + g.id + '" onclick="ordEmailPdf(' + g.id + ')">&#128231; Email PDF (no rates)</button>';
+    html +=     '<div class="ord-pdf-msg" id="ordMsg_' + g.id + '"></div>';
+    html +=   '</div>';
+    html += '</div>';
+  });
+  content.innerHTML = html;
 }
 
-// ── Call Web App ──────────────────────────────────────────────────
-function ccCall(action, payload) {
-  var url = ccGetUrl();
-  if (!url) {
-    ccSetStatus('Please paste your Apps Script Web App URL above first.', 'error');
-    return Promise.reject('no url');
+// ── Images ───────────────────────────────────────────────────────
+// Proxy first; if it fails, try Drive's own thumbnail; then show a placeholder.
+function ordImgFallback(img) {
+  var id = img.getAttribute('data-id');
+  if (id && !img.getAttribute('data-fb')) {
+    img.setAttribute('data-fb', '1');
+    img.src = 'https://drive.google.com/thumbnail?id=' + id + '&sz=w800';
+    return;
   }
-  var params = Object.assign({ action: action }, payload || {});
-  var qs = Object.keys(params).map(function(k) {
-    return encodeURIComponent(k) + '=' + encodeURIComponent(
-      typeof params[k] === 'object' ? JSON.stringify(params[k]) : params[k]
-    );
-  }).join('&');
-  // Apps Script Web Apps require GET for simple triggers, POST for doPost
-  return fetch(url + '?' + qs, { method: 'GET', redirect: 'follow' })
+  img.onerror = null;
+  var ph = document.createElement('div');
+  ph.className = 'ord-thumb ord-thumb-empty' + (img.classList.contains('small') ? ' small' : '');
+  ph.textContent = 'No preview';
+  if (img.parentNode) img.parentNode.replaceChild(ph, img);
+}
+
+function ordOpenImage(img) {
+  var box = document.getElementById('ordLightbox');
+  document.getElementById('ordLightboxImg').src = img.src;
+  box.classList.add('open');
+}
+function ordCloseImage() {
+  document.getElementById('ordLightbox').classList.remove('open');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') ordCloseImage();
+});
+
+// ── Email PDF (Apps Script web app) ───────────────────────────────
+function ordEmailPdf(id) {
+  var g   = ordersGroups[id];
+  var btn = document.getElementById('ordBtn_' + id);
+  var msg = document.getElementById('ordMsg_' + id);
+  if (!g || !btn || !msg) return;
+
+  if (!ORDERS_WEBAPP_URL) {
+    msg.className = 'ord-pdf-msg err';
+    msg.textContent = 'Web App URL not set. Paste it into ORDERS_WEBAPP_URL in the code.';
+    return;
+  }
+  if (btn.disabled) return;
+
+  btn.disabled = true;
+  btn.classList.remove('ok', 'err');
+  btn.innerHTML = '<span class="ord-spin"></span> Building PDF…';
+  msg.className = 'ord-pdf-msg';
+  msg.textContent = 'This can take 15–30 seconds when an order has many images.';
+
+  var qs = 'action=emailOrderPdf' +
+           '&party=' + encodeURIComponent(g.party) +
+           '&date='  + encodeURIComponent(g.dateKey) +
+           (ORDERS_API_KEY ? '&key=' + encodeURIComponent(ORDERS_API_KEY) : '');
+  var url = ORDERS_WEBAPP_URL + (ORDERS_WEBAPP_URL.indexOf('?') === -1 ? '?' : '&') + qs;
+
+  fetch(url, { method: 'GET', redirect: 'follow' })
     .then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
-    });
-}
-
-// ── Process challans ──────────────────────────────────────────────
-function ccProcessChallans() {
-  ccSetBtnsDisabled(true);
-  ccSetStatus('Calling Apps Script — processing challan images via Claude…', 'loading', true);
-  ccCall('process')
+    })
     .then(function(res) {
-      ccSetBtnsDisabled(false);
-      if (res.error) { ccSetStatus('Error: ' + res.error, 'error'); return; }
-      ccSetStatus('Preview generated: ' + (res.rows || 0) + ' rows — load it below.', 'success');
-      if (res.preview && res.preview.length) {
-        ccPreviewData = res.preview;
-        ccRenderPreview();
-      }
+      btn.disabled = false;
+      if (!res || !res.ok) throw new Error((res && res.error) || 'Unknown error');
+      btn.classList.add('ok');
+      btn.innerHTML = '&#10003; PDF sent to your email';
+      msg.className = 'ord-pdf-msg';
+      msg.textContent = res.designs + ' design' + (res.designs !== 1 ? 's' : '') + ' · sent to ' + (res.sentTo || 'your inbox');
     })
     .catch(function(e) {
-      ccSetBtnsDisabled(false);
-      ccSetStatus('Request failed: ' + e.message, 'error');
+      btn.disabled = false;
+      btn.classList.add('err');
+      btn.innerHTML = '&#8635; Retry — Email PDF';
+      msg.className = 'ord-pdf-msg err';
+      msg.textContent = 'Failed: ' + e.message;
     });
 }
 
-// ── Load existing preview from sheet ─────────────────────────────
-function ccLoadExistingPreview() {
-  ccSetBtnsDisabled(true);
-  ccSetStatus('Loading Pending Review from sheet…', 'loading', true);
-  ccCall('getPreview')
-    .then(function(res) {
-      ccSetBtnsDisabled(false);
-      if (res.error) { ccSetStatus('Error: ' + res.error, 'error'); return; }
-      if (!res.preview || !res.preview.length) {
-        ccSetStatus('No pending preview found in the sheet.', '');
-        document.getElementById('ccPreviewCard').classList.remove('visible');
-        return;
-      }
-      ccPreviewData = res.preview;
-      ccSetStatus('Loaded ' + res.preview.length + ' row(s) from Pending Review.', 'success');
-      ccRenderPreview();
-    })
-    .catch(function(e) {
-      ccSetBtnsDisabled(false);
-      ccSetStatus('Request failed: ' + e.message, 'error');
-    });
-}
-
-// ── Render preview rows ───────────────────────────────────────────
-function ccRenderPreview() {
-  var card = document.getElementById('ccPreviewCard');
-  card.classList.add('visible');
-
-  // Summary meta
-  var ok   = ccPreviewData.filter(function(r){ return r.status === 'ok'; }).length;
-  var warn = ccPreviewData.filter(function(r){ return r.status === 'warn'; }).length;
-  var fail = ccPreviewData.filter(function(r){ return r.status === 'fail'; }).length;
-  document.getElementById('ccPreviewMeta').innerHTML =
-    '<div class="cc-meta-item"><span class="cc-meta-label">Total Rows</span><span class="cc-meta-val">'+ccPreviewData.length+'</span></div>' +
-    '<div class="cc-meta-item"><span class="cc-meta-label">Matched</span><span class="cc-meta-val" style="color:#274e13;">'+ok+'</span></div>' +
-    '<div class="cc-meta-item"><span class="cc-meta-label">Unmatched</span><span class="cc-meta-val" style="color:#7f4f00;">'+warn+'</span></div>' +
-    '<div class="cc-meta-item"><span class="cc-meta-label">Failed</span><span class="cc-meta-val" style="color:#cc0000;">'+fail+'</span></div>';
-
-  var wrap = document.getElementById('ccPreviewRows');
-  wrap.innerHTML = '';
-
-  ccPreviewData.forEach(function(row, i) {
-    var statusLabel = row.status === 'ok' ? '✓ OK' : row.status === 'warn' ? '⚠ Unmatched' : '✗ Failed';
-    var statusClass = row.status === 'ok' ? 'ok' : row.status === 'warn' ? 'warn' : 'fail';
-
-    var div = document.createElement('div');
-    div.className = 'cc-row';
-    div.id = 'ccRow_' + i;
-    div.innerHTML =
-      '<div class="cc-row-top">' +
-        '<span class="cc-row-status '+statusClass+'">'+esc(statusLabel)+'</span>' +
-        '<span class="cc-row-challan">'+esc(row.challanNo||'—')+' · '+esc(row.supplier||'—')+'</span>' +
-        '<div class="cc-row-del" onclick="ccDeleteRow('+i+')">&#x2715;</div>' +
-      '</div>' +
-      '<div class="cc-row-fields">' +
-        '<div class="cc-field">' +
-          '<span class="cc-field-label">Fabric (matched)</span>' +
-          '<input class="cc-field-input" data-idx="'+i+'" data-key="fabricMatched" value="'+esc(row.fabricMatched||row.fabricRaw||'')+'" oninput="ccUpdateField('+i+',\'fabricMatched\',this.value)" />' +
-        '</div>' +
-        '<div class="cc-field">' +
-          '<span class="cc-field-label">Width</span>' +
-          '<input class="cc-field-input" data-idx="'+i+'" data-key="width" value="'+esc(row.width||'')+'" oninput="ccUpdateField('+i+',\'width\',this.value)" />' +
-        '</div>' +
-        '<div class="cc-field">' +
-          '<span class="cc-field-label">Meters</span>' +
-          '<input class="cc-field-input" type="number" step="0.1" data-idx="'+i+'" data-key="meters" value="'+(row.meters||0)+'" oninput="ccUpdateField('+i+',\'meters\',parseFloat(this.value)||0)" />' +
-        '</div>' +
-        '<div class="cc-field">' +
-          '<span class="cc-field-label">Date</span>' +
-          '<input class="cc-field-input" data-idx="'+i+'" data-key="date" value="'+esc(row.date||'')+'" oninput="ccUpdateField('+i+',\'date\',this.value)" />' +
-        '</div>' +
-        '<div class="cc-field" style="grid-column:1/-1;">' +
-          '<span class="cc-field-label">Notes</span>' +
-          '<input class="cc-field-input" data-idx="'+i+'" data-key="notes" value="'+esc(row.notes||'')+'" oninput="ccUpdateField('+i+',\'notes\',this.value)" />' +
-        '</div>' +
-      '</div>';
-    wrap.appendChild(div);
-  });
-}
-
-function ccUpdateField(idx, key, val) {
-  if (ccPreviewData[idx]) ccPreviewData[idx][key] = val;
-}
-
-function ccDeleteRow(idx) {
-  ccPreviewData.splice(idx, 1);
-  if (!ccPreviewData.length) {
-    document.getElementById('ccPreviewCard').classList.remove('visible');
-    ccSetStatus('All rows removed. Preview is empty.', '');
-    return;
-  }
-  ccRenderPreview();
-}
-
-// ── Approve & Push ────────────────────────────────────────────────
-function ccApprove() {
-  if (!ccPreviewData.length) { ccSetStatus('No rows to approve.', 'error'); return; }
-  var active = ccPreviewData.filter(function(r){ return r.status !== 'fail'; });
-  if (!active.length) { ccSetStatus('No approvable rows (all are PARSE FAILED).', 'error'); return; }
-
-  ccSetBtnsDisabled(true);
-  ccSetStatus('Pushing ' + active.length + ' row(s) to Challan Log and Fabric Balance…', 'loading', true);
-
-  // Send edited data to web app for commit
-  var url = ccGetUrl();
-  if (!url) { ccSetBtnsDisabled(false); ccSetStatus('No Web App URL set.', 'error'); return; }
-
-  fetch(url, {
-    method : 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body   : 'action=confirm&rows=' + encodeURIComponent(JSON.stringify(active)),
-    redirect: 'follow',
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(res) {
-    ccSetBtnsDisabled(false);
-    if (res.error) { ccSetStatus('Error: ' + res.error, 'error'); return; }
-    ccSetStatus('Done! ' + res.committed + ' row(s) committed. Fabric Balance (Used) updated.', 'success');
-    ccPreviewData = [];
-    document.getElementById('ccPreviewCard').classList.remove('visible');
-  })
-  .catch(function(e) {
-    ccSetBtnsDisabled(false);
-    ccSetStatus('Request failed: ' + e.message, 'error');
-  });
-}
-
-// ── Discard ───────────────────────────────────────────────────────
-function ccDiscard() {
-  if (!confirm('Discard all preview rows? This only clears the view — it does not clear the sheet. Use "Clear Pending Preview" to also clear the sheet.')) return;
-  ccPreviewData = [];
-  document.getElementById('ccPreviewCard').classList.remove('visible');
-  ccSetStatus('Preview cleared from view.', '');
-}
-
-// ── Clear sheet preview ───────────────────────────────────────────
-function ccClearPreview() {
-  if (!confirm('Clear Pending Review in the sheet? This discards unconfirmed challan data.')) return;
-  ccSetBtnsDisabled(true);
-  ccSetStatus('Clearing Pending Review sheet…', 'loading', true);
-  ccCall('clear')
-    .then(function(res) {
-      ccSetBtnsDisabled(false);
-      if (res.error) { ccSetStatus('Error: ' + res.error, 'error'); return; }
-      ccSetStatus('Pending Review cleared in sheet.', 'success');
-      ccPreviewData = [];
-      document.getElementById('ccPreviewCard').classList.remove('visible');
-    })
-    .catch(function(e) {
-      ccSetBtnsDisabled(false);
-      ccSetStatus('Request failed: ' + e.message, 'error');
-    });
-}
 </script>
 </body>
 </html>
